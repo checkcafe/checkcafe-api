@@ -3,6 +3,19 @@ import { createMiddleware } from "hono/factory";
 import { validateToken } from "@/libs/jwt";
 import db from "@/libs/db";
 
+/**
+ * A middleware that authenticates the request using a JWT token in the Authorization header.
+ *
+ * The middleware extracts the token from the header and verifies it using the `validateToken` function.
+ * If the token is valid, it retrieves the user using the `db.user.findUnique` method and sets the `userId`
+ * and `userRole` properties on the context object.
+ *
+ * If the token is invalid or the user is not found, it returns an error response with a 401 or 404 status
+ * code, respectively.
+ *
+ * @param c The context object.
+ * @param next The next middleware or route handler.
+ */
 const authMiddleware = createMiddleware(async (c: Context, next) => {
   const token = extractToken(c.req.header("Authorization"));
 
@@ -43,10 +56,24 @@ const authMiddleware = createMiddleware(async (c: Context, next) => {
   }
 });
 
+/**
+ * Extracts a token from an Authorization header.
+ *
+ * @param authHeader The Authorization header to extract the token from.
+ * @returns The extracted token, or null if the header is missing or invalid.
+ */
 const extractToken = (authHeader: string | undefined): string | null => {
   return authHeader ? authHeader.split(" ")[1] : null;
 };
 
+/**
+ * Responds with an error to the client.
+ *
+ * @param c The Hono Context object.
+ * @param message The error message to send to the client.
+ * @param status The HTTP status code to respond with.
+ * @returns The response object.
+ */
 const respondWithError = (c: Context, message: string, status: number) => {
   return c.json({ message }, { status });
 };
