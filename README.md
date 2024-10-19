@@ -27,6 +27,14 @@
 | /auth/logout        | POST   | Log out a user       |
 | /auth/me            | GET    | Get user information |
 
+## ERD
+
+<details>
+  <summary>Click to expand</summary>
+  
+  ![ERD](erd.png)
+</details>
+
 ## Setup and Usage
 
 <details>

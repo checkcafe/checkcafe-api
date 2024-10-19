@@ -1,8 +1,8 @@
 export enum Role {
-  USER = "USER",
-  MODERATOR = "MODERATOR",
-  ADMIN = "ADMIN",
   SUPER_ADMIN = "SUPER ADMIN",
+  ADMIN = "ADMIN",
+  MODERATOR = "MODERATOR",
+  USER = "USER",
 }
 
 type RoleRecord = {
