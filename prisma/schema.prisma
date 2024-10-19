@@ -33,10 +33,10 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  role       Role         @relation(fields: [roleId], references: [id])
-  tokens     UserToken[]  @relation("UserTokens")
-  cafeReview CafeReview[]
-  cafe       Cafe[]
+  role        Role         @relation(fields: [roleId], references: [id])
+  tokens      UserToken[]  @relation("UserTokens")
+  cafeReviews CafeReview[]
+  cafes       Cafe[]
 
   @@index([roleId])
   @@map("users")
@@ -77,7 +77,7 @@ model Country {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  state State[]
+  states State[]
 
   @@map("countries")
 }
@@ -90,7 +90,7 @@ model State {
   updatedAt DateTime @updatedAt
 
   country Country @relation(fields: [countryId], references: [id])
-  city    City[]
+  cities  City[]
 
   @@map("states")
 }
@@ -105,7 +105,7 @@ model City {
   updatedAt DateTime @updatedAt
 
   state State  @relation(fields: [stateId], references: [id])
-  cafe  Cafe[]
+  cafes Cafe[]
 
   @@map("cities")
 }
@@ -125,9 +125,9 @@ model Cafe {
   city           City            @relation(fields: [cityId], references: [id])
   user           User            @relation(fields: [userId], references: [id])
   operatingHours OperatingHour[]
-  cafeFeature    CafeFeature[]
-  cafePhoto      CafePhoto[]
-  cafeReview     CafeReview[]
+  cafeFeatures   CafeFeature[]
+  cafePhotos     CafePhoto[]
+  cafeReviews    CafeReview[]
 
   @@map("cafes")
 }
@@ -169,7 +169,7 @@ model FeatureCategory {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  feature Feature[]
+  features Feature[]
 
   @@map("feature_categories")
 }
@@ -183,7 +183,7 @@ model Feature {
   updatedAt         DateTime @updatedAt
 
   featureCategory FeatureCategory? @relation(fields: [featureCategoryId], references: [id])
-  cafeFeature     CafeFeature[]
+  cafeFeatures    CafeFeature[]
 
   @@map("features")
 }
@@ -196,9 +196,9 @@ model CafeFeature {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  feature   Feature     @relation(fields: [featureId], references: [id])
-  cafe      Cafe        @relation(fields: [cafeId], references: [id])
-  cafePhoto CafePhoto[]
+  feature    Feature     @relation(fields: [featureId], references: [id])
+  cafe       Cafe        @relation(fields: [cafeId], references: [id])
+  cafePhotos CafePhoto[]
 
   @@map("cafe_features")
 }
