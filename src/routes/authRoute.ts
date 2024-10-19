@@ -90,9 +90,9 @@ authRoute.openapi(
     const body = await c.req.json();
 
     try {
-      const token = await authService.login(body);
+      const result = await authService.login(body);
 
-      return c.json({ token }, 200);
+      return c.json(result, 200);
     } catch (error: Error | any) {
       return c.json({ error: error.message || "Login failed!" }, 401);
     }
@@ -123,7 +123,7 @@ authRoute.openapi(
       const userId = c.get("userId") as string;
       const user = await authService.profile(userId);
 
-      return c.json({ user }, 200);
+      return c.json(user, 200);
     } catch (error: Error | any) {
       return c.json({ error: error.message || "Failed to get user!" }, 401);
     }
@@ -137,6 +137,15 @@ authRoute.openapi(
     path: "/refresh-token",
     summary: "Refresh access token",
     description: "Refresh the access token using the refresh token.",
+    request: {
+      body: {
+        content: {
+          "application/json": {
+            schema: authSchema.refreshSchema,
+          },
+        },
+      },
+    },
     responses: {
       200: {
         description: "Token successfully refreshed",
@@ -157,7 +166,7 @@ authRoute.openapi(
     try {
       const token = await authService.regenToken(refreshToken);
 
-      return c.json({ token }, 200);
+      return c.json(token, 200);
     } catch (error: Error | any) {
       return c.json(
         { error: error.message || "Failed to refresh token!" },
@@ -174,6 +183,15 @@ authRoute.openapi(
     path: "/logout",
     summary: "Log out a user",
     description: "Log out a user by invalidating the refresh token.",
+    request: {
+      body: {
+        content: {
+          "application/json": {
+            schema: authSchema.refreshSchema,
+          },
+        },
+      },
+    },
     responses: {
       200: {
         description: "Logout successful",
