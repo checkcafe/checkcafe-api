@@ -3,6 +3,7 @@ import { apiReference } from "@scalar/hono-api-reference";
 import { logger } from "hono/logger";
 import { cors } from "hono/cors";
 import authRoute from "@/routes/auth";
+import userRoute from "./routes/user";
 import geoRoute from "./routes/geo";
 
 const app = new OpenAPIHono();
@@ -45,6 +46,7 @@ app.doc("/openapi.json", {
 
 // API route
 app.route("/auth", authRoute);
+app.route("/users", userRoute);
 app.route("/geo", geoRoute);
 
 export default app;

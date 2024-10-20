@@ -78,40 +78,6 @@ export const login = async (data: z.infer<typeof loginSchema>) => {
 };
 
 /**
- * Retrieves the profile of a user by ID.
- *
- * @param userId The ID of the user to retrieve.
- * @returns The user profile.
- * @throws {Error} If the user does not exist.
- */
-export const profile = async (userId: string) => {
-  const user = await db.user.findUnique({
-    where: { id: userId },
-    select: {
-      name: true,
-      username: true,
-      email: true,
-      role: {
-        select: {
-          name: true,
-        },
-      },
-    },
-  });
-
-  if (!user) {
-    throw new Error("User not found");
-  }
-
-  return {
-    name: user.name,
-    username: user.username,
-    email: user.email,
-    role: user.role?.name || null,
-  };
-};
-
-/**
  * Processes a refresh token by either revoking it or regenerating a new token pair.
  *
  * @param refreshToken The refresh token to process.
