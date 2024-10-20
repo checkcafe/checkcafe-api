@@ -1,4 +1,4 @@
-# Hono Auth
+# CheckCafe API
 
 **Hono-Auth** is a simple authentication boilerplate built with Hono.js using Bun and TypeScript, designed to provide essential auth functionality. This project includes four key authentication endpoints and leverages Prisma ORM for database management, Zod for validation, and Swagger UI for API documentation.
 
@@ -12,10 +12,13 @@
 
 ## Tech Stack (Framework & Libraries)
 
-- Hono.js (Bun & TypeScript)
-- Prisma ORM (PostgreSQL)
-- Swagger UI (Scalar)
-- Zod (Data Validation)
+- Language: TypeScript
+- Runtime: Bun
+- Framework: Hono
+- ORM: Prisma
+- Database: PostgreSQL
+- REST API: OpenAPI, Swagger, Scalar
+- Data Validation: Zod
 
 ## Endpoints
 
@@ -29,52 +32,38 @@
 
 ## ERD
 
-<details>
-  <summary>Click to expand</summary>
-  
-  ![ERD](erd.png)
-</details>
+![ERD](erd.png)
 
 ## Setup and Usage
 
-<details>
-  <summary>Click to expand</summary>
-  
-1. Clone the repository and install dependencies:
+### Clone the repository and install dependencies:
 
-```bash
-  git clone https://github.com/zckyachmd/hono-auth.git
-  cd hono-auth
-  bun install
+```sh
+git clone https://github.com/checkcafe-api/checkcafe-api.git
+cd checkcafe-api
+bun install
 ```
 
-2. Create a `.env` file in the root directory:
+### Create a `.env` file in the root directory
 
-   ```bash
-     cp .env.example .env
-     nano .env # Edit the variables as needed (see below)
+```sh
+cp .env.example .env
+# edit .env with your own values
+```
 
-     #... (.env)
-     DATABASE_URL=postgresql://user:password@localhost:5432/database?schema=public
-     JWT_SECRET=your-secret-token
-     SALT_ROUNDS=10 # Number of rounds for password hashing
-   ```
+### Migrate and seed the database
 
-3. Migrate the database:
+```sh
+bun migrate
+bun seed
+```
 
-   ```bash
-     bun prisma migrate dev
-   ```
+### Start the server
 
-4. Start the server:
-
-   ```bash
-     bun run dev
-
-     # Open http://localhost:3000/ui in your browser
-   ```
-
-   </details>
+```sh
+bun dev
+# Open http://localhost:3000/ui in your browser
+```
 
 ## Contributing
 

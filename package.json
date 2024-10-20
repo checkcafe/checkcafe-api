@@ -1,7 +1,12 @@
 {
   "name": "checkcafe-api",
   "scripts": {
-    "dev": "bun run --hot src/index.ts"
+    "dev": "bun run --hot src/index.ts",
+    "start": "bun run src/index.ts",
+    "migrate": "prisma migrate dev",
+    "migrate:deploy": "prisma migrate deploy",
+    "generate": "prisma generate",
+    "seed": "prisma db seed"
   },
   "prisma": {
     "seed": "bun run prisma/seed.ts"

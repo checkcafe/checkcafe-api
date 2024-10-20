@@ -1,0 +1,8 @@
+services:
+  database:
+    image: postgres:alpine
+    ports:
+      - "5432:5432"
+    env_file:
+      - path: .env
+        required: true
