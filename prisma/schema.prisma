@@ -24,34 +24,39 @@ enum Day {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  name      String   @db.VarChar(128)
-  email     String   @unique @db.VarChar(128)
-  username  String   @unique @db.VarChar(32)
-  password  String
-  roleId    String
+  id       String @id @default(cuid())
+  name     String @db.VarChar(128)
+  email    String @unique @db.VarChar(128)
+  username String @unique @db.VarChar(32)
+  password String
+
+  roleId String
+  role   Role   @relation(fields: [roleId], references: [id])
+
+  tokens        UserToken[]     @relation("UserTokens")
+  places        Place[]
+  placeReviews  PlaceReview[]
+  PlaceFavorite PlaceFavorite[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  role       Role         @relation(fields: [roleId], references: [id])
-  tokens     UserToken[]  @relation("UserTokens")
-  cafeReview CafeReview[]
-  cafe       Cafe[]
 
   @@index([roleId])
   @@map("users")
 }
 
 model Role {
-  id        String   @id @default(cuid())
-  name      String   @unique @db.VarChar(64)
-  parentId  String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id   String @id @default(cuid())
+  name String @unique @db.VarChar(64)
 
-  parent   Role?  @relation("RoleHierarchy", fields: [parentId], references: [id])
+  parentId String?
+  parent   Role?   @relation("RoleHierarchy", fields: [parentId], references: [id])
+
   children Role[] @relation("RoleHierarchy")
   users    User[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("roles")
 }
@@ -71,149 +76,179 @@ model UserToken {
 }
 
 model Country {
-  id        String   @id @default(cuid())
-  name      String   @unique
-  code      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id   String @id @default(cuid())
+  name String @unique
+  code String @unique
 
   state State[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("countries")
 }
 
 model State {
-  id        String   @id @default(cuid())
-  name      String   @unique
+  id   String @id @default(cuid())
+  name String @unique
+
   countryId String
+  country   Country @relation(fields: [countryId], references: [id])
+
+  city City[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  country Country @relation(fields: [countryId], references: [id])
-  city    City[]
 
   @@map("states")
 }
 
 model City {
-  id        String   @id @default(cuid())
-  name      String   @unique
-  stateId   String
+  id        String @id @default(cuid())
+  name      String @unique
   latitude  Float?
   longitude Float?
+
+  stateId String
+  state   State  @relation(fields: [stateId], references: [id])
+
+  place Place[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  state State  @relation(fields: [stateId], references: [id])
-  cafe  Cafe[]
 
   @@map("cities")
 }
 
-model Cafe {
-  id            String   @id @default(cuid())
-  cityId        String
-  userId        String
+model Place {
+  id            String  @id @default(cuid())
   name          String
   description   String?
   latitude      Float?
   longitude     Float?
-  streetAddress String   @db.VarChar(255)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  streetAddress String  @db.VarChar(255)
 
-  city           City            @relation(fields: [cityId], references: [id])
-  user           User            @relation(fields: [userId], references: [id])
+  cityId String
+  city   City   @relation(fields: [cityId], references: [id])
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
   operatingHours OperatingHour[]
-  cafeFeature    CafeFeature[]
-  cafePhoto      CafePhoto[]
-  cafeReview     CafeReview[]
+  placeFeatures  PlaceFeature[]
+  placePhotos    PlacePhoto[]
+  PlaceFavorite  PlaceFavorite[]
+  placeReviews   PlaceReview[]
 
-  @@map("cafes")
-}
-
-model CafePhoto {
-  id            String   @id @default(cuid())
-  cafeId        String
-  cafeFeatureId String?
-  url           String
-  order         Int      @default(0)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  cafe        Cafe         @relation(fields: [cafeId], references: [id])
-  cafeFeature CafeFeature? @relation(fields: [cafeFeatureId], references: [id])
-
-  @@index([cafeId, order])
-  @@map("cafe_photos")
-}
-
-model OperatingHour {
-  id        String   @id @default(cuid())
-  cafeId    String
-  day       Day
-  startTime String
-  endTime   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  cafe Cafe @relation(fields: [cafeId], references: [id])
+  @@map("places")
+}
+
+model OperatingHour {
+  id            String   @id @default(cuid())
+  day           String
+  startDateTime DateTime
+  endDateTime   DateTime
+
+  placeId String
+  place   Place  @relation(fields: [placeId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("operating_hours")
 }
 
 model FeatureCategory {
-  id          String   @id @default(cuid())
-  name        String   @unique
+  id          String  @id @default(cuid())
+  name        String  @unique
   description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
 
   feature Feature[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("feature_categories")
 }
 
 model Feature {
-  id                String   @id @default(cuid())
-  featureCategoryId String?
-  name              String   @unique
-  description       String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id          String  @id @default(cuid())
+  name        String  @unique
+  description String?
 
-  featureCategory FeatureCategory? @relation(fields: [featureCategoryId], references: [id])
-  cafeFeature     CafeFeature[]
+  featureCategoryId String?
+  featureCategory   FeatureCategory? @relation(fields: [featureCategoryId], references: [id])
+
+  placeFeatures PlaceFeature[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("features")
 }
 
-model CafeFeature {
-  id          String   @id @default(cuid())
-  featureId   String
-  cafeId      String
+model PlaceFeature {
+  id          String  @id @default(cuid())
   description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
 
-  feature   Feature     @relation(fields: [featureId], references: [id])
-  cafe      Cafe        @relation(fields: [cafeId], references: [id])
-  cafePhoto CafePhoto[]
+  featureId String
+  feature   Feature @relation(fields: [featureId], references: [id])
+  placeId   String
+  place     Place   @relation(fields: [placeId], references: [id])
 
-  @@map("cafe_features")
-}
+  placePhotos PlacePhoto[]
 
-model CafeReview {
-  id        String   @id @default(cuid())
-  cafeId    String
-  userId    String
-  rating    Int
-  comment   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  cafe Cafe @relation(fields: [cafeId], references: [id])
-  user User @relation(fields: [userId], references: [id])
+  @@map("place_features")
+}
 
-  @@map("cafe_reviews")
+model PlacePhoto {
+  id    String @id @default(cuid())
+  url   String
+  order Int    @default(0)
+
+  placeId        String
+  place          Place         @relation(fields: [placeId], references: [id])
+  placeFeatureId String?
+  placeFeature   PlaceFeature? @relation(fields: [placeFeatureId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([placeId, order])
+  @@map("place_photos")
+}
+
+model PlaceFavorite {
+  id      String @id @default(cuid())
+  placeId String
+
+  place  Place  @relation(fields: [placeId], references: [id])
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("place_favorites")
+}
+
+model PlaceReview {
+  id      String  @id @default(cuid())
+  rating  Int
+  comment String?
+
+  placeId String
+  place   Place  @relation(fields: [placeId], references: [id])
+  userId  String
+  user    User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("place_reviews")
 }
