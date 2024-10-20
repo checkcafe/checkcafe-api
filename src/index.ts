@@ -5,6 +5,7 @@ import { cors } from "hono/cors";
 import authRoute from "@/routes/auth";
 import userRoute from "./routes/user";
 import geoRoute from "./routes/geo";
+import placeRoute from "./routes/place";
 
 const app = new OpenAPIHono();
 
@@ -48,5 +49,6 @@ app.doc("/openapi.json", {
 app.route("/auth", authRoute);
 app.route("/users", userRoute);
 app.route("/geo", geoRoute);
+app.route("/place", placeRoute);
 
 export default app;
