@@ -6,15 +6,21 @@ import contries from "./samples/countries";
 import states from "./samples/states";
 import cities from "./samples/cities";
 import features from "./samples/features";
+import cliProgress from "cli-progress";
 
 const prisma = new PrismaClient();
 
+const progressBar = new cliProgress.SingleBar({
+  format: "{bar} | {percentage}% | {value}/{total} {type}",
+  barCompleteChar: "\u2588",
+  barIncompleteChar: "\u2591",
+  hideCursor: true,
+});
+
 async function upsertRoles() {
-  console.log("🌱 Seeding roles...");
+  progressBar.start(roles.length, 0, { type: "Roles" });
 
   for (const role of roles) {
-    console.log(`🎭 Role: ${role.name}`);
-
     let parentRole;
     if (role.parent) {
       parentRole = await prisma.role.findUnique({
@@ -38,21 +44,20 @@ async function upsertRoles() {
         parentId: parentRole ? parentRole.id : null,
       },
     });
+
+    progressBar.increment();
   }
+  progressBar.stop();
 }
 
 async function upsertUsers() {
-  console.log("🌱 Seeding users...");
+  progressBar.start(users.length, 0, { type: "Users" });
 
   for (const user of users) {
-    console.log(`👤 User: ${user.username}`);
-
     let role;
     if (user.role) {
       role = await prisma.role.findUnique({
-        where: {
-          name: user.role,
-        },
+        where: { name: user.role },
       });
 
       if (!role) {
@@ -78,15 +83,16 @@ async function upsertUsers() {
         roleId: role.id,
       },
     });
+
+    progressBar.increment();
   }
+  progressBar.stop();
 }
 
 async function upsertCountries() {
-  console.log("🌱 Seeding countries...");
+  progressBar.start(contries.length, 0, { type: "Countries" });
 
   for (const country of contries) {
-    console.log(`🌎 Country: ${country.name}`);
-
     await prisma.country.upsert({
       where: { code: country.code },
       update: {
@@ -97,15 +103,15 @@ async function upsertCountries() {
         code: country.code,
       },
     });
+    progressBar.increment();
   }
+  progressBar.stop();
 }
 
 async function upsertStates() {
-  console.log("🌱 Seeding states...");
+  progressBar.start(states.length, 0, { type: "States" });
 
   for (const state of states) {
-    console.log(`🌎 State: ${state.name}`);
-
     let country;
     if (state.country) {
       country = await prisma.country.findUnique({
@@ -129,15 +135,15 @@ async function upsertStates() {
         countryId: country ? country.id : null,
       },
     });
+    progressBar.increment();
   }
+  progressBar.stop();
 }
 
 async function upsertCities() {
-  console.log("🌱 Seeding cities...");
+  progressBar.start(cities.length, 0, { type: "Cities" });
 
   for (const city of cities) {
-    console.log(`🌎 City: ${city.name}`);
-
     let state;
     if (city.state) {
       state = await prisma.state.findUnique({
@@ -165,15 +171,15 @@ async function upsertCities() {
         longitude: city.long ? city.long : null,
       },
     });
+    progressBar.increment();
   }
+  progressBar.stop();
 }
 
 async function upsertFeatureCategories() {
-  console.log("🌱 Seeding feature categories and features...");
+  progressBar.start(features.length, 0, { type: "Feature Categories" });
 
   for (const categoryData of features) {
-    console.log(`📂 Category: ${categoryData.category}`);
-
     const category = await prisma.featureCategory.upsert({
       where: { name: categoryData.category },
       update: {
@@ -187,8 +193,6 @@ async function upsertFeatureCategories() {
     });
 
     for (const feature of categoryData.features) {
-      console.log(`🛠️ Feature: ${feature.name} (Category: ${category.name})`);
-
       await prisma.feature.upsert({
         where: { name: feature.name },
         update: {
@@ -203,7 +207,9 @@ async function upsertFeatureCategories() {
         },
       });
     }
+    progressBar.increment();
   }
+  progressBar.stop();
 }
 
 async function main() {
@@ -223,7 +229,6 @@ main()
     process.exit(1);
   })
   .finally(async () => {
-    console.log("Seeding finished. Disconnecting...");
     await prisma.$disconnect();
     process.exit(0);
   });

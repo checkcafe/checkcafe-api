@@ -219,12 +219,12 @@ model PlacePhoto {
 }
 
 model PlaceFavorite {
-  id      String @id @default(cuid())
-  placeId String
+  id String @id @default(cuid())
 
-  place  Place  @relation(fields: [placeId], references: [id])
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
+  placeId String
+  place   Place  @relation(fields: [placeId], references: [id])
+  userId  String
+  user    User   @relation(fields: [userId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

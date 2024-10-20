@@ -13,13 +13,14 @@
   },
   "dependencies": {
     "@hono/zod-openapi": "^0.16.4",
-    "@prisma/client": "^5.21.0",
+    "@prisma/client": "^5.21.1",
     "@scalar/hono-api-reference": "^0.5.155",
     "hono": "^4.6.5",
     "oslo": "^1.2.1"
   },
   "devDependencies": {
     "@types/bun": "latest",
-    "prisma": "^5.21.0"
+    "prisma": "^5.21.1",
+    "cli-progress": "^3.12.0"
   }
 }

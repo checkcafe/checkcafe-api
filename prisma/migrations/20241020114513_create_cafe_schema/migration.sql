@@ -3,6 +3,7 @@ CREATE TABLE "countries" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "code" TEXT NOT NULL,
+    "currency" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -37,10 +38,14 @@ CREATE TABLE "cities" (
 CREATE TABLE "places" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
+    "slug" VARCHAR(128) NOT NULL,
     "description" TEXT,
+    "streetAddress" VARCHAR(255) NOT NULL,
+    "wifiSpeedAvg" INTEGER,
+    "priceRange" TEXT,
     "latitude" DOUBLE PRECISION,
     "longitude" DOUBLE PRECISION,
-    "streetAddress" VARCHAR(255) NOT NULL,
+    "isPublished" BOOLEAN NOT NULL DEFAULT false,
     "cityId" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
