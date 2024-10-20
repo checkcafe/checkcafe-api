@@ -11,7 +11,7 @@ import parseSorts from "@/utils/sort";
  */
 export const getCountries = async (
   queryFilter?: string,
-  querySort?: string
+  querySort?: string,
 ) => {
   const where = parseFilters(queryFilter);
   const orderBy = parseSorts(querySort);

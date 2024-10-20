@@ -39,7 +39,7 @@ userRoute.openapi(
     } catch (error: Error | any) {
       return c.json({ error: error.message || "Failed to get user!" }, 401);
     }
-  }
+  },
 );
 
 // Profile Route
@@ -70,7 +70,7 @@ userRoute.openapi(
     } catch (error: Error | any) {
       return c.json({ error: error.message || "Failed to get user!" }, 401);
     }
-  }
+  },
 );
 
 export default userRoute;

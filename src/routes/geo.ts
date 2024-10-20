@@ -42,7 +42,7 @@ geoRoute.openapi(
     } catch (error: Error | any) {
       return c.json({ message: error.message }, 500);
     }
-  }
+  },
 );
 
 // States Route
@@ -81,7 +81,7 @@ geoRoute.openapi(
     } catch (error: Error | any) {
       return c.json({ message: error.message }, 500);
     }
-  }
+  },
 );
 
 // Cities Route
@@ -120,7 +120,7 @@ geoRoute.openapi(
     } catch (error: Error | any) {
       return c.json({ message: error.message }, 500);
     }
-  }
+  },
 );
 
 export default geoRoute;

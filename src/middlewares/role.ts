@@ -28,7 +28,7 @@ const roleMiddleware = ({ roles, strict = true }: RoleMiddlewareOptions) =>
     if (!userRole) {
       return c.json(
         { message: "Unauthorized: Role not found" },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
@@ -37,7 +37,7 @@ const roleMiddleware = ({ roles, strict = true }: RoleMiddlewareOptions) =>
       if (!hasAccess) {
         return c.json(
           { message: "Unauthorized: Access denied" },
-          { status: 403 }
+          { status: 403 },
         );
       }
     } else {
@@ -50,7 +50,7 @@ const roleMiddleware = ({ roles, strict = true }: RoleMiddlewareOptions) =>
       if (!hasAccess) {
         return c.json(
           { message: "Unauthorized: Access denied" },
-          { status: 403 }
+          { status: 403 },
         );
       }
     }
@@ -71,7 +71,7 @@ const roleMiddleware = ({ roles, strict = true }: RoleMiddlewareOptions) =>
  */
 const getFilteredRoleHierarchy = async (
   roleName: string,
-  minRole: string
+  minRole: string,
 ): Promise<string[]> => {
   const hierarchy = await getRoleHierarchy(roleName);
 
