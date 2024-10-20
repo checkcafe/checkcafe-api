@@ -13,6 +13,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Day {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
 model User {
   id        String   @id @default(cuid())
   name      String   @db.VarChar(128)
@@ -23,8 +33,10 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  role   Role        @relation(fields: [roleId], references: [id])
-  tokens UserToken[] @relation("UserTokens")
+  role       Role         @relation(fields: [roleId], references: [id])
+  tokens     UserToken[]  @relation("UserTokens")
+  cafeReview CafeReview[]
+  cafe       Cafe[]
 
   @@index([roleId])
   @@map("users")
@@ -56,4 +68,152 @@ model UserToken {
 
   @@index([userId, token])
   @@map("user_tokens")
+}
+
+model Country {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  code      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  state State[]
+
+  @@map("countries")
+}
+
+model State {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  countryId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  country Country @relation(fields: [countryId], references: [id])
+  city    City[]
+
+  @@map("states")
+}
+
+model City {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  stateId   String
+  latitude  Float?
+  longitude Float?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  state State  @relation(fields: [stateId], references: [id])
+  cafe  Cafe[]
+
+  @@map("cities")
+}
+
+model Cafe {
+  id            String   @id @default(cuid())
+  cityId        String
+  userId        String
+  name          String
+  description   String?
+  latitude      Float?
+  longitude     Float?
+  streetAddress String   @db.VarChar(255)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  city           City            @relation(fields: [cityId], references: [id])
+  user           User            @relation(fields: [userId], references: [id])
+  operatingHours OperatingHour[]
+  cafeFeature    CafeFeature[]
+  cafePhoto      CafePhoto[]
+  cafeReview     CafeReview[]
+
+  @@map("cafes")
+}
+
+model CafePhoto {
+  id            String   @id @default(cuid())
+  cafeId        String
+  cafeFeatureId String?
+  url           String
+  order         Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  cafe        Cafe         @relation(fields: [cafeId], references: [id])
+  cafeFeature CafeFeature? @relation(fields: [cafeFeatureId], references: [id])
+
+  @@index([cafeId, order])
+  @@map("cafe_photos")
+}
+
+model OperatingHour {
+  id        String   @id @default(cuid())
+  cafeId    String
+  day       Day
+  startTime String
+  endTime   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  cafe Cafe @relation(fields: [cafeId], references: [id])
+
+  @@map("operating_hours")
+}
+
+model FeatureCategory {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  feature Feature[]
+
+  @@map("feature_categories")
+}
+
+model Feature {
+  id                String   @id @default(cuid())
+  featureCategoryId String?
+  name              String   @unique
+  description       String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  featureCategory FeatureCategory? @relation(fields: [featureCategoryId], references: [id])
+  cafeFeature     CafeFeature[]
+
+  @@map("features")
+}
+
+model CafeFeature {
+  id          String   @id @default(cuid())
+  featureId   String
+  cafeId      String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  feature   Feature     @relation(fields: [featureId], references: [id])
+  cafe      Cafe        @relation(fields: [cafeId], references: [id])
+  cafePhoto CafePhoto[]
+
+  @@map("cafe_features")
+}
+
+model CafeReview {
+  id        String   @id @default(cuid())
+  cafeId    String
+  userId    String
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  cafe Cafe @relation(fields: [cafeId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("cafe_reviews")
 }
