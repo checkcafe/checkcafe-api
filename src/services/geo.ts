@@ -1,6 +1,6 @@
 import db from "@/libs/db";
-import parseFilters from "@/utils/filterUtils";
-import parseSorts from "@/utils/sortUtils";
+import parseFilters from "@/utils/filter";
+import parseSorts from "@/utils/sort";
 
 /**
  * Retrieves a list of countries based on the provided filters and sorting options.

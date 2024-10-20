@@ -1,9 +1,9 @@
 import type { Context } from "hono";
 import { OpenAPIHono } from "@hono/zod-openapi";
-import * as authService from "@/services/authService";
-import * as authSchema from "@/schemas/authSchema";
-import authMiddleware from "@/middlewares/authMiddleware";
-import roleMiddleware from "@/middlewares/roleMiddleware";
+import * as authService from "@/services/auth";
+import * as authSchema from "@/schemas/auth";
+import authMiddleware from "@/middlewares/auth";
+import roleMiddleware from "@/middlewares/role";
 
 const authRoute = new OpenAPIHono();
 const API_TAGS = ["Auth"];

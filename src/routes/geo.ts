@@ -1,7 +1,7 @@
 import type { Context } from "hono";
 import { OpenAPIHono } from "@hono/zod-openapi";
-import { QuerySchema } from "@/schemas/querySchema";
-import * as geoService from "@/services/geoService";
+import { QuerySchema } from "@/schemas/query";
+import * as geoService from "@/services/geo";
 
 const geoRoute = new OpenAPIHono();
 const API_TAGS = ["Geo"];

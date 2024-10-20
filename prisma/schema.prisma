@@ -13,16 +13,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Day {
-  MONDAY
-  TUESDAY
-  WEDNESDAY
-  THURSDAY
-  FRIDAY
-  SATURDAY
-  SUNDAY
-}
-
 model User {
   id       String @id @default(cuid())
   name     String @db.VarChar(128)
@@ -76,9 +66,10 @@ model UserToken {
 }
 
 model Country {
-  id   String @id @default(cuid())
-  name String @unique
-  code String @unique
+  id       String  @id @default(cuid())
+  name     String  @unique
+  code     String  @unique
+  currency String?
 
   state State[]
 
@@ -123,10 +114,14 @@ model City {
 model Place {
   id            String  @id @default(cuid())
   name          String
+  slug          String  @db.VarChar(128)
   description   String?
+  streetAddress String  @db.VarChar(255)
+  wifiSpeedAvg  Int?
+  priceRange    String?
   latitude      Float?
   longitude     Float?
-  streetAddress String  @db.VarChar(255)
+  isPublished   Boolean @default(false)
 
   cityId String
   city   City   @relation(fields: [cityId], references: [id])

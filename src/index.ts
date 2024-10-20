@@ -2,8 +2,8 @@ import { OpenAPIHono } from "@hono/zod-openapi";
 import { apiReference } from "@scalar/hono-api-reference";
 import { logger } from "hono/logger";
 import { cors } from "hono/cors";
-import authRoute from "@/routes/authRoute";
-import geoRoute from "./routes/geoRoute";
+import authRoute from "@/routes/auth";
+import geoRoute from "./routes/geo";
 
 const app = new OpenAPIHono();
 

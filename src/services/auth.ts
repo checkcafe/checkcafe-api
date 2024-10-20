@@ -1,5 +1,5 @@
 import { z } from "@hono/zod-openapi";
-import { registerSchema, loginSchema } from "@/schemas/authSchema";
+import { registerSchema, loginSchema } from "@/schemas/auth";
 import { passwordHash, passwordVerify } from "@/libs/password";
 import db from "@/libs/db";
 import * as jwt from "@/libs/jwt";
