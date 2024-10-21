@@ -22,7 +22,7 @@ export const loginSchema = z.object({
       },
       {
         message: "Must be a valid username (3-32 characters) or email",
-      },
+      }
     )
     .openapi({
       description: "The username or email of the user.",
@@ -43,7 +43,7 @@ export const registerSchema = z
       .max(32, "Username cannot be longer than 32 characters")
       .regex(
         /^[a-zA-Z0-9_]+$/,
-        "Username can only contain alphanumeric characters or underscores",
+        "Username can only contain alphanumeric characters or underscores"
       )
       .openapi({
         description: "The username of the user.",

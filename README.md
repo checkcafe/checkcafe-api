@@ -33,12 +33,11 @@
 | /auth/refresh-token | POST   | Refresh access token |
 | /auth/logout        | POST   | Log out a user       |
 
-
-| Endpoint      | Method | Description         |
-| ------------- | ------ | ------------------  |
-| /places       | POST   | Post a new place    |
-| /places       | GET    | Get all places      |
-| /places/:slug | GET    | Get place by slug   |
+| Endpoint      | Method | Description       |
+| ------------- | ------ | ----------------- |
+| /places       | POST   | Post a new place  |
+| /places       | GET    | Get all places    |
+| /places/:slug | GET    | Get place by slug |
 
 ## ERD
 

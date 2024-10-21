@@ -61,7 +61,7 @@ const parseFilters = (filters: string | undefined): Record<string, Filter> => {
 
         return conditions;
       },
-      {} as Record<string, Filter>,
+      {} as Record<string, Filter>
     );
   } catch (error: any) {
     throw new Error(error.message);

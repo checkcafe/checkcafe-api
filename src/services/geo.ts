@@ -11,7 +11,7 @@ import parseSorts from "@/utils/sort";
  */
 export const getCountries = async (
   queryFilter?: string,
-  querySort?: string,
+  querySort?: string
 ) => {
   const where = parseFilters(queryFilter);
   const orderBy = parseSorts(querySort);
@@ -65,7 +65,10 @@ export const getCities = async (queryFilter?: string, querySort?: string) => {
       id: true,
       name: true,
       state: {
-        select: { name: true, country: { select: { name: true, code: true } } },
+        select: {
+          name: true,
+          country: { select: { name: true, code: true } },
+        },
       },
     },
     where,

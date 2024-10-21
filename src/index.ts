@@ -14,7 +14,7 @@ app
   .use(
     cors({
       origin: "*",
-    }),
+    })
   )
   .use(logger());
 
@@ -25,7 +25,7 @@ app.get("/", (c) => {
       description: "API for CheckCafe project.",
       ui: `/ui`,
     },
-    200,
+    200
   );
 });
 app.get(
@@ -34,7 +34,7 @@ app.get(
     spec: {
       url: "/openapi.json",
     },
-  }),
+  })
 );
 app.doc("/openapi.json", {
   openapi: "3.1.0",

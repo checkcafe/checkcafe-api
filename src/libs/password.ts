@@ -26,7 +26,7 @@ export const passwordHash = async (password: string): Promise<string> => {
  */
 export const passwordVerify = async (
   value: string,
-  hashedValue: string,
+  hashedValue: string
 ): Promise<boolean> => {
   try {
     return await bcrypt.verify(hashedValue, value);

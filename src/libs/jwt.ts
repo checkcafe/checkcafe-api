@@ -23,7 +23,7 @@ const getEncodedSecret = async (): Promise<ArrayBuffer> => {
  */
 const createToken = async (
   userId: string,
-  expiresIn: TimeSpan,
+  expiresIn: TimeSpan
 ): Promise<string> => {
   const secret = await getEncodedSecret();
   const options = {
@@ -44,7 +44,7 @@ const createToken = async (
  */
 export const createAccessToken = async (
   userId: string,
-  expiresInMinutes = 15,
+  expiresInMinutes = 15
 ): Promise<string> => {
   try {
     return await createToken(userId, new TimeSpan(expiresInMinutes, "m"));
@@ -77,12 +77,12 @@ export const validateToken = async (token: string): Promise<any> => {
  */
 export const createRefreshToken = async (
   userId: string,
-  expiresInDays: number = 30,
+  expiresInDays: number = 30
 ): Promise<string> => {
   try {
     const refreshToken = await createToken(
       userId,
-      new TimeSpan(expiresInDays, "d"),
+      new TimeSpan(expiresInDays, "d")
     );
     const hashedToken = await passwordHash(refreshToken);
 

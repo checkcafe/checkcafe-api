@@ -87,7 +87,11 @@ export const patchPlace = async (
 ) => {
   const existingPlace = await db.place.findFirst({
     where: { id: placeId, userId },
-    include: { operatingHours: true, placeFeatures: true, placePhotos: true },
+    include: {
+      operatingHours: true,
+      placeFeatures: true,
+      placePhotos: true,
+    },
   });
 
   if (!existingPlace) {

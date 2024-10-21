@@ -15,7 +15,7 @@ authRoute.openAPIRegistry.registerComponent(
     scheme: "bearer",
     in: "header",
     description: "Bearer token",
-  },
+  }
 );
 
 // Register Route
@@ -55,7 +55,7 @@ authRoute.openapi(
     } catch (error: Error | any) {
       return c.json({ error: error.message || "Registration failed!" }, 400);
     }
-  },
+  }
 );
 
 // Login Route
@@ -94,7 +94,7 @@ authRoute.openapi(
     } catch (error: Error | any) {
       return c.json({ error: error.message || "Login failed!" }, 401);
     }
-  },
+  }
 );
 
 // Refresh Token Route
@@ -137,10 +137,10 @@ authRoute.openapi(
     } catch (error: Error | any) {
       return c.json(
         { error: error.message || "Failed to refresh token!" },
-        401,
+        401
       );
     }
-  },
+  }
 );
 
 // Logout Route
@@ -186,7 +186,7 @@ authRoute.openapi(
     } catch (error: Error | any) {
       return c.json({ error: error.message || "Failed to logout!" }, 500);
     }
-  },
+  }
 );
 
 export default authRoute;

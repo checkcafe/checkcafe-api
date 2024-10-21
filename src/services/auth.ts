@@ -89,7 +89,7 @@ export const login = async (data: z.infer<typeof loginSchema>) => {
  */
 const processToken = async (
   refreshToken: string,
-  action: "REVOKE" | "REGENERATE",
+  action: "REVOKE" | "REGENERATE"
 ) => {
   const decodedToken = await jwt.validateToken(refreshToken);
   if (!decodedToken?.subject) {
@@ -111,10 +111,10 @@ const processToken = async (
       tokenRecords.map(async (tokenRecord) => {
         const isValidToken = await passwordVerify(
           refreshToken,
-          tokenRecord.token,
+          tokenRecord.token
         );
         return isValidToken ? tokenRecord : null;
-      }),
+      })
     ).then((results) => results.find((record) => record !== null));
 
     if (!validTokenRecord) {
@@ -146,7 +146,10 @@ const processToken = async (
         jwt.createRefreshToken(userId.toString()),
       ]);
 
-      return { accessToken: newAccessToken, refreshToken: newRefreshToken };
+      return {
+        accessToken: newAccessToken,
+        refreshToken: newRefreshToken,
+      };
     }
 
     return true;
