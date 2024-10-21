@@ -4,18 +4,19 @@ import { QuerySchema } from "@/schemas/query";
 import { paramsSchema } from "@/schemas/params";
 import authMiddleware from "@/middlewares/auth";
 import * as placeService from "@/services/place";
+import * as placeSchema from "@/schemas/place";
 
 const placeRoute = new OpenAPIHono();
 const API_TAGS = ["Places"];
 
-// Places Route
+// Create Places Route
 placeRoute.openapi(
   {
     method: "post",
     path: "/",
-    summary: "Post a new place",
-    tags: API_TAGS,
-    description: "Post a new place and get the userId.",
+    summary: "Create a new place",
+    description:
+      "This operation is used to create a new place. The user must be authenticated.",
     security: [{ AuthorizationBearer: [] }],
     middleware: [authMiddleware],
     responses: {
@@ -26,6 +27,7 @@ placeRoute.openapi(
         description: "Failed to create a new place",
       },
     },
+    tags: API_TAGS,
   },
   async (c: Context) => {
     const id = c.get("userId") as string;
@@ -35,21 +37,24 @@ placeRoute.openapi(
 
       return c.json({ data: places }, 201);
     } catch (error: Error | any) {
-      return c.json({ error: error.message || "Failed to create a new place!" }, 400);
+      return c.json(
+        { error: error.message || "Failed to create a new place!" },
+        400
+      );
     }
-  },
+  }
 );
 
-// Login Route
+// Get Places Route
 placeRoute.openapi(
   {
     method: "get",
     path: "/",
-    summary: "Get all places",
-    description: "Get all places.",
+    summary: "Place list",
+    description: "Get a list of places.",
     tags: API_TAGS,
     request: {
-        query: QuerySchema.omit({ page: true, limit: true }),
+      query: QuerySchema.omit({ page: true, limit: true }),
     },
     responses: {
       200: {
@@ -68,21 +73,24 @@ placeRoute.openapi(
 
       return c.json(result, 200);
     } catch (error: Error | any) {
-      return c.json({ error: error.message || "Failed to retrieve places" }, 401);
+      return c.json(
+        { error: error.message || "Failed to retrieve places" },
+        401
+      );
     }
-  },
+  }
 );
 
-// Refresh Token Route
+// Get Place Route by slug
 placeRoute.openapi(
   {
     method: "get",
     path: "/{slug}",
-    summary: "Get places by slug",
-    description: "Get places by slug.",
+    summary: "Places details",
+    description: "Get a place by slug.",
     tags: API_TAGS,
     request: {
-      params: paramsSchema
+      params: paramsSchema,
     },
     responses: {
       200: {
@@ -107,10 +115,61 @@ placeRoute.openapi(
     } catch (error: Error | any) {
       return c.json(
         { error: error.message || "Failed to get place by slug!" },
-        401,
+        401
       );
     }
+  }
+);
+
+// Update Place Route
+placeRoute.openapi(
+  {
+    method: "patch",
+    path: "/{placeId}",
+    summary: "Update a place",
+    description:
+      "This operation is used to update a place. The user must be authenticated.",
+    security: [{ AuthorizationBearer: [] }],
+    middleware: [authMiddleware],
+    request: {
+      body: {
+        content: {
+          "application/json": {
+            schema: placeSchema.placeSchema,
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: "Place patched successfully",
+      },
+      401: {
+        description: "Unauthorized",
+      },
+      404: {
+        description: "Place not found",
+      },
+      500: {
+        description: "Failed to patch place",
+      },
+    },
+    tags: API_TAGS,
   },
+  async (c: Context) => {
+    try {
+      const { placeId } = c.req.param();
+
+      const userId = c.get("userId") as string;
+      const body = await c.req.json();
+
+      const result = await placeService.patchPlace(userId, placeId, body);
+
+      return c.json(result, 200);
+    } catch (error: Error | any) {
+      return c.json({ message: error.message }, 500);
+    }
+  }
 );
 
 export default placeRoute;

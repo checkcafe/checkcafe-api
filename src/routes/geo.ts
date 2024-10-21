@@ -11,7 +11,7 @@ geoRoute.openapi(
   {
     method: "get",
     path: "/countries",
-    summary: "Countries",
+    summary: "Country list",
     description: "Get a list of countries.",
     request: {
       query: QuerySchema.omit({ page: true, limit: true }),
@@ -50,7 +50,7 @@ geoRoute.openapi(
   {
     method: "get",
     path: "/states",
-    summary: "States",
+    summary: "State list",
     description: "Get a list of states.",
     request: {
       query: QuerySchema.omit({ page: true, limit: true }),
@@ -89,7 +89,7 @@ geoRoute.openapi(
   {
     method: "get",
     path: "/cities",
-    summary: "Cities",
+    summary: "City list",
     description: "Get a list of cities.",
     request: {
       query: QuerySchema.omit({ page: true, limit: true }),

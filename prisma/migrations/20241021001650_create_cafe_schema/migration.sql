@@ -46,7 +46,7 @@ CREATE TABLE "places" (
     "latitude" DOUBLE PRECISION,
     "longitude" DOUBLE PRECISION,
     "isPublished" BOOLEAN NOT NULL DEFAULT false,
-    "cityId" TEXT NOT NULL,
+    "cityId" TEXT,
     "userId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -152,6 +152,9 @@ CREATE UNIQUE INDEX "states_name_key" ON "states"("name");
 CREATE UNIQUE INDEX "cities_name_key" ON "cities"("name");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "places_slug_key" ON "places"("slug");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "feature_categories_name_key" ON "feature_categories"("name");
 
 -- CreateIndex
@@ -167,7 +170,7 @@ ALTER TABLE "states" ADD CONSTRAINT "states_countryId_fkey" FOREIGN KEY ("countr
 ALTER TABLE "cities" ADD CONSTRAINT "cities_stateId_fkey" FOREIGN KEY ("stateId") REFERENCES "states"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "places" ADD CONSTRAINT "places_cityId_fkey" FOREIGN KEY ("cityId") REFERENCES "cities"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "places" ADD CONSTRAINT "places_cityId_fkey" FOREIGN KEY ("cityId") REFERENCES "cities"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "places" ADD CONSTRAINT "places_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

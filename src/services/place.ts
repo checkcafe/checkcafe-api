@@ -1,7 +1,50 @@
 import db from "@/libs/db";
 import parseFilters from "@/utils/filter";
 import parseSorts from "@/utils/sort";
+import slugify from "@/utils/slugify";
 
+/**
+ * Prepares child data to be used in Prisma's `update` method when updating
+ * a parent model with its child relations.
+ *
+ * @param {any[]} existingData - The existing child data to be updated.
+ * @param {any[]} newData - The new child data to be created.
+ * @returns { { deleteMany: {}, create: any[] } | undefined } - The prepared child data.
+ */
+const prepareChildData = (
+  existingData: any[],
+  newData: any[]
+): { deleteMany: {}; create: any[] } | undefined => {
+  return newData || existingData
+    ? {
+        deleteMany: {},
+        create: newData && newData.map((item: any) => ({ ...item })),
+      }
+    : undefined;
+};
+
+/**
+ * Generate a unique slug based on the given name.
+ *
+ * @param name - The name to generate the slug from.
+ * @returns A unique slug.
+ */
+const generateUniqueSlug = async (name: string, existingSlug?: string) => {
+  const baseSlug = slugify(name);
+  let slug = baseSlug;
+  let count = 1;
+
+  while (true) {
+    const existing = await db.place.findFirst({ where: { slug } });
+    if (!existing || slug === existingSlug) {
+      break;
+    }
+    slug = `${baseSlug}-${count}`;
+    count++;
+  }
+
+  return slug;
+};
 
 /**
  * Create a new place, together with a new city, state and country if they don't exist.
@@ -9,41 +52,76 @@ import parseSorts from "@/utils/sort";
  * @returns The newly created place.
  */
 export const postPlaces = async (userId: string) => {
-    const place = await db.place.create({
-        data: {
-            name: "Input name of Place",
-            slug: "new-place",
-            description: "Input description of Place",
-            streetAddress:"Input street address of Place",
-            wifiSpeedAvg: 0,
-            priceRange: "$$-$$",
-            latitude: 0.0,
-            longitude: 0.0,
-            isPublished: false,
-            city: {
-                create: {
-                    name: "New City",
-                    state: {
-                        create: {
-                            name: "New State",
-                            country: {
-                                create: {
-                                    name: "New Country",
-                                    code: "Code of New Country",
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            user: { connect: { id: userId } },
-        }
-    });
+  const place = await db.place.create({
+    data: {
+      name: "Input name of Place",
+      slug: "new-place",
+      description: "Input description of Place",
+      streetAddress: "Input street address of Place",
+      wifiSpeedAvg: 0,
+      priceRange: "$$-$$",
+      isPublished: false,
+      userId: userId,
+    },
+  });
 
-    return place;
+  return place;
 };
 
- 
+/**
+ * Update a place and return the updated place with its child relations.
+ *
+ * @param userId - The ID of the user who owns the place.
+ * @param placeId - The ID of the place to update.
+ * @param body - The data to update the place with, which may include:
+ *   - operatingHours: An array of objects with day, startDateTime, endDateTime.
+ *   - placeFeatures: An array of objects with featureId and description.
+ *   - placePhotos: An array of objects with url and order.
+ * @throws {Error} - If the place does not exist or the user is not the owner.
+ * @returns The updated place including its child relations.
+ */
+export const patchPlace = async (
+  userId: string,
+  placeId: string,
+  body: any
+) => {
+  const existingPlace = await db.place.findFirst({
+    where: { id: placeId, userId },
+    include: { operatingHours: true, placeFeatures: true, placePhotos: true },
+  });
+
+  if (!existingPlace) {
+    throw new Error("Place not found or you are not the owner.");
+  }
+
+  const newSlug = await generateUniqueSlug(body.name, existingPlace.slug);
+  const { operatingHours, placeFeatures, placePhotos, ...placeData } = body;
+
+  const updatedPlace = await db.place.update({
+    where: { id: placeId },
+    data: {
+      ...placeData,
+      slug: newSlug,
+      operatingHours: prepareChildData(
+        existingPlace.operatingHours,
+        operatingHours
+      ),
+      placeFeatures: prepareChildData(
+        existingPlace.placeFeatures,
+        placeFeatures
+      ),
+      placePhotos: prepareChildData(existingPlace.placePhotos, placePhotos),
+    },
+    include: {
+      operatingHours: true,
+      placeFeatures: { include: { feature: true } },
+      placePhotos: true,
+    },
+  });
+
+  return updatedPlace;
+};
+
 /**
  * Retrieves a list of places based on the provided filters and sorting options.
  *
@@ -67,7 +145,6 @@ export const getPlaces = async (queryFilter?: string, querySort?: string) => {
   return places;
 };
 
-
 /**
  * Retrieves a place by its slug.
  *
@@ -77,7 +154,12 @@ export const getPlaces = async (queryFilter?: string, querySort?: string) => {
 export const getPlaceBySlug = async (slug: string) => {
   const place = await db.place.findFirst({
     where: { slug },
+    include: {
+      operatingHours: true,
+      placeFeatures: { include: { feature: true } },
+      placePhotos: true,
+    },
   });
-  
+
   return place;
-}
+};

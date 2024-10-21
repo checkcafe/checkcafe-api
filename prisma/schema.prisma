@@ -114,7 +114,7 @@ model City {
 model Place {
   id            String  @id @default(cuid())
   name          String
-  slug          String  @db.VarChar(128)
+  slug          String  @unique @db.VarChar(128)
   description   String?
   streetAddress String  @db.VarChar(255)
   wifiSpeedAvg  Int?
@@ -123,10 +123,10 @@ model Place {
   longitude     Float?
   isPublished   Boolean @default(false)
 
-  cityId String
-  city   City   @relation(fields: [cityId], references: [id])
+  cityId String?
+  city   City?   @relation(fields: [cityId], references: [id])
   userId String
-  user   User   @relation(fields: [userId], references: [id])
+  user   User    @relation(fields: [userId], references: [id])
 
   operatingHours OperatingHour[]
   placeFeatures  PlaceFeature[]

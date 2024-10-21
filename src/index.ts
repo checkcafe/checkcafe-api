@@ -47,7 +47,7 @@ app.doc("/openapi.json", {
 
 // API route
 app.route("/auth", authRoute);
-app.route("/users", userRoute);
+app.route("/user", userRoute);
 app.route("/geo", geoRoute);
 app.route("/place", placeRoute);
 

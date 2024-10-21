@@ -12,7 +12,7 @@ userRoute.openapi(
   {
     method: "get",
     path: "/",
-    summary: "Users",
+    summary: "User list",
     description: "Get a list of users.",
     request: {
       query: QuerySchema.omit({ page: true, limit: true }),
@@ -39,7 +39,7 @@ userRoute.openapi(
     } catch (error: Error | any) {
       return c.json({ error: error.message || "Failed to get user!" }, 401);
     }
-  },
+  }
 );
 
 // Profile Route
@@ -47,7 +47,7 @@ userRoute.openapi(
   {
     method: "get",
     path: "/me",
-    summary: "Get user information",
+    summary: "User profile",
     description: "Get user information including user ID, username, and role.",
     security: [{ AuthorizationBearer: [] }],
     middleware: [authMiddleware],
@@ -70,7 +70,7 @@ userRoute.openapi(
     } catch (error: Error | any) {
       return c.json({ error: error.message || "Failed to get user!" }, 401);
     }
-  },
+  }
 );
 
 export default userRoute;
