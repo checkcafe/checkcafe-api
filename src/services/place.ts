@@ -48,14 +48,14 @@ const generateUniqueSlug = async (name: string, existingSlug?: string) => {
 
 /**
  * Create a new place, together with a new city, state and country if they don't exist.
- * @param userID The ID of the user who creates the place.
+ * @param userId The ID of the user who creates the place.
  * @returns The newly created place.
  */
 export const postPlaces = async (userId: string) => {
   const place = await db.place.create({
     data: {
       name: "Input name of Place",
-      slug: "new-place",
+      slug: await generateUniqueSlug("New Place"),
       description: "Input description of Place",
       streetAddress: "Input street address of Place",
       wifiSpeedAvg: 0,
@@ -81,12 +81,12 @@ export const postPlaces = async (userId: string) => {
  * @returns The updated place including its child relations.
  */
 export const patchPlace = async (
-  userId: string,
+  user: { id: string; role: string },
   placeId: string,
   body: any
 ) => {
   const existingPlace = await db.place.findFirst({
-    where: { id: placeId, userId },
+    where: { id: placeId },
     include: {
       operatingHours: true,
       placeFacilities: true,
@@ -95,7 +95,18 @@ export const patchPlace = async (
   });
 
   if (!existingPlace) {
-    throw new Error("Place not found or you are not the owner.");
+    throw new Error("Place not found.");
+  }
+
+  if (user.role === "USER" && existingPlace.userId !== user.id) {
+    throw new Error("You do not have permission to edit this place.");
+  }
+
+  if (
+    ["MODERATOR", "ADMIN", "SUPER ADMIN"].includes(user.role) &&
+    existingPlace.userId !== user.id
+  ) {
+    body.userId = existingPlace.userId;
   }
 
   const newSlug = await generateUniqueSlug(body.name, existingPlace.slug);
@@ -106,6 +117,7 @@ export const patchPlace = async (
     data: {
       ...placeData,
       slug: newSlug,
+      userId: existingPlace.userId,
       operatingHours: prepareChildData(
         existingPlace.operatingHours,
         operatingHours
@@ -124,6 +136,25 @@ export const patchPlace = async (
   });
 
   return updatedPlace;
+};
+
+/**
+ * Retrieves a place by its slug.
+ *
+ * @param slug The slug of the place to retrieve.
+ * @returns The place object if found, otherwise null.
+ */
+export const getPlaceBySlug = async (slug: string) => {
+  const place = await db.place.findFirst({
+    where: { slug },
+    include: {
+      operatingHours: true,
+      placeFacilities: { include: { facility: true } },
+      placePhotos: true,
+    },
+  });
+
+  return place;
 };
 
 /**
@@ -147,23 +178,4 @@ export const getPlaces = async (queryFilter?: string, querySort?: string) => {
   });
 
   return places;
-};
-
-/**
- * Retrieves a place by its slug.
- *
- * @param slug The slug of the place to retrieve.
- * @returns The place object if found, otherwise null.
- */
-export const getPlaceBySlug = async (slug: string) => {
-  const place = await db.place.findFirst({
-    where: { slug },
-    include: {
-      operatingHours: true,
-      placeFacilities: { include: { facility: true } },
-      placePhotos: true,
-    },
-  });
-
-  return place;
 };

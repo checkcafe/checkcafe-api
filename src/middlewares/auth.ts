@@ -47,8 +47,10 @@ const authMiddleware = createMiddleware(async (c: Context, next) => {
       return respondWithError(c, "User not found!", 404);
     }
 
-    c.set("userId", user.id);
-    c.set("userRole", user.role.name);
+    c.set("user", {
+      id: userId,
+      role: user.role.name || null,
+    });
 
     await next();
   } catch (error) {

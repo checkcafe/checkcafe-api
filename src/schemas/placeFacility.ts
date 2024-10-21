@@ -1,7 +1,7 @@
 import { z } from "@hono/zod-openapi";
 
 export const placeFacilitySchema = z.object({
-  featureId: z.string().openapi({ description: "ID of the feature." }),
+  facilityId: z.string().openapi({ description: "ID of the feature." }),
   description: z
     .string()
     .optional()

@@ -30,10 +30,10 @@ placeRoute.openapi(
     tags: API_TAGS,
   },
   async (c: Context) => {
-    const id = c.get("userId") as string;
+    const userId = c.get("user") ? c.get("user").id : null;
 
     try {
-      const places = await placeService.postPlaces(id);
+      const places = await placeService.postPlaces(userId);
 
       return c.json({ data: places }, 201);
     } catch (error: Error | any) {
@@ -157,13 +157,17 @@ placeRoute.openapi(
     tags: API_TAGS,
   },
   async (c: Context) => {
+    const { placeId } = c.req.param();
+
+    if (!placeId) {
+      return c.json({ error: "Place ID is required!" }, 401);
+    }
+
+    const user = c.get("user");
+    const body = await c.req.json();
+    
     try {
-      const { placeId } = c.req.param();
-
-      const userId = c.get("userId") as string;
-      const body = await c.req.json();
-
-      const result = await placeService.patchPlace(userId, placeId, body);
+      const result = await placeService.patchPlace(user, placeId, body);
 
       return c.json(result, 200);
     } catch (error: Error | any) {

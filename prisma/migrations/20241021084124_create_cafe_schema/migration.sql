@@ -94,7 +94,7 @@ CREATE TABLE "facilities" (
 CREATE TABLE "place_facilities" (
     "id" TEXT NOT NULL,
     "description" TEXT,
-    "facilitiesId" TEXT NOT NULL,
+    "facilityId" TEXT NOT NULL,
     "placeId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -182,7 +182,7 @@ ALTER TABLE "operating_hours" ADD CONSTRAINT "operating_hours_placeId_fkey" FORE
 ALTER TABLE "facilities" ADD CONSTRAINT "facilities_facilityCategoryId_fkey" FOREIGN KEY ("facilityCategoryId") REFERENCES "facility_categories"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "place_facilities" ADD CONSTRAINT "place_facilities_facilitiesId_fkey" FOREIGN KEY ("facilitiesId") REFERENCES "facilities"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "place_facilities" ADD CONSTRAINT "place_facilities_facilityId_fkey" FOREIGN KEY ("facilityId") REFERENCES "facilities"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "place_facilities" ADD CONSTRAINT "place_facilities_placeId_fkey" FOREIGN KEY ("placeId") REFERENCES "places"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

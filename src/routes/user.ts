@@ -63,7 +63,7 @@ userRoute.openapi(
   },
   async (c: Context) => {
     try {
-      const userId = c.get("userId") as string;
+      const userId = c.get("user") ? c.get("user").id : null;
       const user = await userService.getProfile(userId);
 
       return c.json(user, 200);
