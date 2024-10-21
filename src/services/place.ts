@@ -59,7 +59,7 @@ export const postPlaces = async (userId: string) => {
       description: "Input description of Place",
       streetAddress: "Input street address of Place",
       wifiSpeedAvg: 0,
-      priceRange: "$$-$$",
+      priceRange: "$-$$$",
       isPublished: false,
       userId: userId,
     },
@@ -89,7 +89,7 @@ export const patchPlace = async (
     where: { id: placeId, userId },
     include: {
       operatingHours: true,
-      placeFeatures: true,
+      placeFacilities: true,
       placePhotos: true,
     },
   });
@@ -99,7 +99,7 @@ export const patchPlace = async (
   }
 
   const newSlug = await generateUniqueSlug(body.name, existingPlace.slug);
-  const { operatingHours, placeFeatures, placePhotos, ...placeData } = body;
+  const { operatingHours, placeFacilities, placePhotos, ...placeData } = body;
 
   const updatedPlace = await db.place.update({
     where: { id: placeId },
@@ -110,15 +110,15 @@ export const patchPlace = async (
         existingPlace.operatingHours,
         operatingHours
       ),
-      placeFeatures: prepareChildData(
-        existingPlace.placeFeatures,
-        placeFeatures
+      placeFacilities: prepareChildData(
+        existingPlace.placeFacilities,
+        placeFacilities
       ),
       placePhotos: prepareChildData(existingPlace.placePhotos, placePhotos),
     },
     include: {
       operatingHours: true,
-      placeFeatures: { include: { feature: true } },
+      placeFacilities: { include: { facility: true } },
       placePhotos: true,
     },
   });
@@ -160,7 +160,7 @@ export const getPlaceBySlug = async (slug: string) => {
     where: { slug },
     include: {
       operatingHours: true,
-      placeFeatures: { include: { feature: true } },
+      placeFacilities: { include: { facility: true } },
       placePhotos: true,
     },
   });

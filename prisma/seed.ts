@@ -1,12 +1,12 @@
 import { PrismaClient } from "@prisma/client";
 import { passwordHash } from "../src/libs/password";
+import cliProgress from "cli-progress";
 import roles from "./samples/roles";
 import users from "./samples/users";
 import contries from "./samples/countries";
 import states from "./samples/states";
 import cities from "./samples/cities";
-import features from "./samples/features";
-import cliProgress from "cli-progress";
+import facility from "./samples/facility";
 
 const prisma = new PrismaClient();
 
@@ -177,10 +177,10 @@ async function upsertCities() {
 }
 
 async function upsertFeatureCategories() {
-  progressBar.start(features.length, 0, { type: "Feature Categories" });
+  progressBar.start(facility.length, 0, { type: "Feature Categories" });
 
-  for (const categoryData of features) {
-    const category = await prisma.featureCategory.upsert({
+  for (const categoryData of facility) {
+    const category = await prisma.facilityCategory.upsert({
       where: { name: categoryData.category },
       update: {
         name: categoryData.category,
@@ -192,18 +192,18 @@ async function upsertFeatureCategories() {
       },
     });
 
-    for (const feature of categoryData.features) {
-      await prisma.feature.upsert({
-        where: { name: feature.name },
+    for (const facility of categoryData.facilties) {
+      await prisma.facility.upsert({
+        where: { name: facility.name },
         update: {
-          name: feature.name,
-          description: feature.description,
-          featureCategoryId: category.id,
+          name: facility.name,
+          description: facility.description,
+          facilityCategoryId: category.id,
         },
         create: {
-          name: feature.name,
-          description: feature.description,
-          featureCategoryId: category.id,
+          name: facility.name,
+          description: facility.description,
+          facilityCategoryId: category.id,
         },
       });
     }

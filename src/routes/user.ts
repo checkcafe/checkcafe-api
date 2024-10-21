@@ -2,7 +2,7 @@ import type { Context } from "hono";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import * as userService from "@/services/user";
 import authMiddleware from "@/middlewares/auth";
-import { QuerySchema } from "@/schemas/query";
+import { querySchema } from "@/schemas/query";
 
 const userRoute = new OpenAPIHono();
 const API_TAGS = ["User"];
@@ -15,7 +15,7 @@ userRoute.openapi(
     summary: "User list",
     description: "Get a list of users.",
     request: {
-      query: QuerySchema.omit({ page: true, limit: true }),
+      query: querySchema.omit({ page: true, limit: true }),
     },
     responses: {
       200: {

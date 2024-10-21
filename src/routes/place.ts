@@ -1,6 +1,6 @@
 import type { Context } from "hono";
 import { OpenAPIHono } from "@hono/zod-openapi";
-import { QuerySchema } from "@/schemas/query";
+import { querySchema } from "@/schemas/query";
 import { paramsSchema } from "@/schemas/params";
 import authMiddleware from "@/middlewares/auth";
 import * as placeService from "@/services/place";
@@ -52,9 +52,8 @@ placeRoute.openapi(
     path: "/",
     summary: "Place list",
     description: "Get a list of places.",
-    tags: API_TAGS,
     request: {
-      query: QuerySchema.omit({ page: true, limit: true }),
+      query: querySchema.omit({ page: true, limit: true }),
     },
     responses: {
       200: {
@@ -64,6 +63,7 @@ placeRoute.openapi(
         description: "Failed to retrieve places",
       },
     },
+    tags: API_TAGS,
   },
   async (c: Context) => {
     const { filter, sort } = c.req.query();
@@ -88,7 +88,6 @@ placeRoute.openapi(
     path: "/{slug}",
     summary: "Places details",
     description: "Get a place by slug.",
-    tags: API_TAGS,
     request: {
       params: paramsSchema,
     },
@@ -100,6 +99,7 @@ placeRoute.openapi(
         description: "Slug not found",
       },
     },
+    tags: API_TAGS,
   },
   async (c: Context) => {
     const { slug } = c.req.param();

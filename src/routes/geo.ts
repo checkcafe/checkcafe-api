@@ -1,6 +1,6 @@
 import type { Context } from "hono";
 import { OpenAPIHono } from "@hono/zod-openapi";
-import { QuerySchema } from "@/schemas/query";
+import { querySchema } from "@/schemas/query";
 import * as geoService from "@/services/geo";
 
 const geoRoute = new OpenAPIHono();
@@ -14,7 +14,7 @@ geoRoute.openapi(
     summary: "Country list",
     description: "Get a list of countries.",
     request: {
-      query: QuerySchema.omit({ page: true, limit: true }),
+      query: querySchema.omit({ page: true, limit: true }),
     },
     responses: {
       200: {
@@ -40,7 +40,10 @@ geoRoute.openapi(
 
       return c.json(result, 200);
     } catch (error: Error | any) {
-      return c.json({ message: error.message }, 500);
+      return c.json(
+        { message: error.message || "Failed to retrieve countries" },
+        500
+      );
     }
   }
 );
@@ -53,7 +56,7 @@ geoRoute.openapi(
     summary: "State list",
     description: "Get a list of states.",
     request: {
-      query: QuerySchema.omit({ page: true, limit: true }),
+      query: querySchema.omit({ page: true, limit: true }),
     },
     responses: {
       200: {
@@ -79,7 +82,10 @@ geoRoute.openapi(
 
       return c.json(result, 200);
     } catch (error: Error | any) {
-      return c.json({ message: error.message }, 500);
+      return c.json(
+        { message: error.message || "Failed to retrieve states" },
+        500
+      );
     }
   }
 );
@@ -92,7 +98,7 @@ geoRoute.openapi(
     summary: "City list",
     description: "Get a list of cities.",
     request: {
-      query: QuerySchema.omit({ page: true, limit: true }),
+      query: querySchema.omit({ page: true, limit: true }),
     },
     responses: {
       200: {
@@ -118,7 +124,10 @@ geoRoute.openapi(
 
       return c.json(result, 200);
     } catch (error: Error | any) {
-      return c.json({ message: error.message }, 500);
+      return c.json(
+        { message: error.message || "Failed to retrieve cities" },
+        500
+      );
     }
   }
 );

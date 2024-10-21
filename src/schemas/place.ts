@@ -1,6 +1,6 @@
 import { z } from "@hono/zod-openapi";
 import { operatingHourSchema } from "./operatingHour";
-import { placeFeatureSchema } from "./placeFeature";
+import { placeFacilitySchema } from "./placeFacility";
 import { placePhotoSchema } from "./placePhoto";
 
 export const placeSchema = z.object({
@@ -35,7 +35,7 @@ export const placeSchema = z.object({
   operatingHours: z.array(operatingHourSchema).optional().openapi({
     description: "The operating hours of the place.",
   }),
-  placeFeatures: z.array(placeFeatureSchema).optional().openapi({
+  placeFacilities: z.array(placeFacilitySchema).optional().openapi({
     description: "The features of the place.",
   }),
   placePhotos: z.array(placePhotoSchema).optional().openapi({

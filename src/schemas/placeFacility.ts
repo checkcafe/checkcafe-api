@@ -1,6 +1,6 @@
 import { z } from "@hono/zod-openapi";
 
-export const placeFeatureSchema = z.object({
+export const placeFacilitySchema = z.object({
   featureId: z.string().openapi({ description: "ID of the feature." }),
   description: z
     .string()

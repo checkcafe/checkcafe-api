@@ -68,38 +68,38 @@ CREATE TABLE "operating_hours" (
 );
 
 -- CreateTable
-CREATE TABLE "feature_categories" (
+CREATE TABLE "facility_categories" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "feature_categories_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "facility_categories_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "features" (
+CREATE TABLE "facilities" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT,
-    "featureCategoryId" TEXT,
+    "facilityCategoryId" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "features_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "facilities_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "place_features" (
+CREATE TABLE "place_facilities" (
     "id" TEXT NOT NULL,
     "description" TEXT,
-    "featureId" TEXT NOT NULL,
+    "facilitiesId" TEXT NOT NULL,
     "placeId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "place_features_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "place_facilities_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -108,7 +108,7 @@ CREATE TABLE "place_photos" (
     "url" TEXT NOT NULL,
     "order" INTEGER NOT NULL DEFAULT 0,
     "placeId" TEXT NOT NULL,
-    "placeFeatureId" TEXT,
+    "placeFacilityId" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -155,10 +155,10 @@ CREATE UNIQUE INDEX "cities_name_key" ON "cities"("name");
 CREATE UNIQUE INDEX "places_slug_key" ON "places"("slug");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "feature_categories_name_key" ON "feature_categories"("name");
+CREATE UNIQUE INDEX "facility_categories_name_key" ON "facility_categories"("name");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "features_name_key" ON "features"("name");
+CREATE UNIQUE INDEX "facilities_name_key" ON "facilities"("name");
 
 -- CreateIndex
 CREATE INDEX "place_photos_placeId_order_idx" ON "place_photos"("placeId", "order");
@@ -179,19 +179,19 @@ ALTER TABLE "places" ADD CONSTRAINT "places_userId_fkey" FOREIGN KEY ("userId") 
 ALTER TABLE "operating_hours" ADD CONSTRAINT "operating_hours_placeId_fkey" FOREIGN KEY ("placeId") REFERENCES "places"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "features" ADD CONSTRAINT "features_featureCategoryId_fkey" FOREIGN KEY ("featureCategoryId") REFERENCES "feature_categories"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "facilities" ADD CONSTRAINT "facilities_facilityCategoryId_fkey" FOREIGN KEY ("facilityCategoryId") REFERENCES "facility_categories"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "place_features" ADD CONSTRAINT "place_features_featureId_fkey" FOREIGN KEY ("featureId") REFERENCES "features"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "place_facilities" ADD CONSTRAINT "place_facilities_facilitiesId_fkey" FOREIGN KEY ("facilitiesId") REFERENCES "facilities"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "place_features" ADD CONSTRAINT "place_features_placeId_fkey" FOREIGN KEY ("placeId") REFERENCES "places"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "place_facilities" ADD CONSTRAINT "place_facilities_placeId_fkey" FOREIGN KEY ("placeId") REFERENCES "places"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "place_photos" ADD CONSTRAINT "place_photos_placeId_fkey" FOREIGN KEY ("placeId") REFERENCES "places"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "place_photos" ADD CONSTRAINT "place_photos_placeFeatureId_fkey" FOREIGN KEY ("placeFeatureId") REFERENCES "place_features"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "place_photos" ADD CONSTRAINT "place_photos_placeFacilityId_fkey" FOREIGN KEY ("placeFacilityId") REFERENCES "place_facilities"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "place_favorites" ADD CONSTRAINT "place_favorites_placeId_fkey" FOREIGN KEY ("placeId") REFERENCES "places"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
