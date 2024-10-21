@@ -165,7 +165,7 @@ placeRoute.openapi(
 
     const user = c.get("user");
     const body = await c.req.json();
-    
+
     try {
       const result = await placeService.patchPlace(user, placeId, body);
 

@@ -154,6 +154,10 @@ export const getPlaceBySlug = async (slug: string) => {
     },
   });
 
+  if (!place) {
+    throw new Error("Place not found.");
+  }
+
   return place;
 };
 
@@ -172,10 +176,32 @@ export const getPlaces = async (queryFilter?: string, querySort?: string) => {
     select: {
       id: true,
       name: true,
+      slug: true,
+      description: true,
+      streetAddress: true,
+      wifiSpeedAvg: true,
+      priceRange: true,
+      latitude: true,
+      longitude: true,
+      isPublished: true,
+      city: {
+        select: {
+          name: true,
+        },
+      },
+      user: {
+        select: {
+          name: true,
+        },
+      },
     },
     where,
     orderBy,
   });
+
+  if (!places) {
+    throw new Error("Places not found");
+  }
 
   return places;
 };
