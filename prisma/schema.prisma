@@ -234,7 +234,6 @@ model PlaceFavorite {
 
 model PlaceReview {
   id      String  @id @default(cuid())
-  rating  Int
   comment String?
 
   placeId String
@@ -242,8 +241,24 @@ model PlaceReview {
   userId  String
   user    User   @relation(fields: [userId], references: [id])
 
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  PlaceReviewPhoto PlaceReviewPhoto[]
+
+  @@map("place_reviews")
+}
+
+model PlaceReviewPhoto {
+  id    String @id @default(cuid())
+  url   String
+  order Int    @default(0)
+
+  placeReviewId String
+  placeReview   PlaceReview @relation(fields: [placeReviewId], references: [id])
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map("place_reviews")
+  @@index([placeReviewId, order])
+  @@map("place_review_photos")
 }

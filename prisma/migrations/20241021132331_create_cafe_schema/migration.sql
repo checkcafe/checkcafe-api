@@ -129,7 +129,6 @@ CREATE TABLE "place_favorites" (
 -- CreateTable
 CREATE TABLE "place_reviews" (
     "id" TEXT NOT NULL,
-    "rating" INTEGER NOT NULL,
     "comment" TEXT,
     "placeId" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
@@ -137,6 +136,18 @@ CREATE TABLE "place_reviews" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "place_reviews_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "place_review_photos" (
+    "id" TEXT NOT NULL,
+    "url" TEXT NOT NULL,
+    "order" INTEGER NOT NULL DEFAULT 0,
+    "placeReviewId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "place_review_photos_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -162,6 +173,9 @@ CREATE UNIQUE INDEX "facilities_name_key" ON "facilities"("name");
 
 -- CreateIndex
 CREATE INDEX "place_photos_placeId_order_idx" ON "place_photos"("placeId", "order");
+
+-- CreateIndex
+CREATE INDEX "place_review_photos_placeReviewId_order_idx" ON "place_review_photos"("placeReviewId", "order");
 
 -- AddForeignKey
 ALTER TABLE "states" ADD CONSTRAINT "states_countryId_fkey" FOREIGN KEY ("countryId") REFERENCES "countries"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -204,3 +218,6 @@ ALTER TABLE "place_reviews" ADD CONSTRAINT "place_reviews_placeId_fkey" FOREIGN 
 
 -- AddForeignKey
 ALTER TABLE "place_reviews" ADD CONSTRAINT "place_reviews_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "place_review_photos" ADD CONSTRAINT "place_review_photos_placeReviewId_fkey" FOREIGN KEY ("placeReviewId") REFERENCES "place_reviews"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
