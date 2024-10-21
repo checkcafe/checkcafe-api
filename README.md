@@ -1,6 +1,6 @@
 # CheckCafe API
 
-**Hono-Auth** is a simple authentication boilerplate built with Hono.js using Bun and TypeScript, designed to provide essential auth functionality. This project includes four key authentication endpoints and leverages Prisma ORM for database management, Zod for validation, and Swagger UI for API documentation.
+**Checkcafe-API** is a comprehensive web API designed to provide detailed information about cafes in various locations. Built using Hono.js with Bun and TypeScript, this API aims to deliver both general and specific details about each café, making it easier for users to find their ideal coffee spot.
 
 ## Features
 
@@ -9,6 +9,10 @@
 - Swagger UI: Auto-generated API docs for easy testing and integration.
 - Dynamic Role Access Control: Enhanced role management allowing for flexible access control based on user roles and hierarchy.
 - Role Hierarchy Filtering: Implemented filtering logic to ensure only appropriate roles are included in access checks, improving security and clarity.
+- Location and Address Information: Easily find cafes based on their address or location.
+- Seating and Table Details: Get precise data on the seating capacity and the number of tables available in each café.
+- Coffee Pricing: Access up-to-date information on the prices of different coffee options at various cafes.
+- WiFi Speed: Check the WiFi speed available in the café to ensure a productive experience.
 
 ## Tech Stack (Framework & Libraries)
 
@@ -28,7 +32,12 @@
 | /auth/login         | POST   | Log in a user        |
 | /auth/refresh-token | POST   | Refresh access token |
 | /auth/logout        | POST   | Log out a user       |
-| /auth/me            | GET    | Get user information |
+
+| Endpoint      | Method | Description       |
+| ------------- | ------ | ----------------- |
+| /places       | POST   | Post a new place  |
+| /places       | GET    | Get all places    |
+| /places/:slug | GET    | Get place by slug |
 
 ## ERD
 

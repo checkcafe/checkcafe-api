@@ -1,28 +1,32 @@
-type FeatureRecord = {
+type FaciltityRecord = {
   name: string;
   description?: string;
 };
 
-type FeatureCategory = {
+type FaciltityCategory = {
   category: string;
   description?: string;
-  features: FeatureRecord[];
+  facilties: FaciltityRecord[];
 };
 
-const featureCategories: FeatureCategory[] = [
+const featureCategories: FaciltityCategory[] = [
   {
     category: "Comfort & Convenience",
     description:
-      "Features that focus on providing comfort and convenience to customers during their stay at the cafe.",
-    features: [
+      "Features that provide comfort and convenience to customers during their stay at the cafe.",
+    facilties: [
       {
         name: "Free Wi-Fi",
         description:
-          "High-speed wireless internet connection available for all customers.",
+          "High-speed wireless internet available for all customers.",
       },
       {
         name: "Outdoor Seating",
-        description: "Comfortable outdoor seating area with a view.",
+        description: "Comfortable outdoor seating with a pleasant view.",
+      },
+      {
+        name: "Indoor Seating",
+        description: "Cozy indoor seating for work or relaxation.",
       },
       {
         name: "Parking Space",
@@ -31,31 +35,38 @@ const featureCategories: FeatureCategory[] = [
       {
         name: "Air Conditioning",
         description:
-          "The cafe is fully air-conditioned for a comfortable experience.",
+          "The cafe is air-conditioned for a comfortable experience.",
       },
       {
         name: "Wheelchair Accessible",
-        description: "The cafe has facilities for wheelchair users.",
+        description: "The cafe is accessible to customers using wheelchairs.",
+      },
+      {
+        name: "Toilet",
+        description: "Clean and accessible restroom for customers.",
+      },
+      {
+        name: "Prayer Room",
+        description: "A small prayer room for Muslim customers.",
       },
     ],
   },
   {
     category: "Entertainment & Activities",
     description:
-      "Features providing entertainment and activities for customers to enjoy while at the cafe.",
-    features: [
+      "Entertainment and activities provided for customers to enjoy during their visit.",
+    facilties: [
       {
         name: "Live Music",
-        description: "Enjoy live performances from local artists.",
+        description: "Enjoy live performances by local artists.",
       },
       {
         name: "Board Games",
-        description:
-          "A variety of board games available for customers to enjoy with friends.",
+        description: "A variety of board games to enjoy with friends.",
       },
       {
         name: "Arcade Games",
-        description: "Classic arcade games available for entertainment.",
+        description: "Classic arcade games for customer entertainment.",
       },
       {
         name: "Pool Table",
@@ -72,62 +83,58 @@ const featureCategories: FeatureCategory[] = [
     category: "Food & Beverage",
     description:
       "Features related to food and drink offerings, including special menu options.",
-    features: [
+    facilties: [
       {
         name: "Vegan Options",
         description: "The cafe offers vegan-friendly menu items.",
       },
       {
         name: "Halal Food",
-        description: "Halal-certified food is available in the menu.",
+        description: "Halal-certified food is available on the menu.",
       },
       {
         name: "Organic Food Options",
         description:
-          "The menu includes organic and locally-sourced ingredients.",
+          "The menu includes organic and locally sourced ingredients.",
       },
       {
         name: "Gluten-Free Options",
-        description: "The cafe offers gluten-free alternatives on the menu.",
+        description: "Gluten-free alternatives are available on the menu.",
       },
     ],
   },
   {
     category: "Services & Facilities",
     description:
-      "Additional services and facilities for customer convenience and needs.",
-    features: [
+      "Additional services and facilities provided for customer convenience.",
+    facilties: [
       {
         name: "Meeting Rooms",
-        description: "Private meeting rooms are available for booking.",
+        description: "Private meeting rooms available for booking.",
       },
       {
         name: "Delivery Service",
-        description: "Home delivery service is available for cafe orders.",
+        description: "Delivery service is available for cafe orders.",
       },
       {
         name: "Charging Stations",
-        description: "Charging stations are available for electronic devices.",
+        description: "Charging stations available for electronic devices.",
       },
       {
         name: "Takeaway & Pre-ordering Service",
         description:
-          "Order your food and drinks in advance and pick them up at your convenience.",
+          "Pre-order food and drinks for pickup at your convenience.",
       },
     ],
   },
   {
     category: "Safety & Security",
     description:
-      "Features related to customer safety and security while at the cafe.",
-    features: [
+      "Features that ensure the safety and security of customers at the cafe.",
+    facilties: [
       {
         name: "CCTV Surveillance",
         description: "The cafe is monitored by CCTV for customer safety.",
-      },
-      {
-        name: "Wheelchair Accessible",
-        description: "The cafe has facilities for wheelchair users.",
       },
       {
         name: "Smoking Area",
@@ -137,13 +144,17 @@ const featureCategories: FeatureCategory[] = [
         name: "Non-Smoking Area",
         description: "Dedicated non-smoking area for a smoke-free environment.",
       },
+      {
+        name: "First Aid Kit",
+        description: "A first aid kit is available in case of emergencies.",
+      },
     ],
   },
   {
     category: "Community & Events",
     description:
       "Features that encourage community engagement and events held at the cafe.",
-    features: [
+    facilties: [
       {
         name: "Trivia Night",
         description:

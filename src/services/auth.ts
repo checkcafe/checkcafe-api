@@ -146,7 +146,10 @@ const processToken = async (
         jwt.createRefreshToken(userId.toString()),
       ]);
 
-      return { accessToken: newAccessToken, refreshToken: newRefreshToken };
+      return {
+        accessToken: newAccessToken,
+        refreshToken: newRefreshToken,
+      };
     }
 
     return true;

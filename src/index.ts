@@ -5,6 +5,8 @@ import { cors } from "hono/cors";
 import authRoute from "@/routes/auth";
 import userRoute from "./routes/user";
 import geoRoute from "./routes/geo";
+import facilityRoute from "./routes/facility";
+import placeRoute from "./routes/place";
 
 const app = new OpenAPIHono();
 
@@ -30,6 +32,7 @@ app.get("/", (c) => {
 app.get(
   "/ui",
   apiReference({
+    pageTitle: "CheckCafe API Reference",
     spec: {
       url: "/openapi.json",
     },
@@ -46,7 +49,9 @@ app.doc("/openapi.json", {
 
 // API route
 app.route("/auth", authRoute);
-app.route("/users", userRoute);
+app.route("/user", userRoute);
 app.route("/geo", geoRoute);
+app.route("/facility", facilityRoute);
+app.route("/place", placeRoute);
 
 export default app;

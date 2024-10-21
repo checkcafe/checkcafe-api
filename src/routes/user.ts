@@ -2,7 +2,7 @@ import type { Context } from "hono";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import * as userService from "@/services/user";
 import authMiddleware from "@/middlewares/auth";
-import { QuerySchema } from "@/schemas/query";
+import { querySchema } from "@/schemas/query";
 
 const userRoute = new OpenAPIHono();
 const API_TAGS = ["User"];
@@ -12,10 +12,10 @@ userRoute.openapi(
   {
     method: "get",
     path: "/",
-    summary: "Users",
+    summary: "User list",
     description: "Get a list of users.",
     request: {
-      query: QuerySchema.omit({ page: true, limit: true }),
+      query: querySchema.omit({ page: true, limit: true }),
     },
     responses: {
       200: {
@@ -47,7 +47,7 @@ userRoute.openapi(
   {
     method: "get",
     path: "/me",
-    summary: "Get user information",
+    summary: "User profile",
     description: "Get user information including user ID, username, and role.",
     security: [{ AuthorizationBearer: [] }],
     middleware: [authMiddleware],
@@ -63,7 +63,7 @@ userRoute.openapi(
   },
   async (c: Context) => {
     try {
-      const userId = c.get("userId") as string;
+      const userId = c.get("user") ? c.get("user").id : null;
       const user = await userService.getProfile(userId);
 
       return c.json(user, 200);

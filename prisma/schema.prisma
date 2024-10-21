@@ -114,7 +114,7 @@ model City {
 model Place {
   id            String  @id @default(cuid())
   name          String
-  slug          String  @db.VarChar(128)
+  slug          String  @unique @db.VarChar(128)
   description   String?
   streetAddress String  @db.VarChar(255)
   wifiSpeedAvg  Int?
@@ -123,16 +123,16 @@ model Place {
   longitude     Float?
   isPublished   Boolean @default(false)
 
-  cityId String
-  city   City   @relation(fields: [cityId], references: [id])
+  cityId String?
+  city   City?   @relation(fields: [cityId], references: [id])
   userId String
-  user   User   @relation(fields: [userId], references: [id])
+  user   User    @relation(fields: [userId], references: [id])
 
-  operatingHours OperatingHour[]
-  placeFeatures  PlaceFeature[]
-  placePhotos    PlacePhoto[]
-  PlaceFavorite  PlaceFavorite[]
-  placeReviews   PlaceReview[]
+  operatingHours  OperatingHour[]
+  placeFacilities PlaceFacility[]
+  placePhotos     PlacePhoto[]
+  PlaceFavorite   PlaceFavorite[]
+  placeReviews    PlaceReview[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -155,50 +155,50 @@ model OperatingHour {
   @@map("operating_hours")
 }
 
-model FeatureCategory {
+model FacilityCategory {
   id          String  @id @default(cuid())
   name        String  @unique
   description String?
 
-  feature Feature[]
+  facilities Facility[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map("feature_categories")
+  @@map("facility_categories")
 }
 
-model Feature {
+model Facility {
   id          String  @id @default(cuid())
   name        String  @unique
   description String?
 
-  featureCategoryId String?
-  featureCategory   FeatureCategory? @relation(fields: [featureCategoryId], references: [id])
+  facilityCategoryId String?
+  facilityCategory   FacilityCategory? @relation(fields: [facilityCategoryId], references: [id])
 
-  placeFeatures PlaceFeature[]
+  placeFacilities PlaceFacility[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map("features")
+  @@map("facilities")
 }
 
-model PlaceFeature {
+model PlaceFacility {
   id          String  @id @default(cuid())
   description String?
 
-  featureId String
-  feature   Feature @relation(fields: [featureId], references: [id])
-  placeId   String
-  place     Place   @relation(fields: [placeId], references: [id])
+  facilityId String
+  facility   Facility @relation(fields: [facilityId], references: [id])
+  placeId    String
+  place      Place    @relation(fields: [placeId], references: [id])
 
   placePhotos PlacePhoto[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map("place_features")
+  @@map("place_facilities")
 }
 
 model PlacePhoto {
@@ -206,10 +206,10 @@ model PlacePhoto {
   url   String
   order Int    @default(0)
 
-  placeId        String
-  place          Place         @relation(fields: [placeId], references: [id])
-  placeFeatureId String?
-  placeFeature   PlaceFeature? @relation(fields: [placeFeatureId], references: [id])
+  placeId         String
+  place           Place          @relation(fields: [placeId], references: [id])
+  placeFacilityId String?
+  placeFacility   PlaceFacility? @relation(fields: [placeFacilityId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

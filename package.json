@@ -6,7 +6,8 @@
     "migrate": "prisma migrate dev",
     "migrate:deploy": "prisma migrate deploy",
     "generate": "prisma generate",
-    "seed": "prisma db seed"
+    "seed": "prisma db seed",
+    "prettier": "bunx prettier --write ."
   },
   "prisma": {
     "seed": "bun run prisma/seed.ts"
@@ -14,7 +15,7 @@
   "dependencies": {
     "@hono/zod-openapi": "^0.16.4",
     "@prisma/client": "^5.21.1",
-    "@scalar/hono-api-reference": "^0.5.155",
+    "@scalar/hono-api-reference": "^0.5.156",
     "hono": "^4.6.5",
     "oslo": "^1.2.1"
   },
