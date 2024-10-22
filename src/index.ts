@@ -7,6 +7,7 @@ import userRoute from "./routes/user";
 import geoRoute from "./routes/geo";
 import facilityRoute from "./routes/facility";
 import placeRoute from "./routes/place";
+import placeFavoriteRoute from "./routes/placeFavorite";
 
 const app = new OpenAPIHono();
 
@@ -53,5 +54,6 @@ app.route("/user", userRoute);
 app.route("/geo", geoRoute);
 app.route("/facility", facilityRoute);
 app.route("/place", placeRoute);
+app.route("/place-favorite", placeFavoriteRoute);
 
 export default app;
