@@ -3,6 +3,11 @@ import parseFilters from "@/utils/filter";
 import parseSorts from "@/utils/sort";
 import slugify from "@/utils/slugify";
 
+type User = {
+  id: string;
+  role: string;
+};
+
 /**
  * Prepares child data to be used in Prisma's `update` method when updating
  * a parent model with its child relations.
@@ -56,9 +61,7 @@ export const postPlaces = async (userId: string) => {
     data: {
       name: "Input name of Place",
       slug: await generateUniqueSlug("New Place"),
-      description: "Input description of Place",
       streetAddress: "Input street address of Place",
-      wifiSpeedAvg: 0,
       priceRange: "$-$$$",
       isPublished: false,
       userId: userId,
@@ -80,11 +83,7 @@ export const postPlaces = async (userId: string) => {
  * @throws {Error} - If the place does not exist or the user is not the owner.
  * @returns The updated place including its child relations.
  */
-export const patchPlace = async (
-  user: { id: string; role: string },
-  placeId: string,
-  body: any
-) => {
+export const patchPlace = async (user: User, placeId: string, body: any) => {
   const existingPlace = await db.place.findFirst({
     where: { id: placeId },
     include: {
@@ -100,13 +99,6 @@ export const patchPlace = async (
 
   if (user.role === "USER" && existingPlace.userId !== user.id) {
     throw new Error("You do not have permission to edit this place.");
-  }
-
-  if (
-    ["MODERATOR", "ADMIN", "SUPER ADMIN"].includes(user.role) &&
-    existingPlace.userId !== user.id
-  ) {
-    body.userId = existingPlace.userId;
   }
 
   const newSlug = await generateUniqueSlug(body.name, existingPlace.slug);
@@ -139,26 +131,26 @@ export const patchPlace = async (
 };
 
 /**
- * Retrieves a place by its slug.
+ * Deletes a place if the user has permission.
  *
- * @param slug The slug of the place to retrieve.
- * @returns The place object if found, otherwise null.
+ * @param placeId The ID of the place to delete.
+ * @param user An object containing the user's ID and role.
+ * @throws {Error} If the place is not found or the user does not have permission to delete.
  */
-export const getPlaceBySlug = async (slug: string) => {
-  const place = await db.place.findFirst({
-    where: { slug },
-    include: {
-      operatingHours: true,
-      placeFacilities: { include: { facility: true } },
-      placePhotos: true,
-    },
+export const deletePlace = async (placeId: string, user: User) => {
+  const existingPlace = await db.place.findFirst({
+    where: { id: placeId },
   });
 
-  if (!place) {
+  if (!existingPlace) {
     throw new Error("Place not found.");
   }
 
-  return place;
+  if (user.role === "USER" && existingPlace.userId !== user.id) {
+    throw new Error("You do not have permission to delete this place.");
+  }
+
+  await db.place.delete({ where: { id: placeId } });
 };
 
 /**
@@ -179,7 +171,6 @@ export const getPlaces = async (queryFilter?: string, querySort?: string) => {
       slug: true,
       description: true,
       streetAddress: true,
-      wifiSpeedAvg: true,
       priceRange: true,
       latitude: true,
       longitude: true,
@@ -199,9 +190,32 @@ export const getPlaces = async (queryFilter?: string, querySort?: string) => {
     orderBy,
   });
 
-  if (!places) {
-    throw new Error("Places not found");
+  if (!places || places.length === 0) {
+    throw new Error("Places not found.");
   }
 
   return places;
+};
+
+/**
+ * Retrieves a place by its slug.
+ *
+ * @param slug The slug of the place to retrieve.
+ * @returns The place object if found, otherwise null.
+ */
+export const getPlaceBySlug = async (slug: string) => {
+  const place = await db.place.findFirst({
+    where: { slug },
+    include: {
+      operatingHours: true,
+      placeFacilities: { include: { facility: true } },
+      placePhotos: true,
+    },
+  });
+
+  if (!place) {
+    throw new Error("Place not found.");
+  }
+
+  return place;
 };
