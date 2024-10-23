@@ -131,7 +131,7 @@ userRoute.openapi(
 userRoute.openapi(
   {
     method: "get",
-    path: "/{username}/favorite",
+    path: "/{username}/favorites",
     summary: "User favorite places",
     description: "Get favorite places by user.",
     responses: {
@@ -168,7 +168,7 @@ userRoute.openapi(
 userRoute.openapi(
   {
     method: "post",
-    path: "/{username}/favorite",
+    path: "/{username}/favorites",
     summary: "User favorite place",
     description: "Get favorite places by user.",
     security: [{ AuthorizationBearer: [] }],
@@ -221,20 +221,11 @@ userRoute.openapi(
 userRoute.openapi(
   {
     method: "delete",
-    path: "/{username}/favorite/{id}",
+    path: "/{username}/favorites/{id}",
     summary: "User favorite place",
     description: "Get favorite places by user.",
     security: [{ AuthorizationBearer: [] }],
     middleware: [authMiddleware],
-    request: {
-      body: {
-        content: {
-          "application/json": {
-            schema: placeSchema.placeIdSchema,
-          },
-        },
-      },
-    },
     responses: {
       200: {
         description: "Places retrieved successfully",
@@ -248,16 +239,16 @@ userRoute.openapi(
   async (c) => {
     const userId = (c as Context).get("user")?.id as string;
     const username = c.req.param("username");
-    const { id } = c.req.valid("json");
+    const id = c.req.param("id");
 
-    if (!username) {
-      return c.json({ error: "Username is required!" }, 401);
+    if (!id || !username) {
+      return c.json({ error: "Id and username are required!" }, 401);
     }
 
     try {
       const [favorites] = await Promise.all([
         await userService.getUser(userId, username),
-        await placeFavoriteService.deleteFavorite(id, userId),
+        await placeFavoriteService.deleteFavorite(userId, id),
       ]);
 
       return c.json(favorites, 200);
