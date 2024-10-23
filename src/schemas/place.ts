@@ -43,5 +43,3 @@ export const placeSchema = z.object({
     description: "The photos of the place.",
   }),
 });
-
-export const slugPlaceSchema = z.object({ slug: z.string().min(1).max(255) });

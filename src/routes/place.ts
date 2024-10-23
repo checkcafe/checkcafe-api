@@ -1,7 +1,7 @@
 import type { Context } from "hono";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { querySchema } from "@/schemas/query";
-import { placeSchema, slugPlaceSchema } from "@/schemas/place";
+import { placeSchema } from "@/schemas/place";
 import authMiddleware from "@/middlewares/auth";
 import * as placeService from "@/services/place";
 
@@ -105,7 +105,6 @@ placeRoute.openapi(
     security: [{ AuthorizationBearer: [] }],
     middleware: [authMiddleware],
     request: {
-      query: placeSchema.pick({ id: true }),
       body: {
         content: {
           "application/json": {
@@ -131,9 +130,13 @@ placeRoute.openapi(
     tags: API_TAGS,
   },
   async (c) => {
-    const { id } = c.req.valid("query");
     const body = c.req.valid("json");
     const user = (c as Context).get("user");
+
+    const id = c.req.param("placeId");
+    if (!id) {
+      return c.json({ message: "Place not found" }, 404);
+    }
 
     try {
       const result = await placeService.patchPlace(user, id, body);
@@ -155,9 +158,6 @@ placeRoute.openapi(
       "This operation is used to delete a place. The user must be authenticated.",
     security: [{ AuthorizationBearer: [] }],
     middleware: [authMiddleware],
-    request: {
-      query: placeSchema.pick({ id: true }),
-    },
     responses: {
       200: {
         description: "Place deleted successfully",
@@ -175,8 +175,12 @@ placeRoute.openapi(
     tags: API_TAGS,
   },
   async (c) => {
-    const { id } = c.req.valid("query");
     const user = (c as Context).get("user");
+
+    const id = c.req.param("placeId");
+    if (!id) {
+      return c.json({ message: "Place not found" }, 404);
+    }
 
     try {
       await placeService.deletePlace(id, user);
@@ -237,9 +241,6 @@ placeRoute.openapi(
     path: "/{slug}",
     summary: "Place details",
     description: "Get a place by slug.",
-    request: {
-      query: slugPlaceSchema,
-    },
     responses: {
       200: {
         description: "Succes get places by slug",
@@ -251,16 +252,18 @@ placeRoute.openapi(
     tags: API_TAGS,
   },
   async (c) => {
-    const { slug } = c.req.valid("query");
+    const slug = c.req.param("slug");
+    if (!slug) {
+      return c.json({ error: "Slug not found" }, 401);
+    }
 
     try {
       const place = await placeService.getPlaceBySlug(slug);
-
       return c.json(place, 200);
     } catch (error: Error | any) {
       return c.json(
         { error: error.message || "Failed to get place by slug!" },
-        401
+        500
       );
     }
   }
