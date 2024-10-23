@@ -36,26 +36,20 @@ placeFavoriteRoute.openapi(
       },
     },
   },
-  async (c: Context) => {
-    const userId = c.get("userId") as string;
-    const body = await c.req.json();
-
-    const { placeId } = body as { placeId: string };
-
-    if (!placeId) {
-      return c.json({ error: "Place ID is required" }, 400);
-    }
+  async (c) => {
+    const { placeId } = c.req.valid("json");
+    const userId = (c as Context).get("userId");
 
     try {
       const place = await placeFavoriteService.createPlaceFavorite(
         userId,
-        placeId,
+        placeId
       );
       return c.json(place, 201);
     } catch (error: Error | any) {
       return c.json({ error: error.message }, 400);
     }
-  },
+  }
 );
 
 // Get list of favorite places
@@ -81,13 +75,14 @@ placeFavoriteRoute.openapi(
     const userId = c.get("userId") as string;
 
     try {
-      const listPlaces =
-        await placeFavoriteService.getListPlaceFavorites(userId);
+      const listPlaces = await placeFavoriteService.getListPlaceFavorites(
+        userId
+      );
       return c.json(listPlaces, 200);
     } catch (error: Error | any) {
       return c.json({ error: error.message }, 400);
     }
-  },
+  }
 );
 
 // Delete favorite place
@@ -112,15 +107,18 @@ placeFavoriteRoute.openapi(
       },
     },
   },
-  async (c: Context) => {
-    const { id } = c.req.param();
+  async (c) => {
+    const { placeFavoriteId } = c.req.valid("param");
+
     try {
-      const place = await placeFavoriteService.deletePlaceFavorite(id);
+      const place = await placeFavoriteService.deletePlaceFavorite(
+        placeFavoriteId
+      );
       return c.json(place, 200);
     } catch (error: Error | any) {
       return c.json({ error: error.message }, 400);
     }
-  },
+  }
 );
 
 export default placeFavoriteRoute;
