@@ -22,6 +22,10 @@ export const getCountries = async (
     orderBy,
   });
 
+  if (!countries || countries.length === 0) {
+    throw new Error("Countries not found");
+  }
+
   return countries;
 };
 
@@ -45,6 +49,10 @@ export const getStates = async (queryFilter?: string, querySort?: string) => {
     where,
     orderBy,
   });
+
+  if (!states || states.length === 0) {
+    throw new Error("States not found");
+  }
 
   return states;
 };
@@ -74,6 +82,10 @@ export const getCities = async (queryFilter?: string, querySort?: string) => {
     where,
     orderBy,
   });
+
+  if (!cities || cities.length === 0) {
+    throw new Error("Cities not found");
+  }
 
   return cities;
 };

@@ -1,10 +1,9 @@
 import type { Context } from "hono";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { querySchema } from "@/schemas/query";
-import { paramsSchema } from "@/schemas/params";
+import { placeSchema, slugPlaceSchema } from "@/schemas/place";
 import authMiddleware from "@/middlewares/auth";
 import * as placeService from "@/services/place";
-import * as placeSchema from "@/schemas/place";
 
 const placeRoute = new OpenAPIHono();
 const API_TAGS = ["Places"];
@@ -31,10 +30,10 @@ placeRoute.openapi(
     },
     tags: API_TAGS,
   },
-  async (c: Context) => {
-    const { filter, sort } = c.req.query();
+  async (c) => {
+    const { filter, sort } = c.req.valid("query");
 
-    const user = c.get("user");
+    const user = (c as Context).get("user");
     const userId = user ? user.id : null;
     const userRole = user ? user.role : null;
 
@@ -106,10 +105,11 @@ placeRoute.openapi(
     security: [{ AuthorizationBearer: [] }],
     middleware: [authMiddleware],
     request: {
+      query: placeSchema.pick({ id: true }),
       body: {
         content: {
           "application/json": {
-            schema: placeSchema.placeSchema,
+            schema: placeSchema.omit({ id: true }),
           },
         },
       },
@@ -130,18 +130,13 @@ placeRoute.openapi(
     },
     tags: API_TAGS,
   },
-  async (c: Context) => {
-    const { placeId } = c.req.param();
-
-    if (!placeId) {
-      return c.json({ error: "Place ID is required!" }, 401);
-    }
-
-    const user = c.get("user");
-    const body = await c.req.json();
+  async (c) => {
+    const { id } = c.req.valid("query");
+    const body = c.req.valid("json");
+    const user = (c as Context).get("user");
 
     try {
-      const result = await placeService.patchPlace(user, placeId, body);
+      const result = await placeService.patchPlace(user, id, body);
 
       return c.json(result, 200);
     } catch (error: Error | any) {
@@ -160,6 +155,9 @@ placeRoute.openapi(
       "This operation is used to delete a place. The user must be authenticated.",
     security: [{ AuthorizationBearer: [] }],
     middleware: [authMiddleware],
+    request: {
+      query: placeSchema.pick({ id: true }),
+    },
     responses: {
       200: {
         description: "Place deleted successfully",
@@ -176,17 +174,12 @@ placeRoute.openapi(
     },
     tags: API_TAGS,
   },
-  async (c: Context) => {
-    const { placeId } = c.req.param();
-
-    if (!placeId) {
-      return c.json({ error: "Place ID is required!" }, 401);
-    }
-
-    const user = c.get("user");
+  async (c) => {
+    const { id } = c.req.valid("query");
+    const user = (c as Context).get("user");
 
     try {
-      await placeService.deletePlace(placeId, user);
+      await placeService.deletePlace(id, user);
 
       return c.json({ message: "Success delete place" }, 200);
     } catch (error: Error | any) {
@@ -245,7 +238,7 @@ placeRoute.openapi(
     summary: "Place details",
     description: "Get a place by slug.",
     request: {
-      params: paramsSchema,
+      query: slugPlaceSchema,
     },
     responses: {
       200: {
@@ -257,12 +250,8 @@ placeRoute.openapi(
     },
     tags: API_TAGS,
   },
-  async (c: Context) => {
-    const { slug } = c.req.param();
-
-    if (!slug) {
-      return c.json({ error: "Slug is required!" }, 401);
-    }
+  async (c) => {
+    const { slug } = c.req.valid("query");
 
     try {
       const place = await placeService.getPlaceBySlug(slug);

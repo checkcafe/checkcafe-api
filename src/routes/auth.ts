@@ -45,8 +45,8 @@ authRoute.openapi(
     },
     tags: API_TAGS,
   },
-  async (c: Context) => {
-    const body = await c.req.json();
+  async (c) => {
+    const body = c.req.valid("json");
 
     try {
       const user = await authService.register(body);
@@ -84,8 +84,8 @@ authRoute.openapi(
     },
     tags: API_TAGS,
   },
-  async (c: Context) => {
-    const body = await c.req.json();
+  async (c) => {
+    const body = c.req.valid("json");
 
     try {
       const result = await authService.login(body);
@@ -123,12 +123,8 @@ authRoute.openapi(
     },
     tags: API_TAGS,
   },
-  async (c: Context) => {
-    const { refreshToken } = await c.req.json();
-
-    if (!refreshToken) {
-      return c.json({ error: "Refresh token is required!" }, 401);
-    }
+  async (c) => {
+    const { refreshToken } = c.req.valid("json");
 
     try {
       const token = await authService.regenToken(refreshToken);
@@ -172,12 +168,8 @@ authRoute.openapi(
     },
     tags: API_TAGS,
   },
-  async (c: Context) => {
-    const { refreshToken } = await c.req.json();
-
-    if (!refreshToken) {
-      return c.json({ error: "Refresh token is required!" }, 401);
-    }
+  async (c) => {
+    const { refreshToken } = c.req.valid("json");
 
     try {
       await authService.logout(refreshToken);

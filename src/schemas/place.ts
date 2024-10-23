@@ -4,6 +4,7 @@ import { placeFacilitySchema } from "./placeFacility";
 import { placePhotoSchema } from "./placePhoto";
 
 export const placeSchema = z.object({
+  id: z.string().openapi({ description: "The ID of the place." }),
   name: z.string().min(1, "Name is required").max(255).openapi({
     description: "The name of the place.",
   }),
@@ -42,3 +43,5 @@ export const placeSchema = z.object({
     description: "The photos of the place.",
   }),
 });
+
+export const slugPlaceSchema = z.object({ slug: z.string().min(1).max(255) });
