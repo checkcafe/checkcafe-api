@@ -59,7 +59,7 @@ model UserToken {
   expiresAt DateTime
   revoked   Boolean  @default(false)
 
-  user User @relation("UserTokens", fields: [userId], references: [id])
+  user User @relation("UserTokens", fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, token])
   @@map("user_tokens")
@@ -84,7 +84,7 @@ model State {
   name String @unique
 
   countryId String
-  country   Country @relation(fields: [countryId], references: [id])
+  country   Country @relation(fields: [countryId], references: [id], onDelete: Cascade)
 
   city City[]
 
@@ -101,7 +101,7 @@ model City {
   longitude Float?
 
   stateId String
-  state   State  @relation(fields: [stateId], references: [id])
+  state   State  @relation(fields: [stateId], references: [id], onDelete: Cascade)
 
   place Place[]
 
@@ -117,7 +117,6 @@ model Place {
   slug          String  @unique @db.VarChar(128)
   description   String?
   streetAddress String  @db.VarChar(255)
-  wifiSpeedAvg  Int?
   priceRange    String?
   latitude      Float?
   longitude     Float?
@@ -147,7 +146,7 @@ model OperatingHour {
   endDateTime   DateTime
 
   placeId String
-  place   Place  @relation(fields: [placeId], references: [id])
+  place   Place  @relation(fields: [placeId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -174,7 +173,7 @@ model Facility {
   description String?
 
   facilityCategoryId String?
-  facilityCategory   FacilityCategory? @relation(fields: [facilityCategoryId], references: [id])
+  facilityCategory   FacilityCategory? @relation(fields: [facilityCategoryId], references: [id], onDelete: Cascade)
 
   placeFacilities PlaceFacility[]
 
@@ -189,11 +188,9 @@ model PlaceFacility {
   description String?
 
   facilityId String
-  facility   Facility @relation(fields: [facilityId], references: [id])
+  facility   Facility @relation(fields: [facilityId], references: [id], onDelete: Cascade)
   placeId    String
-  place      Place    @relation(fields: [placeId], references: [id])
-
-  placePhotos PlacePhoto[]
+  place      Place    @relation(fields: [placeId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -206,10 +203,8 @@ model PlacePhoto {
   url   String
   order Int    @default(0)
 
-  placeId         String
-  place           Place          @relation(fields: [placeId], references: [id])
-  placeFacilityId String?
-  placeFacility   PlaceFacility? @relation(fields: [placeFacilityId], references: [id])
+  placeId String
+  place   Place  @relation(fields: [placeId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -222,7 +217,7 @@ model PlaceFavorite {
   id String @id @default(cuid())
 
   placeId String
-  place   Place  @relation(fields: [placeId], references: [id])
+  place   Place  @relation(fields: [placeId], references: [id], onDelete: Cascade)
   userId  String
   user    User   @relation(fields: [userId], references: [id])
 
@@ -237,13 +232,13 @@ model PlaceReview {
   comment String?
 
   placeId String
-  place   Place  @relation(fields: [placeId], references: [id])
+  place   Place  @relation(fields: [placeId], references: [id], onDelete: Cascade)
   userId  String
   user    User   @relation(fields: [userId], references: [id])
 
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
-  PlaceReviewPhoto PlaceReviewPhoto[]
+  PlaceReviewPhoto PlaceReviewPhoto[] @relation()
 
   @@map("place_reviews")
 }
@@ -254,7 +249,7 @@ model PlaceReviewPhoto {
   order Int    @default(0)
 
   placeReviewId String
-  placeReview   PlaceReview @relation(fields: [placeReviewId], references: [id])
+  placeReview   PlaceReview @relation(fields: [placeReviewId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

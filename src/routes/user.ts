@@ -31,8 +31,9 @@ userRoute.openapi(
     tags: API_TAGS,
   },
   async (c: Context) => {
+    const { filter, sort } = c.req.query();
+
     try {
-      const { filter, sort } = c.req.query();
       const result = await userService.getUsers(filter, sort);
 
       return c.json(result, 200);
@@ -62,8 +63,9 @@ userRoute.openapi(
     tags: API_TAGS,
   },
   async (c: Context) => {
+    const userId = c.get("user") ? c.get("user").id : null;
+    
     try {
-      const userId = c.get("user") ? c.get("user").id : null;
       const user = await userService.getProfile(userId);
 
       return c.json(user, 200);
