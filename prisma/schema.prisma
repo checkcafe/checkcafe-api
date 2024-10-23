@@ -14,11 +14,12 @@ datasource db {
 }
 
 model User {
-  id       String @id @default(cuid())
-  name     String @db.VarChar(128)
-  email    String @unique @db.VarChar(128)
-  username String @unique @db.VarChar(32)
-  password String
+  id         String  @id @default(cuid())
+  name       String  @db.VarChar(128)
+  email      String  @unique @db.VarChar(128)
+  username   String  @unique @db.VarChar(32)
+  password   String
+  avatar_url String?
 
   roleId String
   role   Role   @relation(fields: [roleId], references: [id])
@@ -224,6 +225,7 @@ model PlaceFavorite {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@index([placeId, userId])
   @@map("place_favorites")
 }
 

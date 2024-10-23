@@ -33,21 +33,15 @@ export const getUsers = async (queryFilter?: string, querySort?: string) => {
  * Retrieves the profile of a user by ID.
  *
  * @param userId The ID of the user to retrieve.
+ * @param username The username of the user to retrieve.
  * @returns The user profile.
  * @throws {Error} If the user does not exist.
  */
-export const getProfile = async (userId: string) => {
+export const getUser = async (userId?: string, username?: string) => {
   const user = await db.user.findUnique({
-    where: { id: userId },
-    select: {
-      name: true,
-      username: true,
-      email: true,
-      role: {
-        select: {
-          name: true,
-        },
-      },
+    where: { id: userId || undefined, username: username || undefined },
+    include: {
+      role: true,
     },
   });
 
@@ -55,10 +49,5 @@ export const getProfile = async (userId: string) => {
     throw new Error("User not found");
   }
 
-  return {
-    name: user.name,
-    username: user.username,
-    email: user.email,
-    role: user.role?.name || null,
-  };
+  return user;
 };

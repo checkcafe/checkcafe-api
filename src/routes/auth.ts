@@ -1,7 +1,9 @@
 import type { Context } from "hono";
 import { OpenAPIHono } from "@hono/zod-openapi";
+import { getUser } from "@/services/user";
 import * as authService from "@/services/auth";
 import * as authSchema from "@/schemas/auth";
+import authMiddleware from "@/middlewares/auth";
 
 const authRoute = new OpenAPIHono();
 const API_TAGS = ["Auth"];
@@ -93,6 +95,39 @@ authRoute.openapi(
       return c.json(result, 200);
     } catch (error: Error | any) {
       return c.json({ error: error.message || "Login failed!" }, 401);
+    }
+  }
+);
+
+// Auth Me Router
+authRoute.openapi(
+  {
+    method: "get",
+    path: "/me",
+    summary: "User information",
+    description:
+      "Get logged in user information including user ID, username, and role.",
+    security: [{ AuthorizationBearer: [] }],
+    middleware: [authMiddleware],
+    responses: {
+      200: {
+        description: "User information successfully retrieved",
+      },
+      401: {
+        description: "Refresh token is missing or invalid",
+      },
+    },
+    tags: API_TAGS,
+  },
+  async (c) => {
+    const userId = (c as Context).get("user")?.id as string;
+
+    try {
+      const user = await getUser(userId);
+
+      return c.json(user, 200);
+    } catch (error: Error | any) {
+      return c.json({ error: error.message }, 401);
     }
   }
 );

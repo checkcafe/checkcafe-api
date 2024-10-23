@@ -3,8 +3,15 @@ import { operatingHourSchema } from "./operatingHour";
 import { placeFacilitySchema } from "./placeFacility";
 import { placePhotoSchema } from "./placePhoto";
 
+export const placeIdSchema = z.object({
+  id: z.string().min(1, "Place ID is required").max(255).openapi({
+    description: "The ID of the place to favorite.",
+    example: "12345",
+  }),
+});
+
 export const placeSchema = z.object({
-  id: z.string().openapi({ description: "The ID of the place." }),
+  id: placeIdSchema.shape.id,
   name: z.string().min(1, "Name is required").max(255).openapi({
     description: "The name of the place.",
   }),

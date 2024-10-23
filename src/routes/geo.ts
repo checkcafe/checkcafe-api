@@ -1,4 +1,3 @@
-import type { Context } from "hono";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { querySchema } from "@/schemas/query";
 import * as geoService from "@/services/geo";
