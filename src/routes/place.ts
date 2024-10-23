@@ -1,20 +1,69 @@
 import type { Context } from "hono";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { querySchema } from "@/schemas/query";
-import { paramsSchema } from "@/schemas/params";
+import { placeSchema, slugPlaceSchema } from "@/schemas/place";
 import authMiddleware from "@/middlewares/auth";
 import * as placeService from "@/services/place";
-import * as placeSchema from "@/schemas/place";
 
 const placeRoute = new OpenAPIHono();
 const API_TAGS = ["Places"];
 
-// Create Places Route
+// Get place contributors Route
+placeRoute.openapi(
+  {
+    method: "get",
+    path: "/contributors",
+    summary: "Place contributors",
+    description: "Get a list of places.",
+    security: [{ AuthorizationBearer: [] }],
+    middleware: [authMiddleware],
+    request: {
+      query: querySchema.omit({ page: true, limit: true }),
+    },
+    responses: {
+      200: {
+        description: "Places retrieved successfully",
+      },
+      401: {
+        description: "Failed to retrieve places",
+      },
+    },
+    tags: API_TAGS,
+  },
+  async (c) => {
+    const { filter, sort } = c.req.valid("query");
+
+    const user = (c as Context).get("user");
+    const userId = user ? user.id : null;
+    const userRole = user ? user.role : null;
+
+    let filterObj = filter ? JSON.parse(filter) : {};
+    if (userRole === "USER") {
+      filterObj = { userId, ...filterObj };
+    }
+
+    try {
+      const result = await placeService.getPlaces(
+        JSON.stringify(filterObj),
+        sort
+      );
+
+      return c.json(result, 200);
+    } catch (error: Error | any) {
+      return c.json(
+        { error: error.message || "Failed to retrieve places" },
+        401
+      );
+    }
+  }
+);
+
+// Post Places Route
 placeRoute.openapi(
   {
     method: "post",
     path: "/",
-    summary: "Create a new place",
+    summary: "Create a place",
     description:
       "This operation is used to create a new place. The user must be authenticated.",
     security: [{ AuthorizationBearer: [] }],
@@ -45,82 +94,6 @@ placeRoute.openapi(
   }
 );
 
-// Get Places Route
-placeRoute.openapi(
-  {
-    method: "get",
-    path: "/",
-    summary: "Place list",
-    description: "Get a list of places.",
-    request: {
-      query: querySchema.omit({ page: true, limit: true }),
-    },
-    responses: {
-      200: {
-        description: "Places retrieved successfully",
-      },
-      401: {
-        description: "Failed to retrieve places",
-      },
-    },
-    tags: API_TAGS,
-  },
-  async (c: Context) => {
-    const { filter, sort } = c.req.query();
-
-    try {
-      const result = await placeService.getPlaces(filter, sort);
-
-      return c.json(result, 200);
-    } catch (error: Error | any) {
-      return c.json(
-        { error: error.message || "Failed to retrieve places" },
-        401
-      );
-    }
-  }
-);
-
-// Get Place Route by slug
-placeRoute.openapi(
-  {
-    method: "get",
-    path: "/{slug}",
-    summary: "Places details",
-    description: "Get a place by slug.",
-    request: {
-      params: paramsSchema,
-    },
-    responses: {
-      200: {
-        description: "Succes get places by slug",
-      },
-      401: {
-        description: "Slug not found",
-      },
-    },
-    tags: API_TAGS,
-  },
-  async (c: Context) => {
-    const { slug } = c.req.param();
-
-    if (!slug) {
-      return c.json({ error: "Slug is required!" }, 401);
-    }
-
-    try {
-      const place = await placeService.getPlaceBySlug(slug);
-
-      return c.json(place, 200);
-    } catch (error: Error | any) {
-      return c.json(
-        { error: error.message || "Failed to get place by slug!" },
-        401
-      );
-    }
-  }
-);
-
 // Update Place Route
 placeRoute.openapi(
   {
@@ -132,10 +105,11 @@ placeRoute.openapi(
     security: [{ AuthorizationBearer: [] }],
     middleware: [authMiddleware],
     request: {
+      query: placeSchema.pick({ id: true }),
       body: {
         content: {
           "application/json": {
-            schema: placeSchema.placeSchema,
+            schema: placeSchema.omit({ id: true }),
           },
         },
       },
@@ -156,22 +130,138 @@ placeRoute.openapi(
     },
     tags: API_TAGS,
   },
-  async (c: Context) => {
-    const { placeId } = c.req.param();
-
-    if (!placeId) {
-      return c.json({ error: "Place ID is required!" }, 401);
-    }
-
-    const user = c.get("user");
-    const body = await c.req.json();
+  async (c) => {
+    const { id } = c.req.valid("query");
+    const body = c.req.valid("json");
+    const user = (c as Context).get("user");
 
     try {
-      const result = await placeService.patchPlace(user, placeId, body);
+      const result = await placeService.patchPlace(user, id, body);
 
       return c.json(result, 200);
     } catch (error: Error | any) {
       return c.json({ message: error.message }, 500);
+    }
+  }
+);
+
+// Delete Place Route
+placeRoute.openapi(
+  {
+    method: "delete",
+    path: "/{placeId}",
+    summary: "Delete a place",
+    description:
+      "This operation is used to delete a place. The user must be authenticated.",
+    security: [{ AuthorizationBearer: [] }],
+    middleware: [authMiddleware],
+    request: {
+      query: placeSchema.pick({ id: true }),
+    },
+    responses: {
+      200: {
+        description: "Place deleted successfully",
+      },
+      401: {
+        description: "Unauthorized",
+      },
+      404: {
+        description: "Place not found",
+      },
+      500: {
+        description: "Failed to delete place",
+      },
+    },
+    tags: API_TAGS,
+  },
+  async (c) => {
+    const { id } = c.req.valid("query");
+    const user = (c as Context).get("user");
+
+    try {
+      await placeService.deletePlace(id, user);
+
+      return c.json({ message: "Success delete place" }, 200);
+    } catch (error: Error | any) {
+      return c.json({ message: error.message }, 500);
+    }
+  }
+);
+
+// Get Places Route
+placeRoute.openapi(
+  {
+    method: "get",
+    path: "/",
+    summary: "Places",
+    description: "Get a list of places.",
+    request: {
+      query: querySchema.omit({ page: true, limit: true }),
+    },
+    responses: {
+      200: {
+        description: "Places retrieved successfully",
+      },
+      401: {
+        description: "Failed to retrieve places",
+      },
+    },
+    tags: API_TAGS,
+  },
+  async (c: Context) => {
+    const { filter, sort } = c.req.query();
+
+    let filterObj = filter ? JSON.parse(filter) : {};
+    filterObj = { isPublished: true, ...filterObj };
+
+    try {
+      const result = await placeService.getPlaces(
+        JSON.stringify(filterObj),
+        sort
+      );
+
+      return c.json(result, 200);
+    } catch (error: Error | any) {
+      return c.json(
+        { error: error.message || "Failed to retrieve places" },
+        401
+      );
+    }
+  }
+);
+
+// Get Place Route
+placeRoute.openapi(
+  {
+    method: "get",
+    path: "/{slug}",
+    summary: "Place details",
+    description: "Get a place by slug.",
+    request: {
+      query: slugPlaceSchema,
+    },
+    responses: {
+      200: {
+        description: "Succes get places by slug",
+      },
+      401: {
+        description: "Slug not found",
+      },
+    },
+    tags: API_TAGS,
+  },
+  async (c) => {
+    const { slug } = c.req.valid("query");
+
+    try {
+      const place = await placeService.getPlaceBySlug(slug);
+
+      return c.json(place, 200);
+    } catch (error: Error | any) {
+      return c.json(
+        { error: error.message || "Failed to get place by slug!" },
+        401
+      );
     }
   }
 );

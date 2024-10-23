@@ -29,14 +29,11 @@ geoRoute.openapi(
     },
     tags: API_TAGS,
   },
-  async (c: Context) => {
+  async (c) => {
+    const { filter, sort } = c.req.valid("query");
+    
     try {
-      const { filter, sort } = c.req.query();
       const result = await geoService.getCountries(filter, sort);
-
-      if (!result || result.length === 0) {
-        return c.json({ message: "No countries found!" }, 404);
-      }
 
       return c.json(result, 200);
     } catch (error: Error | any) {
@@ -71,14 +68,11 @@ geoRoute.openapi(
     },
     tags: API_TAGS,
   },
-  async (c: Context) => {
-    try {
-      const { filter, sort } = c.req.query();
-      const result = await geoService.getStates(filter, sort);
+  async (c) => {
+    const { filter, sort } = c.req.valid("query");
 
-      if (!result || result.length === 0) {
-        return c.json({ message: "No states found!" }, 404);
-      }
+    try {
+      const result = await geoService.getStates(filter, sort);
 
       return c.json(result, 200);
     } catch (error: Error | any) {
@@ -113,14 +107,11 @@ geoRoute.openapi(
     },
     tags: API_TAGS,
   },
-  async (c: Context) => {
-    try {
-      const { filter, sort } = c.req.query();
-      const result = await geoService.getCities(filter, sort);
+  async (c) => {
+    const { filter, sort } = c.req.valid("query");
 
-      if (!result || result.length === 0) {
-        return c.json({ message: "No cities found!" }, 404);
-      }
+    try {
+      const result = await geoService.getCities(filter, sort);
 
       return c.json(result, 200);
     } catch (error: Error | any) {

@@ -29,9 +29,10 @@ facilityRoute.openapi(
     },
     tags: API_TAGS,
   },
-  async (c: Context) => {
+  async (c) => {
+    const { filter, sort } = c.req.valid("query");
+    
     try {
-      const { filter, sort } = c.req.query();
       const facilities = await facilityService.getFacilities(filter, sort);
 
       return c.json(facilities, 200);

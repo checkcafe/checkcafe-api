@@ -57,6 +57,10 @@ const parseFilters = (filters: string | undefined): Record<string, Filter> => {
           };
         } else if (typeof value === "object") {
           currentCondition[lastKey] = parseFilters(JSON.stringify(value));
+        } else if (typeof value === "boolean") {
+          currentCondition[lastKey] = {
+            equals: value,
+          };
         }
 
         return conditions;
