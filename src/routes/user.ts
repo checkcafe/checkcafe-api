@@ -210,10 +210,14 @@ userRoute.openapi(
     }
 
     try {
-      const [favorites] = await Promise.all([
+      const [user, favorites] = await Promise.all([
         await userService.getUser(userId, username),
         await placeFavoriteService.createFavorite(userId, id),
       ]);
+
+      if (!user || user.id !== userId) {
+        return c.json({ error: "User not found!" }, 401);
+      }
 
       return c.json(favorites, 200);
     } catch (error: Error | any) {
@@ -254,10 +258,14 @@ userRoute.openapi(
     }
 
     try {
-      const [favorites] = await Promise.all([
+      const [user, favorites] = await Promise.all([
         await userService.getUser(userId, username),
         await placeFavoriteService.deleteFavorite(userId, id),
       ]);
+
+      if (!user || user.id !== userId) {
+        return c.json({ error: "User not found!" }, 401);
+      }
 
       return c.json(favorites, 200);
     } catch (error: Error | any) {

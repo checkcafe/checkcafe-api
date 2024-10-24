@@ -42,12 +42,12 @@ export const getFavorites = async (username: string, querySort?: string) => {
         },
       },
     },
-    where: { user: { username } },
+    where: { user: { username }, place: { isPublished: true } },
     orderBy,
   });
 
   if (!placeFavorites.length) {
-    throw new Error("Favorites not found");
+    throw new Error("Favorite places not found");
   }
 
   const { name, username: userUsername, avatar_url } = placeFavorites[0].user;
@@ -82,12 +82,22 @@ export const getFavorites = async (username: string, querySort?: string) => {
  * @returns The newly created favorite record.
  */
 export const createFavorite = async (userId: string, placeId: string) => {
-  const placeFavorite = await db.placeFavorite.create({
-    data: {
-      userId,
-      placeId,
-    },
+  const place = db.place.findUnique({
+    where: { id: placeId, isPublished: true },
   });
+
+  if (!place) {
+    throw new Error("Place not found.");
+  }
+
+  const placeFavorite = await db.placeFavorite.upsert({
+    where: {
+      userId_placeId: { userId, placeId },
+    },
+    create: { userId, placeId },
+    update: {},
+  });
+
   return placeFavorite;
 };
 
@@ -99,6 +109,14 @@ export const createFavorite = async (userId: string, placeId: string) => {
  * @returns The deleted favorite record.
  */
 export const deleteFavorite = async (userId: string, id: string) => {
+  const placeFavoriteExists = await db.placeFavorite.findUnique({
+    where: { id, userId },
+  });
+
+  if (!placeFavoriteExists) {
+    throw new Error("Favorite place not found.");
+  }
+
   const placeFavorite = await db.placeFavorite.delete({
     where: { id, userId },
   });

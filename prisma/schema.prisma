@@ -225,7 +225,7 @@ model PlaceFavorite {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([placeId, userId])
+  @@unique([userId, placeId])
   @@map("place_favorites")
 }
 
