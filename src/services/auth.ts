@@ -41,11 +41,17 @@ export const register = async (data: z.infer<typeof registerSchema>) => {
         username: data.username,
         email: data.email,
         password: hashedPassword,
+        avatar_url: data.avatar_url,
         roleId: role.id,
       },
     });
 
-    return { name: user.name, email: user.email };
+    return {
+      name: user.name,
+      username: user.username,
+      email: user.email,
+      avatar_url: user.avatar_url,
+    };
   });
 };
 

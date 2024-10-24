@@ -51,9 +51,16 @@ authRoute.openapi(
     const body = c.req.valid("json");
 
     try {
-      const user = await authService.register(body);
+      const appendBody = {
+        ...body,
+        avatar_url:
+          body.avatar_url ??
+          `https://api.dicebear.com/9.x/avataaars-neutral/svg?seed=${body.username}&size=64`,
+      };
 
-      return c.json({ data: user }, 201);
+      const user = await authService.register(appendBody);
+
+      return c.json(user, 201);
     } catch (error: Error | any) {
       return c.json({ error: error.message || "Registration failed!" }, 400);
     }

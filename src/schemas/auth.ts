@@ -45,14 +45,26 @@ export const registerSchema = z
         /^[a-zA-Z0-9_]+$/,
         "Username can only contain alphanumeric characters or underscores"
       )
+      .transform((value) => value.toLowerCase())
       .openapi({
         description: "The username of the user.",
         example: "user123",
       }),
-    email: z.string().email("Invalid email address").max(128).openapi({
-      description: "The email of the user.",
-      example: "user@mail.com",
-    }),
+    email: z
+      .string()
+      .email("Invalid email address")
+      .max(128)
+      .transform((value) => value.toLowerCase())
+      .openapi({
+        description: "The email of the user.",
+        example: "user@mail.com",
+      }),
+    avatar_url: z
+      .string()
+      .url("Invalid avatar URL")
+      .max(255)
+      .optional()
+      .openapi({ description: "The avatar URL of the user." }),
     password: passwordSchema,
     confirmPassword: passwordSchema,
   })
