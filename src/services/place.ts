@@ -249,36 +249,95 @@ export const getPlaces = async (queryFilter?: string, querySort?: string) => {
  */
 export const getPlaceBySlug = async (slug: string) => {
   const place = await db.place.findFirst({
-    where: { slug },
-    include: {
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      description: true,
+      streetAddress: true,
+      priceRange: true,
+      latitude: true,
+      longitude: true,
+      user: {
+        select: {
+          name: true,
+          username: true,
+          avatar_url: true,
+        },
+      },
+      city: {
+        select: {
+          name: true,
+          state: {
+            select: {
+              name: true,
+              country: { select: { name: true, code: true } },
+            },
+          },
+        },
+      },
       operatingHours: {
         select: {
           day: true,
           startDateTime: true,
           endDateTime: true,
-          placeId: true,
         },
       },
       placeFacilities: {
         select: {
           description: true,
-          facilityId: true,
-          placeId: true,
+          facility: {
+            select: {
+              name: true,
+            },
+          },
         },
       },
       placePhotos: {
         select: {
           url: true,
           order: true,
-          placeId: true,
         },
       },
     },
+    where: { slug, isPublished: true },
   });
 
   if (!place) {
     throw new Error("Place not found.");
   }
 
-  return place;
+  const formattedPlace = {
+    id: place.id,
+    name: place.name,
+    slug: place.slug,
+    description: place.description,
+    priceRange: place.priceRange,
+    latitude: place.latitude,
+    longitude: place.longitude,
+    address: {
+      street: place.streetAddress,
+      city: place.city ? place.city.name : null,
+      state: place.city ? place.city.state.name : null,
+      country:
+        place.city && place.city.state ? place.city.state.country.name : null,
+      countryCode:
+        place.city && place.city.state ? place.city.state.country.code : null,
+    },
+    operatingHours: place.operatingHours,
+    placeFacilities: place.placeFacilities.map((facility) => ({
+      facility: facility.facility.name,
+      description: facility.description,
+    })),
+    placePhotos: place.placePhotos
+      .sort((a, b) => a.order - b.order)
+      .map((photo) => photo.url),
+    submitter: {
+      name: place.user.name,
+      username: place.user.username,
+      avatar_url: place.user.avatar_url,
+    },
+  };
+
+  return formattedPlace;
 };
