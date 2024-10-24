@@ -184,6 +184,8 @@ export const getPlaces = async (queryFilter?: string, querySort?: string) => {
       user: {
         select: {
           name: true,
+          username: true,
+          avatar_url: true,
         },
       },
     },
@@ -191,17 +193,52 @@ export const getPlaces = async (queryFilter?: string, querySort?: string) => {
     orderBy,
   });
 
-  if (!places || places.length === 0) {
+  if (places.length === 0) {
     throw new Error("Places not found.");
   }
 
-  const mappedResult = places.map((item) => ({
-    ...item,
-    submitter: item.user,
-    user: undefined,
-  }));
+  if (!queryFilter?.includes("user.username")) {
+    const mappedPlaces = places.map((item) => ({
+      ...item,
+      submitter: item.user,
+      user: undefined,
+    }));
 
-  return mappedResult;
+    return mappedPlaces;
+  }
+
+  const { user } = places[0];
+
+  return {
+    name: user.name,
+    username: user.username,
+    avatar_url: user.avatar_url,
+    places: places.map(
+      ({
+        id,
+        name,
+        slug,
+        description,
+        streetAddress,
+        priceRange,
+        latitude,
+        longitude,
+        isPublished,
+        city,
+      }) => ({
+        id,
+        name,
+        slug,
+        description,
+        streetAddress,
+        priceRange,
+        latitude,
+        longitude,
+        isPublished,
+        city,
+      })
+    ),
+  };
 };
 
 /**

@@ -12,15 +12,66 @@ export const getFavorites = async (username: string, querySort?: string) => {
   const orderBy = parseSorts(querySort);
 
   const placeFavorites = await db.placeFavorite.findMany({
-    where: { user: { username } },
-    include: {
-      place: true,
-      user: true,
+    select: {
+      place: {
+        select: {
+          name: true,
+          slug: true,
+          description: true,
+          streetAddress: true,
+          priceRange: true,
+          latitude: true,
+          longitude: true,
+          city: {
+            select: {
+              name: true,
+              state: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
+        },
+      },
+      user: {
+        select: {
+          name: true,
+          username: true,
+          avatar_url: true,
+        },
+      },
     },
+    where: { user: { username } },
     orderBy,
   });
 
-  return placeFavorites;
+  if (!placeFavorites.length) {
+    throw new Error("Favorites not found");
+  }
+
+  const { name, username: userUsername, avatar_url } = placeFavorites[0].user;
+
+  const userFavorites = {
+    name,
+    username: userUsername,
+    avatar_url,
+    place_favorites: placeFavorites.map(({ place }) => ({
+      name: place.name,
+      slug: place.slug,
+      description: place.description,
+      streetAddress: place.streetAddress,
+      priceRange: place.priceRange,
+      latitude: place.latitude,
+      longitude: place.longitude,
+      city: {
+        name: place.city?.name ?? "Unknown",
+        state: place.city?.state?.name ?? "Unknown",
+      },
+    })),
+  };
+
+  return userFavorites;
 };
 
 /**

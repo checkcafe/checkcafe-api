@@ -17,6 +17,7 @@ export const getUsers = async (queryFilter?: string, querySort?: string) => {
       id: true,
       name: true,
       username: true,
+      avatar_url: true,
     },
     where,
     orderBy,

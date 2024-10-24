@@ -68,11 +68,16 @@ userRoute.openapi(
 
     try {
       const user = await userService.getUser(undefined, username);
+      const protocol = c.req.header("X-Forwarded-Proto") || "http";
+      const host = c.req.header("host");
+      const baseUrl = `${protocol}://${host}`;
 
       const result = {
         name: user.name,
         username: user.username,
-        email: user.email,
+        avatar_url: user.avatar_url,
+        places_url: `${baseUrl}/users/${user.username}/places`,
+        favorites_url: `${baseUrl}/users/${user.username}/favorites`,
         role: user.role?.name || null,
       };
 
@@ -115,7 +120,10 @@ userRoute.openapi(
     filterObj = { "user.username": username, ...filterObj };
 
     try {
-      const places = await placeService.getPlaces(filter, sort);
+      const places = await placeService.getPlaces(
+        JSON.stringify(filterObj),
+        sort
+      );
 
       return c.json(places, 200);
     } catch (error: Error | any) {
