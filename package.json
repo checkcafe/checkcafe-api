@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "@types/bun": "latest",
-    "prisma": "^5.21.1",
-    "cli-progress": "^3.12.0"
+    "@types/cli-progress": "^3.11.6",
+    "prisma": "^5.21.1"
   }
 }

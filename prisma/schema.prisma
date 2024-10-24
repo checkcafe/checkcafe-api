@@ -114,7 +114,7 @@ model City {
 
 model Place {
   id            String  @id @default(cuid())
-  name          String
+  name          String  @unique @db.VarChar(255)
   slug          String  @unique @db.VarChar(128)
   description   String?
   streetAddress String  @db.VarChar(255)
@@ -152,6 +152,7 @@ model OperatingHour {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@unique([placeId, day])
   @@map("operating_hours")
 }
 
@@ -196,6 +197,7 @@ model PlaceFacility {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@unique([placeId, facilityId])
   @@map("place_facilities")
 }
 
@@ -210,7 +212,7 @@ model PlacePhoto {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([placeId, order])
+  @@unique([placeId, order])
   @@map("place_photos")
 }
 
@@ -256,6 +258,6 @@ model PlaceReviewPhoto {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([placeReviewId, order])
+  @@unique([placeReviewId, order])
   @@map("place_review_photos")
 }

@@ -1,12 +1,14 @@
 import { PrismaClient } from "@prisma/client";
 import { passwordHash } from "../src/libs/password";
 import cliProgress from "cli-progress";
+import slugify from "../src/utils/slugify";
 import roles from "./samples/roles";
 import users from "./samples/users";
 import contries from "./samples/countries";
 import states from "./samples/states";
 import cities from "./samples/cities";
 import facility from "./samples/facility";
+import places from "./samples/places";
 
 const prisma = new PrismaClient();
 
@@ -212,6 +214,140 @@ async function upsertFeatureCategories() {
   progressBar.stop();
 }
 
+async function upsertPlaces() {
+  progressBar.start(roles.length, 0, { type: "Places" });
+
+  const user = await prisma.user.findUnique({
+    where: { username: "admin" },
+  });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  for (const place of places) {
+    try {
+      await prisma.$transaction(async (prisma) => {
+        if (!place.city) {
+          throw new Error(`City ${place.city} tidak ditemukan!`);
+        }
+
+        const city = await prisma.city.findUnique({
+          where: { name: place.city },
+        });
+
+        if (!city) {
+          throw new Error(`City ${place.city} tidak ditemukan!`);
+        }
+
+        const upsertedPlace = await prisma.place.upsert({
+          where: { name: place.name },
+          update: {
+            streetAddress: place.streetAddress,
+            cityId: city.id,
+            priceRange: place.priceRange,
+            isPublished: place.isPublished,
+            latitude: place.lat,
+            longitude: place.long,
+          },
+          create: {
+            name: place.name,
+            slug: slugify(place.name),
+            streetAddress: place.streetAddress,
+            cityId: city.id,
+            priceRange: place.priceRange || null,
+            isPublished: place.isPublished,
+            latitude: place.lat || null,
+            longitude: place.long || null,
+            userId: user.id,
+          },
+        });
+
+        if (place.operatingHours) {
+          for (const operatingHour of place.operatingHours) {
+            await prisma.operatingHour.upsert({
+              where: {
+                placeId_day: {
+                  placeId: upsertedPlace.id,
+                  day: operatingHour.day,
+                },
+              },
+              update: {
+                startDateTime: operatingHour.startDateTime,
+                endDateTime: operatingHour.endDateTime,
+              },
+              create: {
+                placeId: upsertedPlace.id,
+                day: operatingHour.day,
+                startDateTime: operatingHour.startDateTime,
+                endDateTime: operatingHour.endDateTime,
+              },
+            });
+          }
+        }
+
+        if (place.placeFacilities) {
+          for (const placeFacility of place.placeFacilities) {
+            const facility = await prisma.facility.findUnique({
+              where: { name: placeFacility.facility },
+            });
+
+            if (!facility) {
+              throw new Error(
+                `Facility ${placeFacility.facility} tidak ditemukan!`
+              );
+            }
+
+            await prisma.placeFacility.upsert({
+              where: {
+                placeId_facilityId: {
+                  placeId: upsertedPlace.id,
+                  facilityId: facility.id,
+                },
+              },
+              update: {
+                description: placeFacility.description,
+              },
+              create: {
+                placeId: upsertedPlace.id,
+                facilityId: facility.id,
+                description: placeFacility.description,
+              },
+            });
+          }
+        }
+
+        if (place.placePhotos) {
+          for (const placePhoto of place.placePhotos) {
+            await prisma.placePhoto.upsert({
+              where: {
+                placeId_order: {
+                  placeId: upsertedPlace.id,
+                  order: placePhoto.order,
+                },
+              },
+              update: {
+                url: placePhoto.url,
+              },
+              create: {
+                placeId: upsertedPlace.id,
+                url: placePhoto.url,
+                order: placePhoto.order,
+              },
+            });
+          }
+        }
+      });
+
+      progressBar.increment();
+    } catch (error) {
+      console.error(`Error processing place ${place.name}:`, error);
+    }
+  }
+
+  progressBar.stop();
+}
+
 async function main() {
   await prisma.$transaction(async (tx) => {
     await upsertRoles();
@@ -220,6 +356,7 @@ async function main() {
     await upsertStates();
     await upsertCities();
     await upsertFeatureCategories();
+    await upsertPlaces();
   });
 }
 
