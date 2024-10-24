@@ -30,7 +30,7 @@ geoRoute.openapi(
   },
   async (c) => {
     const { filter, sort } = c.req.valid("query");
-    
+
     try {
       const result = await geoService.getCountries(filter, sort);
 

@@ -30,7 +30,7 @@ facilityRoute.openapi(
   },
   async (c) => {
     const { filter, sort } = c.req.valid("query");
-    
+
     try {
       const facilities = await facilityService.getFacilities(filter, sort);
 

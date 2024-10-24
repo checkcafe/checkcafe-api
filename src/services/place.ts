@@ -61,6 +61,7 @@ export const postPlaces = async (userId: string) => {
     data: {
       name: "Input name of Place",
       slug: await generateUniqueSlug("New Place"),
+      description: "No Description",
       streetAddress: "Input street address of Place",
       priceRange: "$-$$$",
       isPublished: false,
@@ -194,7 +195,13 @@ export const getPlaces = async (queryFilter?: string, querySort?: string) => {
     throw new Error("Places not found.");
   }
 
-  return places;
+  const mappedResult = places.map((item) => ({
+    ...item,
+    submitter: item.user,
+    user: undefined,
+  }));
+
+  return mappedResult;
 };
 
 /**
@@ -207,9 +214,28 @@ export const getPlaceBySlug = async (slug: string) => {
   const place = await db.place.findFirst({
     where: { slug },
     include: {
-      operatingHours: true,
-      placeFacilities: { include: { facility: true } },
-      placePhotos: true,
+      operatingHours: {
+        select: {
+          day: true,
+          startDateTime: true,
+          endDateTime: true,
+          placeId: true,
+        },
+      },
+      placeFacilities: {
+        select: {
+          description: true,
+          facilityId: true,
+          placeId: true,
+        },
+      },
+      placePhotos: {
+        select: {
+          url: true,
+          order: true,
+          placeId: true,
+        },
+      },
     },
   });
 
