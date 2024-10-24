@@ -8,32 +8,57 @@ type User = {
   role: string;
 };
 
-/**
- * Prepares child data to be used in Prisma's `update` method when updating
- * a parent model with its child relations.
- *
- * @param {any[]} existingData - The existing child data to be updated.
- * @param {any[]} newData - The new child data to be created.
- * @returns { { deleteMany: {}, create: any[] } | undefined } - The prepared child data.
- */
-const prepareChildData = (
-  existingData: any[],
-  newData: any[]
-): { deleteMany: {}; create: any[] } | undefined => {
-  return newData || existingData
-    ? {
-        deleteMany: {},
-        create: newData && newData.map((item: any) => ({ ...item })),
-      }
-    : undefined;
+// Helper function to format place data
+const formatPlaceData = (place: any, submitter?: boolean) => {
+  const formattedData: any = {
+    id: place.id,
+    name: place.name,
+    slug: place.slug,
+    description: place.description,
+    currency: place.city?.state.country.currency ?? null,
+    priceRange: place.priceRange,
+    latitude: place.latitude,
+    longitude: place.longitude,
+    address: {
+      street: place.streetAddress,
+      city: place.city?.name ?? null,
+      state: place.city?.state.name ?? null,
+      country: place.city?.state.country.name ?? null,
+      countryCode: place.city?.state.country.code ?? null,
+    },
+  };
+
+  if (place.operatingHours) {
+    formattedData.operatingHours = place.operatingHours;
+  }
+
+  if (place.placeFacilities) {
+    formattedData.placeFacilities = place.placeFacilities.map(
+      (facility: { facility: { name: string }; description: string }) => ({
+        facility: facility.facility.name,
+        description: facility.description,
+      })
+    );
+  }
+
+  if (place.placePhotos) {
+    formattedData.placePhotos = place.placePhotos
+      .sort((a: { order: number }, b: { order: number }) => a.order - b.order)
+      .map((photo: { url: string }) => photo.url);
+  }
+
+  if (submitter && place.user) {
+    formattedData.submitter = {
+      name: place.user.name,
+      username: place.user.username,
+      avatar_url: place.user.avatar_url,
+    };
+  }
+
+  return formattedData;
 };
 
-/**
- * Generate a unique slug based on the given name.
- *
- * @param name - The name to generate the slug from.
- * @returns A unique slug.
- */
+// Helper function to generate slug
 const generateUniqueSlug = async (name: string, existingSlug?: string) => {
   const baseSlug = slugify(name);
   let slug = baseSlug;
@@ -51,13 +76,21 @@ const generateUniqueSlug = async (name: string, existingSlug?: string) => {
   return slug;
 };
 
+// Helper function to prepare child data
+const prepareChildData = (existingData: any[], newData: any[]) =>
+  newData
+    ? { deleteMany: {}, create: newData.map((item: any) => ({ ...item })) }
+    : undefined;
+
 /**
- * Create a new place, together with a new city, state and country if they don't exist.
- * @param userId The ID of the user who creates the place.
- * @returns The newly created place.
+ * Creates a new place in the database with default values.
+ *
+ * @param userId The ID of the user making the request. The place will be associated with this user.
+ * @returns The newly created place information, including its ID, name, slug, description, street address,
+ * price range, and other details.
  */
 export const postPlaces = async (userId: string) => {
-  const place = await db.place.create({
+  return await db.place.create({
     data: {
       name: "Input name of Place",
       slug: await generateUniqueSlug("New Place"),
@@ -65,24 +98,21 @@ export const postPlaces = async (userId: string) => {
       streetAddress: "Input street address of Place",
       priceRange: "$-$$$",
       isPublished: false,
-      userId: userId,
+      userId,
     },
   });
-
-  return place;
 };
 
 /**
- * Update a place and return the updated place with its child relations.
+ * Updates an existing place in the database.
  *
- * @param userId - The ID of the user who owns the place.
- * @param placeId - The ID of the place to update.
- * @param body - The data to update the place with, which may include:
- *   - operatingHours: An array of objects with day, startDateTime, endDateTime.
- *   - placeFeatures: An array of objects with featureId and description.
- *   - placePhotos: An array of objects with url and order.
- * @throws {Error} - If the place does not exist or the user is not the owner.
- * @returns The updated place including its child relations.
+ * @param user The user making the request. Must be the owner of the place or have the ADMIN role.
+ * @param placeId The ID of the place to update.
+ * @param body The data to update the place with, including potential updates to operating hours,
+ * facilities, photos, and other place details.
+ * @throws {Error} If the place does not exist.
+ * @throws {Error} If the user does not have permission to edit the place.
+ * @returns The updated place information, including its operating hours, facilities, and photos.
  */
 export const patchPlace = async (user: User, placeId: string, body: any) => {
   const existingPlace = await db.place.findFirst({
@@ -94,10 +124,7 @@ export const patchPlace = async (user: User, placeId: string, body: any) => {
     },
   });
 
-  if (!existingPlace) {
-    throw new Error("Place not found.");
-  }
-
+  if (!existingPlace) throw new Error("Place not found.");
   if (user.role === "USER" && existingPlace.userId !== user.id) {
     throw new Error("You do not have permission to edit this place.");
   }
@@ -105,12 +132,11 @@ export const patchPlace = async (user: User, placeId: string, body: any) => {
   const newSlug = await generateUniqueSlug(body.name, existingPlace.slug);
   const { operatingHours, placeFacilities, placePhotos, ...placeData } = body;
 
-  const updatedPlace = await db.place.update({
+  return await db.place.update({
     where: { id: placeId },
     data: {
       ...placeData,
       slug: newSlug,
-      userId: existingPlace.userId,
       operatingHours: prepareChildData(
         existingPlace.operatingHours,
         operatingHours
@@ -127,26 +153,19 @@ export const patchPlace = async (user: User, placeId: string, body: any) => {
       placePhotos: true,
     },
   });
-
-  return updatedPlace;
 };
 
 /**
- * Deletes a place if the user has permission.
+ * Deletes a place from the database.
  *
  * @param placeId The ID of the place to delete.
- * @param user An object containing the user's ID and role.
- * @throws {Error} If the place is not found or the user does not have permission to delete.
+ * @param user The user making the request. Must be the owner of the place or have the ADMIN role.
+ * @throws {Error} If the user does not have permission to delete the place.
+ * @throws {Error} If the place does not exist.
  */
 export const deletePlace = async (placeId: string, user: User) => {
-  const existingPlace = await db.place.findFirst({
-    where: { id: placeId },
-  });
-
-  if (!existingPlace) {
-    throw new Error("Place not found.");
-  }
-
+  const existingPlace = await db.place.findFirst({ where: { id: placeId } });
+  if (!existingPlace) throw new Error("Place not found.");
   if (user.role === "USER" && existingPlace.userId !== user.id) {
     throw new Error("You do not have permission to delete this place.");
   }
@@ -155,11 +174,14 @@ export const deletePlace = async (placeId: string, user: User) => {
 };
 
 /**
- * Retrieves a list of places based on the provided filters and sorting options.
+ * Retrieves a list of places, with optional filtering and sorting.
  *
- * @param queryFilter The filter string to apply to the places list.
- * @param querySort The sort string to apply to the places list.
- * @returns A list of places with selected properties like id, name, and code.
+ * @param queryFilter Optional query string parameter for filtering the results.
+ * @param querySort Optional query string parameter for sorting the results.
+ * @returns A list of places, with their associated cities, users, operating hours,
+ * facilities, and photos. The format of the returned object is determined by the
+ * presence of the "user.username" filter in the queryFilter parameter.
+ * @throws {Error} If no places are found that match the given filters.
  */
 export const getPlaces = async (queryFilter?: string, querySort?: string) => {
   const where = parseFilters(queryFilter);
@@ -179,6 +201,12 @@ export const getPlaces = async (queryFilter?: string, querySort?: string) => {
       city: {
         select: {
           name: true,
+          state: {
+            select: {
+              name: true,
+              country: { select: { name: true, code: true, currency: true } },
+            },
+          },
         },
       },
       user: {
@@ -193,59 +221,41 @@ export const getPlaces = async (queryFilter?: string, querySort?: string) => {
     orderBy,
   });
 
-  if (places.length === 0) {
-    throw new Error("Places not found.");
+  if (places.length === 0) throw new Error("Places not found.");
+
+  const formattedPlaces = places.map((place) =>
+    formatPlaceData(place, !queryFilter?.includes("user.username"))
+  );
+
+  const user = places[0]?.user;
+
+  if (queryFilter?.includes("user.username")) {
+    return {
+      name: user.name,
+      username: user.username,
+      avatar_url: user.avatar_url,
+      places: formattedPlaces,
+    };
   }
 
-  if (!queryFilter?.includes("user.username")) {
-    const mappedPlaces = places.map((item) => ({
-      ...item,
-      submitter: item.user,
-      user: undefined,
-    }));
-
-    return mappedPlaces;
-  }
-
-  const { user } = places[0];
-
-  return {
-    name: user.name,
-    username: user.username,
-    avatar_url: user.avatar_url,
-    places: places.map(
-      ({
-        id,
-        name,
-        slug,
-        description,
-        streetAddress,
-        priceRange,
-        latitude,
-        longitude,
-        isPublished,
-        city,
-      }) => ({
-        id,
-        name,
-        slug,
-        description,
-        streetAddress,
-        priceRange,
-        latitude,
-        longitude,
-        isPublished,
-        city,
-      })
-    ),
-  };
+  return formattedPlaces.map((place) => ({
+    ...place,
+    submitter: user
+      ? {
+          name: user.name,
+          username: user.username,
+          avatar_url: user.avatar_url,
+        }
+      : undefined,
+  }));
 };
 
 /**
- * Retrieves a place by its slug.
- *
+ * Retrieves a single place by its slug.
  * @param slug The slug of the place to retrieve.
- * @returns The place object if found, otherwise null.
+ * @throws {Error} If the place is not found or is not published.
+ * @returns The retrieved place, with its associated user, city, operating
+ * hours, facilities, and photos.
  */
 export const getPlaceBySlug = async (slug: string) => {
   const place = await db.place.findFirst({
@@ -271,7 +281,7 @@ export const getPlaceBySlug = async (slug: string) => {
           state: {
             select: {
               name: true,
-              country: { select: { name: true, code: true } },
+              country: { select: { name: true, code: true, currency: true } },
             },
           },
         },
@@ -286,58 +296,17 @@ export const getPlaceBySlug = async (slug: string) => {
       placeFacilities: {
         select: {
           description: true,
-          facility: {
-            select: {
-              name: true,
-            },
-          },
+          facility: { select: { name: true } },
         },
       },
       placePhotos: {
-        select: {
-          url: true,
-          order: true,
-        },
+        select: { url: true, order: true },
       },
     },
     where: { slug, isPublished: true },
   });
 
-  if (!place) {
-    throw new Error("Place not found.");
-  }
+  if (!place) throw new Error("Place not found.");
 
-  const formattedPlace = {
-    id: place.id,
-    name: place.name,
-    slug: place.slug,
-    description: place.description,
-    priceRange: place.priceRange,
-    latitude: place.latitude,
-    longitude: place.longitude,
-    address: {
-      street: place.streetAddress,
-      city: place.city ? place.city.name : null,
-      state: place.city ? place.city.state.name : null,
-      country:
-        place.city && place.city.state ? place.city.state.country.name : null,
-      countryCode:
-        place.city && place.city.state ? place.city.state.country.code : null,
-    },
-    operatingHours: place.operatingHours,
-    placeFacilities: place.placeFacilities.map((facility) => ({
-      facility: facility.facility.name,
-      description: facility.description,
-    })),
-    placePhotos: place.placePhotos
-      .sort((a, b) => a.order - b.order)
-      .map((photo) => photo.url),
-    submitter: {
-      name: place.user.name,
-      username: place.user.username,
-      avatar_url: place.user.avatar_url,
-    },
-  };
-
-  return formattedPlace;
+  return formatPlaceData(place, true);
 };
