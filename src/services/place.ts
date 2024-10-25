@@ -2,6 +2,7 @@ import db from "@/libs/db";
 import parseFilters from "@/utils/filter";
 import parseSorts from "@/utils/sort";
 import slugify from "@/utils/slugify";
+import { formatTime, getOperatingHours } from "@/utils/time";
 
 type User = {
   id: string;
@@ -9,7 +10,11 @@ type User = {
 };
 
 // Helper function to format place data
-const formatPlaceData = (place: any, submitter?: boolean) => {
+const formatPlaceData = (
+  place: any,
+  submitter?: boolean,
+  detailedOperatingHours: boolean = false
+) => {
   const formattedData: any = {
     id: place.id,
     name: place.name,
@@ -29,7 +34,29 @@ const formatPlaceData = (place: any, submitter?: boolean) => {
   };
 
   if (place.operatingHours) {
-    formattedData.operatingHours = place.operatingHours;
+    if (detailedOperatingHours) {
+      formattedData.operatingHours = place.operatingHours.map(
+        ({
+          day,
+          startDateTime,
+          endDateTime,
+        }: {
+          day: string;
+          startDateTime: string;
+          endDateTime: string;
+        }) => ({
+          day,
+          start: formatTime(startDateTime),
+          end: formatTime(endDateTime),
+        })
+      );
+    } else {
+      const { openingTime, closingTime } = getOperatingHours(
+        place.operatingHours
+      );
+      formattedData.openingTime = openingTime;
+      formattedData.closingTime = closingTime;
+    }
   }
 
   if (place.placeFacilities) {
@@ -216,6 +243,7 @@ export const getPlaces = async (queryFilter?: string, querySort?: string) => {
           avatarUrl: true,
         },
       },
+      operatingHours: true,
     },
     where,
     orderBy,
@@ -308,5 +336,5 @@ export const getPlaceBySlug = async (slug: string) => {
 
   if (!place) throw new Error("Place not found.");
 
-  return formatPlaceData(place, true);
+  return formatPlaceData(place, true, true);
 };
