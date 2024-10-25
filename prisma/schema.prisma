@@ -14,12 +14,12 @@ datasource db {
 }
 
 model User {
-  id         String  @id @default(cuid())
-  name       String  @db.VarChar(128)
-  email      String  @unique @db.VarChar(128)
-  username   String  @unique @db.VarChar(32)
-  password   String
-  avatar_url String?
+  id        String  @id @default(cuid())
+  name      String  @db.VarChar(128)
+  email     String  @unique @db.VarChar(128)
+  username  String  @unique @db.VarChar(32)
+  password  String
+  avatarUrl String?
 
   roleId String
   role   Role   @relation(fields: [roleId], references: [id])

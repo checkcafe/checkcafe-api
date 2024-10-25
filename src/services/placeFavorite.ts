@@ -38,7 +38,7 @@ export const getFavorites = async (username: string, querySort?: string) => {
         select: {
           name: true,
           username: true,
-          avatar_url: true,
+          avatarUrl: true,
         },
       },
     },
@@ -50,12 +50,12 @@ export const getFavorites = async (username: string, querySort?: string) => {
     throw new Error("Favorite places not found");
   }
 
-  const { name, username: userUsername, avatar_url } = placeFavorites[0].user;
+  const { name, username: userUsername, avatarUrl } = placeFavorites[0].user;
 
   const userFavorites = {
     name,
     username: userUsername,
-    avatar_url,
+    avatarUrl,
     place_favorites: placeFavorites.map(({ place }) => ({
       name: place.name,
       slug: place.slug,

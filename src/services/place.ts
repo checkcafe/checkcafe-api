@@ -51,7 +51,7 @@ const formatPlaceData = (place: any, submitter?: boolean) => {
     formattedData.submitter = {
       name: place.user.name,
       username: place.user.username,
-      avatar_url: place.user.avatar_url,
+      avatarUrl: place.user.avatarUrl,
     };
   }
 
@@ -213,7 +213,7 @@ export const getPlaces = async (queryFilter?: string, querySort?: string) => {
         select: {
           name: true,
           username: true,
-          avatar_url: true,
+          avatarUrl: true,
         },
       },
     },
@@ -233,7 +233,7 @@ export const getPlaces = async (queryFilter?: string, querySort?: string) => {
     return {
       name: user.name,
       username: user.username,
-      avatar_url: user.avatar_url,
+      avatarUrl: user.avatarUrl,
       places: formattedPlaces,
     };
   }
@@ -244,7 +244,7 @@ export const getPlaces = async (queryFilter?: string, querySort?: string) => {
       ? {
           name: user.name,
           username: user.username,
-          avatar_url: user.avatar_url,
+          avatarUrl: user.avatarUrl,
         }
       : undefined,
   }));
@@ -272,7 +272,7 @@ export const getPlaceBySlug = async (slug: string) => {
         select: {
           name: true,
           username: true,
-          avatar_url: true,
+          avatarUrl: true,
         },
       },
       city: {

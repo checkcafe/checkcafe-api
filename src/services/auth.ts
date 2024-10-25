@@ -41,7 +41,7 @@ export const register = async (data: z.infer<typeof registerSchema>) => {
         username: data.username,
         email: data.email,
         password: hashedPassword,
-        avatar_url: data.avatar_url,
+        avatarUrl: data.avatarUrl,
         roleId: role.id,
       },
     });
@@ -50,7 +50,7 @@ export const register = async (data: z.infer<typeof registerSchema>) => {
       name: user.name,
       username: user.username,
       email: user.email,
-      avatar_url: user.avatar_url,
+      avatarUrl: user.avatarUrl,
     };
   });
 };

@@ -68,6 +68,8 @@ async function upsertUsers() {
       }
     }
 
+    const avatarUrl = `https://api.dicebear.com/9.x/avataaars-neutral/svg?seed=${user.username}&size=64`;
+
     const hashedPassword = await passwordHash(user.password);
     await prisma.user.upsert({
       where: { username: user.username },
@@ -75,6 +77,7 @@ async function upsertUsers() {
         name: user.name,
         email: user.email,
         password: hashedPassword,
+        avatarUrl: avatarUrl,
         roleId: role.id,
       },
       create: {
@@ -82,6 +85,7 @@ async function upsertUsers() {
         email: user.email,
         username: user.username,
         password: hashedPassword,
+        avatarUrl: avatarUrl,
         roleId: role.id,
       },
     });

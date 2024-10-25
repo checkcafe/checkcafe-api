@@ -53,8 +53,8 @@ authRoute.openapi(
     try {
       const appendBody = {
         ...body,
-        avatar_url:
-          body.avatar_url ??
+        avatarUrl:
+          body.avatarUrl ??
           `https://api.dicebear.com/9.x/avataaars-neutral/svg?seed=${body.username}&size=64`,
       };
 

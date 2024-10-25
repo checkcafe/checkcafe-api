@@ -59,7 +59,7 @@ export const registerSchema = z
         description: "The email of the user.",
         example: "user@mail.com",
       }),
-    avatar_url: z
+    avatarUrl: z
       .string()
       .url("Invalid avatar URL")
       .max(255)

@@ -75,7 +75,7 @@ userRoute.openapi(
       const result = {
         name: user.name,
         username: user.username,
-        avatar_url: user.avatar_url,
+        avatarUrl: user.avatarUrl,
         places_url: `${baseUrl}/users/${user.username}/places`,
         favorites_url: `${baseUrl}/users/${user.username}/favorites`,
         role: user.role?.name || null,
