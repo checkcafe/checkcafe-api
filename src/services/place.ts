@@ -14,6 +14,7 @@ type User = {
 const formatPlaceData = (
   place: any,
   submitter?: boolean,
+  thumbnail?: boolean,
   detailedOperatingHours: boolean = false
 ) => {
   const formattedData: any = {
@@ -70,9 +71,16 @@ const formatPlaceData = (
   }
 
   if (place.placePhotos) {
-    formattedData.placePhotos = place.placePhotos
-      .sort((a: { order: number }, b: { order: number }) => a.order - b.order)
-      .map((photo: { url: string }) => photo.url);
+    const sortedPhotos = place.placePhotos.sort(
+      (a: { order: number }, b: { order: number }) => a.order - b.order
+    );
+    const photoUrls = sortedPhotos.map((photo: { url: string }) => photo.url);
+
+    if (thumbnail) {
+      formattedData.thumbnail = photoUrls[0];
+    } else {
+      formattedData.photos = photoUrls;
+    }
   }
 
   if (submitter && place.user) {
@@ -292,6 +300,7 @@ export const getPlaces = async (queryFilter?: string, querySort?: string) => {
         },
       },
       operatingHours: true,
+      placePhotos: true,
     },
     where,
     orderBy,
@@ -300,7 +309,7 @@ export const getPlaces = async (queryFilter?: string, querySort?: string) => {
   if (places.length === 0) throw new Error("Places not found.");
 
   const formattedPlaces = places.map((place) =>
-    formatPlaceData(place, !queryFilter?.includes("user.username"))
+    formatPlaceData(place, !queryFilter?.includes("user.username"), true)
   );
 
   const user = places[0]?.user;
@@ -384,5 +393,5 @@ export const getPlaceBySlug = async (slug: string) => {
 
   if (!place) throw new Error("Place not found.");
 
-  return formatPlaceData(place, true, true);
+  return formatPlaceData(place, true, false, true);
 };

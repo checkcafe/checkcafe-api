@@ -10,5 +10,5 @@
 -- AlterTable
 ALTER TABLE "operating_hours" DROP COLUMN "endDateTime",
 DROP COLUMN "startDateTime",
-ADD COLUMN     "closingTime" TIMETZ NOT NULL,
-ADD COLUMN     "openingTime" TIMETZ NOT NULL;
+ADD COLUMN     "closingTime" TIME NOT NULL,
+ADD COLUMN     "openingTime" TIME NOT NULL;
