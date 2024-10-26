@@ -277,14 +277,22 @@ async function upsertPlaces() {
                 },
               },
               update: {
-                startDateTime: operatingHour.startDateTime,
-                endDateTime: operatingHour.endDateTime,
+                openingTime: new Date(
+                  `1970-01-01T${operatingHour.openingTime}Z`
+                ),
+                closingTime: new Date(
+                  `1970-01-01T${operatingHour.closingTime}Z`
+                ),
               },
               create: {
                 placeId: upsertedPlace.id,
                 day: operatingHour.day,
-                startDateTime: operatingHour.startDateTime,
-                endDateTime: operatingHour.endDateTime,
+                openingTime: new Date(
+                  `1970-01-01T${operatingHour.openingTime}Z`
+                ),
+                closingTime: new Date(
+                  `1970-01-01T${operatingHour.closingTime}Z`
+                ),
               },
             });
           }

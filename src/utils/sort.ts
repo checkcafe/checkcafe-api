@@ -15,12 +15,12 @@ type SortOrder = "asc" | "desc";
  * @throws {Error} If the sort string is invalid or cannot be parsed.
  */
 const parseSorts = (sort?: string | null): Array<Record<string, SortOrder>> => {
-  if (!sort) return [];
+  if (!sort || typeof sort !== "string") return [];
 
   try {
     const sortParams = JSON.parse(sort);
 
-    if (typeof sortParams !== "object") {
+    if (typeof sortParams !== "object" || sortParams === null) {
       throw new Error("Invalid sort format. Please provide valid JSON.");
     }
 
@@ -56,7 +56,7 @@ const parseSorts = (sort?: string | null): Array<Record<string, SortOrder>> => {
     });
 
     return sortOptions;
-  } catch (error: any) {
+  } catch (error: Error | any) {
     throw new Error(error.message);
   }
 };
