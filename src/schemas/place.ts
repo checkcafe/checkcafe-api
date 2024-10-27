@@ -34,7 +34,7 @@ export const placeSchema = z.object({
     description: "The longitude of the place.",
   }),
   isPublished: z.boolean().optional().openapi({
-    description: "The state of the place (1 = published, 0 = not published).",
+    description: "The state of the place (true = published, false = not published).",
   }),
   cityId: z.string().openapi({
     description: "The ID of the city of the place.",

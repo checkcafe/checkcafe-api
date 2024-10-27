@@ -28,8 +28,8 @@ placeRoute.openapi(
     },
     tags: API_TAGS,
   },
-  async (c: Context) => {
-    const { filter, sort } = c.req.query();
+  async (c) => {
+    const { filter, sort } = c.req.valid("query");
 
     let filterObj = filter ? JSON.parse(filter) : {};
     filterObj = { isPublished: true, ...filterObj };
@@ -95,6 +95,15 @@ placeRoute.openapi(
       "This operation is used to create a new place. The user must be authenticated.",
     security: [{ AuthorizationBearer: [] }],
     middleware: [authMiddleware],
+    request: {
+      body: {
+        content: {
+          "application/json": {
+            schema: placeSchema.omit({ id: true }),
+          },
+        },
+      },
+    },
     responses: {
       201: {
         description: "Success create a new place",

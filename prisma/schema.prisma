@@ -141,10 +141,10 @@ model Place {
 }
 
 model OperatingHour {
-  id            String   @id @default(cuid())
-  day           String
-  startDateTime DateTime
-  endDateTime   DateTime
+  id          String   @id @default(cuid())
+  day         String
+  openingTime DateTime @db.Time()
+  closingTime DateTime @db.Time()
 
   placeId String
   place   Place  @relation(fields: [placeId], references: [id], onDelete: Cascade)

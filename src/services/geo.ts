@@ -72,6 +72,8 @@ export const getCities = async (queryFilter?: string, querySort?: string) => {
     select: {
       id: true,
       name: true,
+      latitude: true,
+      longitude: true,
       state: {
         select: {
           name: true,

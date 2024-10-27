@@ -1,7 +1,7 @@
 type OperatingHour = {
   day: string;
-  startDateTime: string;
-  endDateTime: string;
+  openingTime: string;
+  closingTime: string;
 };
 
 type PlaceFacility = {
@@ -40,38 +40,38 @@ const places: Place[] = [
     operatingHours: [
       {
         day: "Monday",
-        startDateTime: "2024-10-21T09:00:00Z",
-        endDateTime: "2024-10-21T22:00:00Z",
+        openingTime: "09:00",
+        closingTime: "22:00",
       },
       {
         day: "Tuesday",
-        startDateTime: "2024-10-22T08:00:00Z",
-        endDateTime: "2024-10-22T21:00:00Z",
+        openingTime: "08:00",
+        closingTime: "21:00",
       },
       {
         day: "Wednesday",
-        startDateTime: "2024-10-23T08:00:00Z",
-        endDateTime: "2024-10-23T21:00:00Z",
+        openingTime: "08:00",
+        closingTime: "21:00",
       },
       {
         day: "Thursday",
-        startDateTime: "2024-10-24T08:00:00Z",
-        endDateTime: "2024-10-24T21:00:00Z",
+        openingTime: "08:00",
+        closingTime: "21:00",
       },
       {
         day: "Friday",
-        startDateTime: "2024-10-25T08:00:00Z",
-        endDateTime: "2024-10-25T21:00:00Z",
+        openingTime: "08:00",
+        closingTime: "21:00",
       },
       {
         day: "Saturday",
-        startDateTime: "2024-10-25T08:00:00Z",
-        endDateTime: "2024-10-25T21:00:00Z",
+        openingTime: "08:00",
+        closingTime: "21:00",
       },
       {
         day: "Sunday",
-        startDateTime: "2024-10-25T08:00:00Z",
-        endDateTime: "2024-10-25T21:00:00Z",
+        openingTime: "08:00",
+        closingTime: "21:00",
       },
     ],
     placeFacilities: [
@@ -114,38 +114,38 @@ const places: Place[] = [
     operatingHours: [
       {
         day: "Monday",
-        startDateTime: "2024-10-21T08:00:00Z",
-        endDateTime: "2024-10-21T21:00:00Z",
+        openingTime: "08:00",
+        closingTime: "21:00",
       },
       {
         day: "Tuesday",
-        startDateTime: "2024-10-22T08:00:00Z",
-        endDateTime: "2024-10-22T21:00:00Z",
+        openingTime: "08:00",
+        closingTime: "21:00",
       },
       {
         day: "Wednesday",
-        startDateTime: "2024-10-23T08:00:00Z",
-        endDateTime: "2024-10-23T21:00:00Z",
+        openingTime: "08:00",
+        closingTime: "21:00",
       },
       {
         day: "Thursday",
-        startDateTime: "2024-10-24T08:00:00Z",
-        endDateTime: "2024-10-24T21:00:00Z",
+        openingTime: "08:00",
+        closingTime: "21:00",
       },
       {
         day: "Friday",
-        startDateTime: "2024-10-25T08:00:00Z",
-        endDateTime: "2024-10-25T21:00:00Z",
+        openingTime: "08:00",
+        closingTime: "21:00",
       },
       {
         day: "Saturday",
-        startDateTime: "2024-10-25T08:00:00Z",
-        endDateTime: "2024-10-25T21:00:00Z",
+        openingTime: "08:00",
+        closingTime: "21:00",
       },
       {
         day: "Sunday",
-        startDateTime: "2024-10-25T08:00:00Z",
-        endDateTime: "2024-10-25T21:00:00Z",
+        openingTime: "08:00",
+        closingTime: "21:00",
       },
     ],
     placeFacilities: [
@@ -188,38 +188,38 @@ const places: Place[] = [
     operatingHours: [
       {
         day: "Monday",
-        startDateTime: "2024-10-21T10:00:00Z",
-        endDateTime: "2024-10-21T02:00:00Z",
+        openingTime: "10:00",
+        closingTime: "02:00",
       },
       {
         day: "Tuesday",
-        startDateTime: "2024-10-22T10:00:00Z",
-        endDateTime: "2024-10-22T02:00:00Z",
+        openingTime: "10:00",
+        closingTime: "02:00",
       },
       {
         day: "Wednesday",
-        startDateTime: "2024-10-23T10:00:00Z",
-        endDateTime: "2024-10-23T02:00:00Z",
+        openingTime: "10:00",
+        closingTime: "02:00",
       },
       {
         day: "Thursday",
-        startDateTime: "2024-10-24T10:00:00Z",
-        endDateTime: "2024-10-24T02:00:00Z",
+        openingTime: "10:00",
+        closingTime: "02:00",
       },
       {
         day: "Friday",
-        startDateTime: "2024-10-25T10:00:00Z",
-        endDateTime: "2024-10-25T02:00:00Z",
+        openingTime: "10:00",
+        closingTime: "02:00",
       },
       {
         day: "Saturday",
-        startDateTime: "2024-10-25T10:00:00Z",
-        endDateTime: "2024-10-25T02:00:00Z",
+        openingTime: "10:00",
+        closingTime: "02:00",
       },
       {
         day: "Sunday",
-        startDateTime: "2024-10-25T10:00:00Z",
-        endDateTime: "2024-10-25T02:00:00Z",
+        openingTime: "10:00",
+        closingTime: "02:00",
       },
     ],
     placeFacilities: [
@@ -258,38 +258,38 @@ const places: Place[] = [
     operatingHours: [
       {
         day: "Monday",
-        startDateTime: "2024-10-21T09:00:00Z",
-        endDateTime: "2024-10-21T22:00:00Z",
+        openingTime: "09:00",
+        closingTime: "22:00",
       },
       {
         day: "Tuesday",
-        startDateTime: "2024-10-22T09:00:00Z",
-        endDateTime: "2024-10-22T22:00:00Z",
+        openingTime: "09:00",
+        closingTime: "22:00",
       },
       {
         day: "Wednesday",
-        startDateTime: "2024-10-23T09:00:00Z",
-        endDateTime: "2024-10-23T22:00:00Z",
+        openingTime: "09:00",
+        closingTime: "22:00",
       },
       {
         day: "Thursday",
-        startDateTime: "2024-10-24T09:00:00Z",
-        endDateTime: "2024-10-24T22:00:00Z",
+        openingTime: "09:00",
+        closingTime: "22:00",
       },
       {
         day: "Friday",
-        startDateTime: "2024-10-25T09:00:00Z",
-        endDateTime: "2024-10-25T22:00:00Z",
+        openingTime: "09:00",
+        closingTime: "22:00",
       },
       {
         day: "Saturday",
-        startDateTime: "2024-10-25T09:00:00Z",
-        endDateTime: "2024-10-25T22:00:00Z",
+        openingTime: "09:00",
+        closingTime: "22:00",
       },
       {
         day: "Sunday",
-        startDateTime: "2024-10-25T09:00:00Z",
-        endDateTime: "2024-10-25T22:00:00Z",
+        openingTime: "09:00",
+        closingTime: "22:00",
       },
     ],
     placePhotos: [
@@ -318,38 +318,38 @@ const places: Place[] = [
     operatingHours: [
       {
         day: "Monday",
-        startDateTime: "2024-10-21T09:00:00Z",
-        endDateTime: "2024-10-21T22:00:00Z",
+        openingTime: "09:00",
+        closingTime: "22:00",
       },
       {
         day: "Tuesday",
-        startDateTime: "2024-10-22T09:00:00Z",
-        endDateTime: "2024-10-22T22:00:00Z",
+        openingTime: "09:00",
+        closingTime: "22:00",
       },
       {
         day: "Wednesday",
-        startDateTime: "2024-10-23T09:00:00Z",
-        endDateTime: "2024-10-23T22:00:00Z",
+        openingTime: "09:00",
+        closingTime: "22:00",
       },
       {
         day: "Thursday",
-        startDateTime: "2024-10-24T09:00:00Z",
-        endDateTime: "2024-10-24T22:00:00Z",
+        openingTime: "09:00",
+        closingTime: "22:00",
       },
       {
         day: "Friday",
-        startDateTime: "2024-10-25T09:00:00Z",
-        endDateTime: "2024-10-25T22:00:00Z",
+        openingTime: "09:00",
+        closingTime: "22:00",
       },
       {
         day: "Saturday",
-        startDateTime: "2024-10-25T09:00:00Z",
-        endDateTime: "2024-10-25T22:00:00Z",
+        openingTime: "09:00",
+        closingTime: "22:00",
       },
       {
         day: "Sunday",
-        startDateTime: "2024-10-25T09:00:00Z",
-        endDateTime: "2024-10-25T22:00:00Z",
+        openingTime: "09:00",
+        closingTime: "22:00",
       },
     ],
     placePhotos: [

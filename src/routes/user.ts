@@ -76,8 +76,8 @@ userRoute.openapi(
         name: user.name,
         username: user.username,
         avatarUrl: user.avatarUrl,
-        places_url: `${baseUrl}/users/${user.username}/places`,
-        favorites_url: `${baseUrl}/users/${user.username}/favorites`,
+        placesUrl: `${baseUrl}/users/${user.username}/places`,
+        favoritesUrl: `${baseUrl}/users/${user.username}/favorites`,
         role: user.role?.name || null,
       };
 

@@ -2,6 +2,7 @@ import db from "@/libs/db";
 import parseFilters from "@/utils/filter";
 import parseSorts from "@/utils/sort";
 import slugify from "@/utils/slugify";
+import { timeRegex } from "@/schemas/operatingHour";
 import { formatTime, getOperatingHours } from "@/utils/time";
 
 type User = {
@@ -13,6 +14,7 @@ type User = {
 const formatPlaceData = (
   place: any,
   submitter?: boolean,
+  thumbnail?: boolean,
   detailedOperatingHours: boolean = false
 ) => {
   const formattedData: any = {
@@ -38,16 +40,16 @@ const formatPlaceData = (
       formattedData.operatingHours = place.operatingHours.map(
         ({
           day,
-          startDateTime,
-          endDateTime,
+          openingTime,
+          closingTime,
         }: {
           day: string;
-          startDateTime: string;
-          endDateTime: string;
+          openingTime: string;
+          closingTime: string;
         }) => ({
           day,
-          start: formatTime(startDateTime),
-          end: formatTime(endDateTime),
+          start: formatTime(openingTime),
+          end: formatTime(closingTime),
         })
       );
     } else {
@@ -69,9 +71,16 @@ const formatPlaceData = (
   }
 
   if (place.placePhotos) {
-    formattedData.placePhotos = place.placePhotos
-      .sort((a: { order: number }, b: { order: number }) => a.order - b.order)
-      .map((photo: { url: string }) => photo.url);
+    const sortedPhotos = place.placePhotos.sort(
+      (a: { order: number }, b: { order: number }) => a.order - b.order
+    );
+    const photoUrls = sortedPhotos.map((photo: { url: string }) => photo.url);
+
+    if (thumbnail) {
+      formattedData.thumbnail = photoUrls[0];
+    } else {
+      formattedData.photos = photoUrls;
+    }
   }
 
   if (submitter && place.user) {
@@ -104,7 +113,7 @@ const generateUniqueSlug = async (name: string, existingSlug?: string) => {
 };
 
 // Helper function to prepare child data
-const prepareChildData = (existingData: any[], newData: any[]) =>
+const prepareChildData = (newData: any[]) =>
   newData
     ? { deleteMany: {}, create: newData.map((item: any) => ({ ...item })) }
     : undefined;
@@ -164,15 +173,9 @@ export const patchPlace = async (user: User, placeId: string, body: any) => {
     data: {
       ...placeData,
       slug: newSlug,
-      operatingHours: prepareChildData(
-        existingPlace.operatingHours,
-        operatingHours
-      ),
-      placeFacilities: prepareChildData(
-        existingPlace.placeFacilities,
-        placeFacilities
-      ),
-      placePhotos: prepareChildData(existingPlace.placePhotos, placePhotos),
+      operatingHours: prepareChildData(operatingHours),
+      placeFacilities: prepareChildData(placeFacilities),
+      placePhotos: prepareChildData(placePhotos),
     },
     include: {
       operatingHours: true,
@@ -214,6 +217,59 @@ export const getPlaces = async (queryFilter?: string, querySort?: string) => {
   const where = parseFilters(queryFilter);
   const orderBy = parseSorts(querySort);
 
+  if (where.operatingHours) {
+    const parseTime = (time: string) => `1970-01-01T${time}:00.000Z`;
+
+    const isValidTimeFormat = (time: string) => {
+      return timeRegex.test(time);
+    };
+
+    const openingTimeCondition = where.operatingHours.openingTime
+      ? {
+          openingTime: {
+            ...(where.operatingHours.openingTime.gte &&
+              isValidTimeFormat(where.operatingHours.openingTime.gte) && {
+                gte: new Date(
+                  parseTime(where.operatingHours.openingTime.gte)
+                ).toISOString(),
+              }),
+            ...(where.operatingHours.openingTime.gt &&
+              isValidTimeFormat(where.operatingHours.openingTime.gt) && {
+                gt: new Date(
+                  parseTime(where.operatingHours.openingTime.gt)
+                ).toISOString(),
+              }),
+          },
+        }
+      : undefined;
+
+    const closingTimeCondition = where.operatingHours.closingTime
+      ? {
+          closingTime: {
+            ...(where.operatingHours.closingTime.lte &&
+              isValidTimeFormat(where.operatingHours.closingTime.lte) && {
+                lte: new Date(
+                  parseTime(where.operatingHours.closingTime.lte)
+                ).toISOString(),
+              }),
+            ...(where.operatingHours.closingTime.lt &&
+              isValidTimeFormat(where.operatingHours.closingTime.lt) && {
+                lt: new Date(
+                  parseTime(where.operatingHours.closingTime.lt)
+                ).toISOString(),
+              }),
+          },
+        }
+      : undefined;
+
+    where.operatingHours = {
+      every: {
+        ...openingTimeCondition,
+        ...closingTimeCondition,
+      },
+    };
+  }
+
   const places = await db.place.findMany({
     select: {
       id: true,
@@ -244,6 +300,7 @@ export const getPlaces = async (queryFilter?: string, querySort?: string) => {
         },
       },
       operatingHours: true,
+      placePhotos: true,
     },
     where,
     orderBy,
@@ -252,7 +309,7 @@ export const getPlaces = async (queryFilter?: string, querySort?: string) => {
   if (places.length === 0) throw new Error("Places not found.");
 
   const formattedPlaces = places.map((place) =>
-    formatPlaceData(place, !queryFilter?.includes("user.username"))
+    formatPlaceData(place, !queryFilter?.includes("user.username"), true)
   );
 
   const user = places[0]?.user;
@@ -317,8 +374,8 @@ export const getPlaceBySlug = async (slug: string) => {
       operatingHours: {
         select: {
           day: true,
-          startDateTime: true,
-          endDateTime: true,
+          openingTime: true,
+          closingTime: true,
         },
       },
       placeFacilities: {
@@ -336,5 +393,5 @@ export const getPlaceBySlug = async (slug: string) => {
 
   if (!place) throw new Error("Place not found.");
 
-  return formatPlaceData(place, true, true);
+  return formatPlaceData(place, true, false, true);
 };
