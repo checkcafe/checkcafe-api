@@ -367,6 +367,306 @@ const places: Place[] = [
       },
     ],
   },
+  {
+    name: "Haruna Cafe",
+    streetAddress: "Jl. Danau Sentarum, Sungai Bangkong, Kec. Pontianak Kota.",
+    city: "Kota Pontianak",
+    priceRange: "25000",
+    isPublished: true,
+    lat: -0.048090,
+    long: 109.308060,
+    operatingHours: [
+      {
+        day: "Sunday",
+        openingTime: "07:00",
+        closingTime: "23:00"
+      },
+      {
+        day: "Sunday",
+        openingTime: "07:00",
+        closingTime: "23:00"
+      },
+      {
+        day: "Sunday",
+        openingTime: "07:00",
+        closingTime: "23:00"
+      },
+      {
+        day: "Sunday",
+        openingTime: "07:00",
+        closingTime: "23:00"
+      },
+      {
+        day: "Sunday",
+        openingTime: "07:00",
+        closingTime: "23:00"
+      },
+      {
+        day: "Sunday",
+        openingTime: "07:00",
+        closingTime: "23:00"
+      },
+      {
+        day: "Sunday",
+        openingTime: "07:00",
+        closingTime: "23:00"
+      },
+    ],
+    placePhotos: [
+      {
+        url: "https://lh3.googleusercontent.com/p/AF1QipPs47nBR9i97qUNwEs0tWTRR18kfHsETdzxInPa=s680-w680-h510",
+        order: 0,
+      },
+      {
+        url: "https://lh3.googleusercontent.com/p/AF1QipPdSWn1wtLD7vVD-j_71RrxlrKGXZeqCIi5IvV8=s680-w680-h510",
+        order: 1,
+      },
+      {
+        url: "https://lh3.googleusercontent.com/p/AF1QipNGBXIlnKx_zZ021rJZWz4qcZVWMChl8ViPPg0G=s680-w680-h510",
+        order: 2,
+      },
+    ],
+  },
+  {
+    name: "Chara Coffee",
+    streetAddress: "Gg. Purnama I No.9, Parit Tokaya, Kec. Pontianak Sel., Kota Pontianak.",
+    city: "Kota Pontianak",
+    priceRange: "25000",
+    isPublished: true,
+    lat: -0.058880,
+    long: 109.324830,
+    operatingHours: [
+      {
+        day: "Sunday",
+        openingTime: "09:00",
+        closingTime: "23:00"
+      },
+      {
+        day: "Sunday",
+        openingTime: "09:00",
+        closingTime: "23:00"
+      },
+      {
+        day: "Sunday",
+        openingTime: "09:00",
+        closingTime: "23:00"
+      },
+      {
+        day: "Sunday",
+        openingTime: "09:00",
+        closingTime: "23:00"
+      },
+      {
+        day: "Sunday",
+        openingTime: "09:00",
+        closingTime: "23:00"
+      },
+      {
+        day: "Sunday",
+        openingTime: "09:00",
+        closingTime: "23:00"
+      },
+      {
+        day: "Sunday",
+        openingTime: "09:00",
+        closingTime: "23:00"
+      },
+    ],
+    placePhotos: [
+      {
+        url: "https://lh3.googleusercontent.com/p/AF1QipMrF6SVCQztp1zjTVWPo7w20ouQ-BOHj8KLArGO=s680-w680-h510",
+        order: 0,
+      },
+      {
+        url: "https://lh3.googleusercontent.com/p/AF1QipMLnNmwpKUZejq67updudKrcUHPVpqSuykPvVmz=s680-w680-h510",
+        order: 1,
+      },
+      {
+        url: "https://lh3.googleusercontent.com/p/AF1QipNrmr2sxvYA_4GNTbpCs9r24pd2hwGNE8qx5AL8=s680-w680-h510",
+        order: 2,
+      },
+    ],
+  },
+  {
+    name: "The Grounds Cafe",
+    streetAddress: "Jl. WR Supratman No.9, Benua Melayu Darat, Kec. Pontianak Sel., Kota Pontianak.",
+    city: "Kota Pontianak",
+    priceRange: "50000",
+    isPublished: true,
+    lat: -0.035880,
+    long: 109.339400,
+    operatingHours: [
+      {
+        day: "Sunday",
+        openingTime: "10:00",
+        closingTime: "22:00"
+      },
+      {
+        day: "Sunday",
+        openingTime: "10:00",
+        closingTime: "22:00"
+      },
+      {
+        day: "Sunday",
+        openingTime: "10:00",
+        closingTime: "22:00"
+      },
+      {
+        day: "Sunday",
+        openingTime: "10:00",
+        closingTime: "22:00"
+      },
+      {
+        day: "Sunday",
+        openingTime: "10:00",
+        closingTime: "22:00"
+      },
+      {
+        day: "Sunday",
+        openingTime: "10:00",
+        closingTime: "22:00"
+      },
+      {
+        day: "Sunday",
+        openingTime: "10:00",
+        closingTime: "22:00"
+      },
+    ],
+    placePhotos: [
+      {
+        url: "https://lh3.googleusercontent.com/p/AF1QipPqmWlYvGskzgxml9dJApksqk9GgL-NxDIsYyxb=s680-w680-h510",
+        order: 0,
+      },
+      {
+        url: "https://lh3.googleusercontent.com/p/AF1QipP_IqljSQHPzbXCDW-tOjAXV7vZyIAhfmW1wg71=s680-w680-h510",
+        order: 1,
+      },
+      {
+        url: "https://lh3.googleusercontent.com/p/AF1QipPgBrXT_QCkYRDbdpH0ZoFt6DIYXsfZHceqfreR=s680-w680-h510",
+        order: 2,
+      },
+    ],
+  },
+  {
+    name: "Aming Coffee",
+    streetAddress: "Kampung Tengah, Mempawah Hilir, Mempawah Regency.",
+    city: "Mempawah",
+    priceRange: "50000",
+    isPublished: true,
+    lat: 0.353500,
+    long: 108.963790,
+    operatingHours: [
+      {
+        day: "Sunday",
+        openingTime: "08:00",
+        closingTime: "23:00"
+      },
+      {
+        day: "Sunday",
+        openingTime: "08:00",
+        closingTime: "23:00"
+      },
+      {
+        day: "Sunday",
+        openingTime: "08:00",
+        closingTime: "23:00"
+      },
+      {
+        day: "Sunday",
+        openingTime: "08:00",
+        closingTime: "23:00"
+      },
+      {
+        day: "Sunday",
+        openingTime: "08:00",
+        closingTime: "23:00"
+      },
+      {
+        day: "Sunday",
+        openingTime: "08:00",
+        closingTime: "23:00"
+      },
+      {
+        day: "Sunday",
+        openingTime: "08:00",
+        closingTime: "23:00"
+      },
+    ],
+    placePhotos: [
+      {
+        url: "https://lh3.googleusercontent.com/p/AF1QipNE2Rr-eJuMWIKrfhespJI0EXVuePpVu0JhiPtZ=s680-w680-h510",
+        order: 0,
+      },
+      {
+        url: "https://lh3.googleusercontent.com/p/AF1QipPasmT39ZOyjM5hmriu0glvV4uUqKXlZteoM8Wa=s680-w680-h510",
+        order: 1,
+      },
+      {
+        url: "https://lh3.googleusercontent.com/p/AF1QipO_zSDzRH9WwIXoYlTS1Vh1LNaFm94ekP4TkLFG=s680-w680-h510",
+        order: 2,
+      },
+    ],
+  },
+  {
+    name: "UP Coffee",
+    streetAddress: "VXXC+75X, Pasiran, Singkawang Barat, Singkawang City.",
+    city: "Kota Singkawang",
+    priceRange: "25000",
+    isPublished: true,
+    lat: 0.903430,
+    long: 108.975388,
+    operatingHours: [
+      {
+        day: "Sunday",
+        openingTime: "10:00",
+        closingTime: "22:00"
+      },
+      {
+        day: "Sunday",
+        openingTime: "10:00",
+        closingTime: "22:00"
+      },
+      {
+        day: "Sunday",
+        openingTime: "10:00",
+        closingTime: "22:00"
+      },
+      {
+        day: "Sunday",
+        openingTime: "10:00",
+        closingTime: "22:00"
+      },
+      {
+        day: "Sunday",
+        openingTime: "10:00",
+        closingTime: "22:00"
+      },
+      {
+        day: "Sunday",
+        openingTime: "10:00",
+        closingTime: "22:00"
+      },
+      {
+        day: "Sunday",
+        openingTime: "10:00",
+        closingTime: "22:00"
+      },
+    ],
+    placePhotos: [
+      {
+        url: "https://lh3.googleusercontent.com/p/AF1QipN2FSa-FPEnauvP7ZcHc9kBnEnWqubC_fRetMkC=s680-w680-h510",
+        order: 0,
+      },
+      {
+        url: "https://lh3.googleusercontent.com/p/AF1QipOPEkNu9R6aHHOyw-jQtRm5alFiRY-42Sew86tL=s680-w680-h510",
+        order: 1,
+      },
+      {
+        url: "https://lh3.googleusercontent.com/p/AF1QipPVGHM88Q_KrmOb0tvXiL7bq6Gqc2v1zLLOTjIr=s680-w680-h510",
+        order: 2,
+      },
+    ],
+  },
 ];
 
 export default places;
