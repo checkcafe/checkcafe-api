@@ -139,6 +139,48 @@ authRoute.openapi(
   }
 );
 
+// Change Password Route
+authRoute.openapi(
+  {
+    method: "put",
+    path: "/change-password",
+    summary: "Change password",
+    description: "Change user password.",
+    security: [{ AuthorizationBearer: [] }],
+    middleware: [authMiddleware],
+    request: {
+      body: {
+        content: {
+          "application/json": {
+            schema: authSchema.changePasswordSchema,
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: "Password successfully changed",
+      },
+      401: {
+        description: "Refresh token is missing or invalid",
+      },
+    },
+    tags: API_TAGS,
+  },
+  async (c) => {
+    const { oldPassword, newPassword } = c.req.valid("json");
+    const userId = (c as Context).get("user")?.id as string;
+
+    try {
+      await authService.changePassword(userId, oldPassword, newPassword);
+
+      return c.json({ message: "Password successfully changed!" }, 200);
+    } catch (error: Error | any) {
+      return c.json({ error: error.message }, 401);
+    }
+  }
+);
+
 // Refresh Token Route
 authRoute.openapi(
   {

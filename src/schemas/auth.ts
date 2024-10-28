@@ -9,6 +9,17 @@ const passwordSchema = z
     example: "secret",
   });
 
+export const changePasswordSchema = z
+  .object({
+    oldPassword: passwordSchema,
+    newPassword: passwordSchema,
+    confirmNewPassword: passwordSchema,
+  })
+  .refine((data) => data.newPassword === data.confirmNewPassword, {
+    message: "Passwords do not match",
+    path: ["confirmNewPassword"],
+  });
+
 export const loginSchema = z.object({
   username: z
     .string()

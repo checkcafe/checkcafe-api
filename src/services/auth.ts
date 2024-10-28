@@ -84,6 +84,37 @@ export const login = async (data: z.infer<typeof loginSchema>) => {
 };
 
 /**
+ * Changes a user's password. This function verifies the old password before
+ * updating the user's password to the new one. If the old password is incorrect,
+ * an error is thrown.
+ *
+ * @param userId The ID of the user whose password should be changed.
+ * @param oldPassword The old password to verify against.
+ * @param newPassword The new password to set.
+ * @returns The updated user.
+ * @throws {Error} If the old password is incorrect or the user is not found.
+ */
+export const changePassword = async (
+  userId: string,
+  oldPassword: string,
+  newPassword: string
+) => {
+  const user = await db.user.findUnique({ where: { id: userId } });
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  if (!(await passwordVerify(oldPassword, user.password))) {
+    throw new Error("Old password is incorrect");
+  }
+
+  return await db.user.update({
+    where: { id: userId },
+    data: { password: await passwordHash(newPassword) },
+  });
+};
+
+/**
  * Processes a refresh token by either revoking it or regenerating a new token pair.
  *
  * @param refreshToken The refresh token to process.
