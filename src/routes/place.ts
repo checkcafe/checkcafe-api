@@ -95,15 +95,6 @@ placeRoute.openapi(
       "This operation is used to create a new place. The user must be authenticated.",
     security: [{ AuthorizationBearer: [] }],
     middleware: [authMiddleware],
-    request: {
-      body: {
-        content: {
-          "application/json": {
-            schema: placeSchema.omit({ id: true }),
-          },
-        },
-      },
-    },
     responses: {
       201: {
         description: "Success create a new place",
@@ -118,9 +109,9 @@ placeRoute.openapi(
     const userId = c.get("user") ? c.get("user").id : null;
 
     try {
-      const places = await placeService.postPlaces(userId);
+      const result = await placeService.postPlaces(userId);
 
-      return c.json({ data: places }, 201);
+      return c.json(result, 201);
     } catch (error: Error | any) {
       return c.json(
         { error: error.message || "Failed to create a new place!" },

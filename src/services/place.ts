@@ -94,6 +94,29 @@ const formatPlaceData = (
   return formattedData;
 };
 
+// Helper function to generate unique place name
+const generateUniquePlaceName = async (
+  requestedName: string
+): Promise<string> => {
+  const existingPlace = await db.place.findUnique({
+    where: { name: requestedName },
+  });
+
+  if (!existingPlace) {
+    return requestedName;
+  }
+
+  let counter = 1;
+  let newName = `${requestedName} ${counter}`;
+
+  while (await db.place.findUnique({ where: { name: newName } })) {
+    counter += 1;
+    newName = `${requestedName} ${counter}`;
+  }
+
+  return newName;
+};
+
 // Helper function to generate slug
 const generateUniqueSlug = async (name: string, existingSlug?: string) => {
   const baseSlug = slugify(name);
@@ -128,11 +151,11 @@ const prepareChildData = (newData: any[]) =>
 export const postPlaces = async (userId: string) => {
   return await db.place.create({
     data: {
-      name: "Input name of Place",
+      name: await generateUniquePlaceName("Input name of Place"),
       slug: await generateUniqueSlug("New Place"),
       description: "No Description",
       streetAddress: "Input street address of Place",
-      priceRange: "$-$$$",
+      priceRange: "Input price range of Place",
       isPublished: false,
       userId,
     },
