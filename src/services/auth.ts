@@ -72,7 +72,7 @@ export const login = async (data: z.infer<typeof loginSchema>) => {
   });
 
   if (!user || !(await passwordVerify(inputPassword, user.password))) {
-    throw new Error("Invalid login credentials");
+    throw new Error("Username or password is incorrect");
   }
 
   const [accessToken, refreshToken] = await Promise.all([
@@ -95,7 +95,8 @@ export const login = async (data: z.infer<typeof loginSchema>) => {
  */
 const processToken = async (
   refreshToken: string,
-  action: "REVOKE" | "REGENERATE"
+  action: "REVOKE" | "REGENERATE",
+  timeoutDuration: number = 10000
 ) => {
   const decodedToken = await jwt.validateToken(refreshToken);
   if (!decodedToken?.subject) {
@@ -104,14 +105,29 @@ const processToken = async (
 
   const userId = decodedToken.subject;
 
+  const withTimeout = <T>(
+    promise: Promise<T>,
+    duration: number
+  ): Promise<T> => {
+    return Promise.race([
+      promise,
+      new Promise<T>((_, reject) =>
+        setTimeout(() => reject(new Error("Operation timed out")), duration)
+      ),
+    ]);
+  };
+
   return await db.$transaction(async (prisma) => {
-    const tokenRecords = await prisma.userToken.findMany({
-      where: {
-        userId,
-        revoked: false,
-        expiresAt: { gte: new Date() },
-      },
-    });
+    const tokenRecords = await withTimeout(
+      prisma.userToken.findMany({
+        where: {
+          userId,
+          revoked: false,
+          expiresAt: { gte: new Date() },
+        },
+      }),
+      timeoutDuration
+    );
 
     const validTokenRecord = await Promise.all(
       tokenRecords.map(async (tokenRecord) => {

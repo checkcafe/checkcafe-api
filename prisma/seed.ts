@@ -361,7 +361,7 @@ async function upsertPlaces() {
 }
 
 async function main() {
-  await prisma.$transaction(async (tx) => {
+  try {
     await upsertRoles();
     await upsertUsers();
     await upsertCountries();
@@ -369,15 +369,13 @@ async function main() {
     await upsertCities();
     await upsertFeatureCategories();
     await upsertPlaces();
-  });
-}
-
-main()
-  .catch((e) => {
+  } catch (e) {
     console.error("❌ Seeding error:", e);
     process.exit(1);
-  })
-  .finally(async () => {
+  } finally {
     await prisma.$disconnect();
     process.exit(0);
-  });
+  }
+}
+
+main();

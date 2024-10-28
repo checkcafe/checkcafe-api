@@ -52,3 +52,20 @@ export const getUser = async (userId?: string, username?: string) => {
 
   return user;
 };
+
+/**
+ * Updates a user in the database with the given data.
+ *
+ * @param userId The ID of the user to update.
+ * @param body The data to update the user with.
+ * @returns The updated user.
+ * @throws {Error} If the user does not exist.
+ */
+export const updateUser = async (userId: string, body: any) => {
+  const user = await db.user.update({
+    where: { id: userId },
+    data: body,
+  });
+
+  return user;
+};

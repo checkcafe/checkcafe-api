@@ -1,6 +1,7 @@
 import type { Context } from "hono";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { querySchema } from "@/schemas/query";
+import { userSchema } from "@/schemas/user";
 import * as userService from "@/services/user";
 import * as placeService from "@/services/place";
 import * as placeFavoriteService from "@/services/placeFavorite";
@@ -73,6 +74,7 @@ userRoute.openapi(
       const baseUrl = `${protocol}://${host}`;
 
       const result = {
+        id: user.id,
         name: user.name,
         username: user.username,
         avatarUrl: user.avatarUrl,
@@ -84,6 +86,56 @@ userRoute.openapi(
       return c.json(result, 200);
     } catch (error: Error | any) {
       return c.json({ error: error.message || "Failed to get user!" }, 401);
+    }
+  }
+);
+
+// Put User Profile Route
+userRoute.openapi(
+  {
+    method: "put",
+    path: "/{username}",
+    summary: "User profile",
+    description: "Update user information.",
+    security: [{ AuthorizationBearer: [] }],
+    middleware: [authMiddleware],
+    request: {
+      body: {
+        content: {
+          "application/json": {
+            schema: userSchema,
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: "User information successfully updated",
+      },
+      401: {
+        description: "Refresh token is missing or invalid",
+      },
+    },
+    tags: API_TAGS,
+  },
+  async (c) => {
+    const username = c.req.param("username");
+    const userId = (c as Context).get("user")?.id as string;
+    const body = c.req.valid("json");
+
+    try {
+      const [user, updatedUser] = await Promise.all([
+        await userService.getUser(userId, username),
+        await userService.updateUser(userId, body),
+      ]);
+
+      if (!user || user.id !== userId) {
+        return c.json({ error: "User not found!" }, 401);
+      }
+
+      return c.json(updatedUser, 200);
+    } catch (error: Error | any) {
+      return c.json({ error: error.message || "Failed to update user!" }, 401);
     }
   }
 );
