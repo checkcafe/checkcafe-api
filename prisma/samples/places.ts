@@ -373,8 +373,8 @@ const places: Place[] = [
     city: "Kota Pontianak",
     priceRange: "25000",
     isPublished: true,
-    lat: -0.048090,
-    long: 109.308060,
+    lat: -0.04809,
+    long: 109.30806,
     operatingHours: [
       {
         day: "Sunday",
@@ -382,32 +382,32 @@ const places: Place[] = [
         closingTime: "23:00"
       },
       {
-        day: "Sunday",
+        day: "Monday",
         openingTime: "07:00",
         closingTime: "23:00"
       },
       {
-        day: "Sunday",
+        day: "Tuesday",
         openingTime: "07:00",
         closingTime: "23:00"
       },
       {
-        day: "Sunday",
+        day: "Wednesday",
         openingTime: "07:00",
         closingTime: "23:00"
       },
       {
-        day: "Sunday",
+        day: "Thursday",
         openingTime: "07:00",
         closingTime: "23:00"
       },
       {
-        day: "Sunday",
+        day: "Friday",
         openingTime: "07:00",
         closingTime: "23:00"
       },
       {
-        day: "Sunday",
+        day: "Saturday",
         openingTime: "07:00",
         closingTime: "23:00"
       },
@@ -433,8 +433,8 @@ const places: Place[] = [
     city: "Kota Pontianak",
     priceRange: "25000",
     isPublished: true,
-    lat: -0.058880,
-    long: 109.324830,
+    lat: -0.05888,
+    long: 109.32483,
     operatingHours: [
       {
         day: "Sunday",
@@ -442,32 +442,32 @@ const places: Place[] = [
         closingTime: "23:00"
       },
       {
-        day: "Sunday",
+        day: "Monday",
         openingTime: "09:00",
         closingTime: "23:00"
       },
       {
-        day: "Sunday",
+        day: "Tuesday",
         openingTime: "09:00",
         closingTime: "23:00"
       },
       {
-        day: "Sunday",
+        day: "Wednesday",
         openingTime: "09:00",
         closingTime: "23:00"
       },
       {
-        day: "Sunday",
+        day: "Thursday",
         openingTime: "09:00",
         closingTime: "23:00"
       },
       {
-        day: "Sunday",
+        day: "Friday",
         openingTime: "09:00",
         closingTime: "23:00"
       },
       {
-        day: "Sunday",
+        day: "Saturday",
         openingTime: "09:00",
         closingTime: "23:00"
       },
@@ -493,8 +493,8 @@ const places: Place[] = [
     city: "Kota Pontianak",
     priceRange: "50000",
     isPublished: true,
-    lat: -0.035880,
-    long: 109.339400,
+    lat: -0.03588,
+    long: 109.3394,
     operatingHours: [
       {
         day: "Sunday",
@@ -502,32 +502,32 @@ const places: Place[] = [
         closingTime: "22:00"
       },
       {
-        day: "Sunday",
+        day: "Monday",
         openingTime: "10:00",
         closingTime: "22:00"
       },
       {
-        day: "Sunday",
+        day: "Tuesday",
         openingTime: "10:00",
         closingTime: "22:00"
       },
       {
-        day: "Sunday",
+        day: "Wednesday",
         openingTime: "10:00",
         closingTime: "22:00"
       },
       {
-        day: "Sunday",
+        day: "Thursday",
         openingTime: "10:00",
         closingTime: "22:00"
       },
       {
-        day: "Sunday",
+        day: "Friday",
         openingTime: "10:00",
         closingTime: "22:00"
       },
       {
-        day: "Sunday",
+        day: "Saturday",
         openingTime: "10:00",
         closingTime: "22:00"
       },
@@ -553,8 +553,8 @@ const places: Place[] = [
     city: "Mempawah",
     priceRange: "50000",
     isPublished: true,
-    lat: 0.353500,
-    long: 108.963790,
+    lat: 0.3535,
+    long: 108.96379,
     operatingHours: [
       {
         day: "Sunday",
@@ -562,32 +562,32 @@ const places: Place[] = [
         closingTime: "23:00"
       },
       {
-        day: "Sunday",
+        day: "Monday",
         openingTime: "08:00",
         closingTime: "23:00"
       },
       {
-        day: "Sunday",
+        day: "Tuesday",
         openingTime: "08:00",
         closingTime: "23:00"
       },
       {
-        day: "Sunday",
+        day: "Wednesday",
         openingTime: "08:00",
         closingTime: "23:00"
       },
       {
-        day: "Sunday",
+        day: "Thursday",
         openingTime: "08:00",
         closingTime: "23:00"
       },
       {
-        day: "Sunday",
+        day: "Friday",
         openingTime: "08:00",
         closingTime: "23:00"
       },
       {
-        day: "Sunday",
+        day: "Saturday",
         openingTime: "08:00",
         closingTime: "23:00"
       },
@@ -613,7 +613,7 @@ const places: Place[] = [
     city: "Kota Singkawang",
     priceRange: "25000",
     isPublished: true,
-    lat: 0.903430,
+    lat: 0.90343,
     long: 108.975388,
     operatingHours: [
       {
@@ -622,32 +622,32 @@ const places: Place[] = [
         closingTime: "22:00"
       },
       {
-        day: "Sunday",
+        day: "Monday",
         openingTime: "10:00",
         closingTime: "22:00"
       },
       {
-        day: "Sunday",
+        day: "Tuesday",
         openingTime: "10:00",
         closingTime: "22:00"
       },
       {
-        day: "Sunday",
+        day: "Wednesday",
         openingTime: "10:00",
         closingTime: "22:00"
       },
       {
-        day: "Sunday",
+        day: "Thursday",
         openingTime: "10:00",
         closingTime: "22:00"
       },
       {
-        day: "Sunday",
+        day: "Friday",
         openingTime: "10:00",
         closingTime: "22:00"
       },
       {
-        day: "Sunday",
+        day: "Saturday",
         openingTime: "10:00",
         closingTime: "22:00"
       },
