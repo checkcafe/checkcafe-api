@@ -365,7 +365,7 @@ export const getPlaces = async (queryFilter?: string, querySort?: string) => {
  * @returns The retrieved place, with its associated user, city, operating
  * hours, facilities, and photos.
  */
-export const getPlaceBySlug = async (slug: string) => {
+export const getPlaceBySlugOrId = async (slugOrId: string) => {
   const place = await db.place.findFirst({
     select: {
       id: true,
@@ -411,8 +411,13 @@ export const getPlaceBySlug = async (slug: string) => {
         select: { url: true, order: true },
       },
     },
-    where: { slug, isPublished: true },
+    where: {
+      OR: [{ slug: slugOrId }, { id: slugOrId }],
+    },
   });
+
+  // OPTIONAL TODO:
+  // Check authorized user who can access the place which is not published yet
 
   if (!place) throw new Error("Place not found.");
 

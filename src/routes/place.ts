@@ -1,5 +1,5 @@
 import type { Context } from "hono";
-import { OpenAPIHono } from "@hono/zod-openapi";
+import { OpenAPIHono, z } from "@hono/zod-openapi";
 import { querySchema } from "@/schemas/query";
 import { placeSchema } from "@/schemas/place";
 import authMiddleware from "@/middlewares/auth";
@@ -8,7 +8,7 @@ import * as placeService from "@/services/place";
 const placeRoute = new OpenAPIHono();
 const API_TAGS = ["Places"];
 
-// Get Places Route
+// Get All Places Route
 placeRoute.openapi(
   {
     method: "get",
@@ -50,31 +50,30 @@ placeRoute.openapi(
   }
 );
 
-// Get Place Route
+// Get One Place Route
 placeRoute.openapi(
   {
     method: "get",
-    path: "/{slug}",
+    path: "/{slugOrId}",
     summary: "Place details",
-    description: "Get a place by slug.",
+    description: "Get a place by slug or id.",
+    request: { params: z.object({ slugOrId: z.string() }) },
     responses: {
       200: {
-        description: "Succes get places by slug",
+        description: "Succes get places by slug or id",
       },
       401: {
-        description: "Slug not found",
+        description: "Place not found",
       },
     },
     tags: API_TAGS,
   },
   async (c) => {
-    const slug = c.req.param("slug");
-    if (!slug) {
-      return c.json({ error: "Slug not found" }, 401);
-    }
+    const { slugOrId } = c.req.valid("param");
 
     try {
-      const place = await placeService.getPlaceBySlug(slug);
+      const place = await placeService.getPlaceBySlugOrId(slugOrId);
+
       return c.json(place, 200);
     } catch (error: Error | any) {
       return c.json(
