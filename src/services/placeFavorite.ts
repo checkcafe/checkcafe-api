@@ -13,6 +13,7 @@ export const getFavorites = async (username: string, querySort?: string) => {
 
   const placeFavorites = await db.placeFavorite.findMany({
     select: {
+      id: true,
       place: {
         select: {
           name: true,
@@ -56,7 +57,8 @@ export const getFavorites = async (username: string, querySort?: string) => {
     name,
     username: userUsername,
     avatarUrl,
-    place_favorites: placeFavorites.map(({ place }) => ({
+    placeFavorites: placeFavorites.map(({ id, place }) => ({
+      favoriteId: id,
       name: place.name,
       slug: place.slug,
       description: place.description,
