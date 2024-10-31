@@ -8,8 +8,8 @@ dayjs.extend(timezone);
 
 interface OperatingHourFormatted {
   day: string;
-  openingTime: Date | null;
-  closingTime: Date | null;
+  openingTime: Date | string | null;
+  closingTime: Date | string | null;
 }
 
 interface OperatingHoursSummary {
@@ -62,7 +62,7 @@ export const formatOperatingHoursToTime = async (
  * @returns A promise that resolves to an `OperatingHoursSummary` object.
  */
 export const getOperatingHours = async (
-  operatingHours: OperatingHourFormatted[]
+  operatingHours: OperatingHourFormatted[] | undefined
 ): Promise<OperatingHoursSummary> => {
   if (!operatingHours || operatingHours.length === 0) {
     return { openingTime: "-", closingTime: "-" };

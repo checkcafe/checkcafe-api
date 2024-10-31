@@ -29,8 +29,8 @@ export interface PlaceAddress {
 
 export interface OperatingHour {
   day: string;
-  openingTime: string;
-  closingTime: string;
+  openingTime: string | null;
+  closingTime: string | null;
 }
 
 export interface PlaceFacility {

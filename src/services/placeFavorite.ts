@@ -20,7 +20,8 @@ export const getFavorites = async (username: string, querySort?: string) => {
           slug: true,
           description: true,
           streetAddress: true,
-          priceRange: true,
+          priceRangeMin: true,
+          priceRangeMax: true,
           latitude: true,
           longitude: true,
           city: {
@@ -63,7 +64,8 @@ export const getFavorites = async (username: string, querySort?: string) => {
       slug: place.slug,
       description: place.description,
       streetAddress: place.streetAddress,
-      priceRange: place.priceRange,
+      priceRangeMin: place.priceRangeMin,
+      priceRangeMax: place.priceRangeMax,
       latitude: place.latitude,
       longitude: place.longitude,
       city: {

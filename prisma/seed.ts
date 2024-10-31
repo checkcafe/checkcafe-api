@@ -9,7 +9,7 @@ import states from "./samples/states";
 import cities from "./samples/cities";
 import facility from "./samples/facility";
 import places from "./samples/places";
-import { photoSorts } from "../src/libs/place";
+import { getOperatingHours } from "../src/utils/time";
 
 const prisma = new PrismaClient();
 
@@ -245,6 +245,10 @@ async function upsertPlaces() {
           throw new Error(`City ${place.city} tidak ditemukan!`);
         }
 
+        const { openingTime, closingTime } = await getOperatingHours(
+          place.operatingHours
+        );
+
         const upsertedPlace = await prisma.place.upsert({
           where: { name: place.name },
           update: {
@@ -254,6 +258,8 @@ async function upsertPlaces() {
             isPublished: place.isPublished,
             latitude: place.lat,
             longitude: place.long,
+            openingTime,
+            closingTime,
             thumbnailUrl:
               place.placePhotos && place.placePhotos.length > 0
                 ? place.placePhotos[0].url
@@ -268,6 +274,8 @@ async function upsertPlaces() {
             isPublished: place.isPublished,
             latitude: place.lat || null,
             longitude: place.long || null,
+            openingTime,
+            closingTime,
             thumbnailUrl:
               place.placePhotos && place.placePhotos.length > 0
                 ? place.placePhotos[0].url
