@@ -62,7 +62,7 @@ export const formatOperatingHoursToTime = async (
  * @returns A promise that resolves to an `OperatingHoursSummary` object.
  */
 export const getOperatingHours = async (
-  operatingHours: Array<{ openingTime: string; closingTime: string }>
+  operatingHours: OperatingHourFormatted[]
 ): Promise<OperatingHoursSummary> => {
   if (!operatingHours || operatingHours.length === 0) {
     return { openingTime: "-", closingTime: "-" };

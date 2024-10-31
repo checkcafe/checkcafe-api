@@ -1,25 +1,16 @@
-type OperatingHour = {
-  day: string;
-  openingTime: string;
-  closingTime: string;
-};
-
-type PlaceFacility = {
-  facility: string;
-  description: string;
-};
-
-type PlacePhoto = {
-  url: string;
-  order: number;
-};
+import {
+  OperatingHour,
+  PlaceFacility,
+  PlacePhoto,
+} from "../../src/types/place";
 
 type Place = {
   name: string;
   description?: string;
   streetAddress: string;
   city: string | null;
-  priceRange?: string;
+  priceRangeMin?: number;
+  priceRangeMax?: number;
   lat?: number;
   long?: number;
   isPublished: boolean;
@@ -33,7 +24,7 @@ const places: Place[] = [
     name: "OSH Jakarta",
     streetAddress: "Jl. Tebet Barat IX No. 3, Tebet",
     city: "Kota Jakarta Selatan",
-    priceRange: "50000",
+    priceRangeMin: 50000,
     isPublished: true,
     lat: -6.238384652269945,
     long: 106.8514705345677,
@@ -107,7 +98,7 @@ const places: Place[] = [
     name: "Evlogia Cafe & Co",
     streetAddress: "Jl. Cisanggiri I No. 6, Senopati, Kebayoran Baru",
     city: "Kota Jakarta Selatan",
-    priceRange: "50000",
+    priceRangeMin: 50000,
     isPublished: true,
     lat: -6.239833512553738,
     long: 106.81139548342742,
@@ -181,7 +172,7 @@ const places: Place[] = [
     name: "Hartaka Coffee & Billiard",
     streetAddress: "Jl. Tebet Barat IX No.4, Tebet Barat, Kec. Tebet",
     city: "Kota Jakarta Selatan",
-    priceRange: "50000",
+    priceRangeMin: 50000,
     isPublished: true,
     lat: -6.238107805845276,
     long: 106.85163653085576,
@@ -251,7 +242,7 @@ const places: Place[] = [
     name: "Temu Kita Coffee Terrace",
     streetAddress: "Jl. Cihanjuang No.81A, Cibabat",
     city: "Kota Cimahi",
-    priceRange: "30000",
+    priceRangeMin: 30000,
     isPublished: true,
     lat: -6.872082058057354,
     long: 107.55317124119699,
@@ -311,7 +302,7 @@ const places: Place[] = [
     name: "Roemah K-Ve",
     streetAddress: "Jl. Mahar Martanegara No.229, Utama, Kec. Cimahi Sel",
     city: "Kota Cimahi",
-    priceRange: "30000",
+    priceRangeMin: 30000,
     isPublished: true,
     lat: -6.90213295191926,
     long: 107.54213609940383,
@@ -371,7 +362,7 @@ const places: Place[] = [
     name: "Haruna Cafe",
     streetAddress: "Jl. Danau Sentarum, Sungai Bangkong, Kec. Pontianak Kota.",
     city: "Kota Pontianak",
-    priceRange: "25000",
+    priceRangeMin: 25000,
     isPublished: true,
     lat: -0.04809,
     long: 109.30806,
@@ -379,37 +370,37 @@ const places: Place[] = [
       {
         day: "Sunday",
         openingTime: "07:00",
-        closingTime: "23:00"
+        closingTime: "23:00",
       },
       {
         day: "Monday",
         openingTime: "07:00",
-        closingTime: "23:00"
+        closingTime: "23:00",
       },
       {
         day: "Tuesday",
         openingTime: "07:00",
-        closingTime: "23:00"
+        closingTime: "23:00",
       },
       {
         day: "Wednesday",
         openingTime: "07:00",
-        closingTime: "23:00"
+        closingTime: "23:00",
       },
       {
         day: "Thursday",
         openingTime: "07:00",
-        closingTime: "23:00"
+        closingTime: "23:00",
       },
       {
         day: "Friday",
         openingTime: "07:00",
-        closingTime: "23:00"
+        closingTime: "23:00",
       },
       {
         day: "Saturday",
         openingTime: "07:00",
-        closingTime: "23:00"
+        closingTime: "23:00",
       },
     ],
     placePhotos: [
@@ -429,9 +420,10 @@ const places: Place[] = [
   },
   {
     name: "Chara Coffee",
-    streetAddress: "Gg. Purnama I No.9, Parit Tokaya, Kec. Pontianak Sel., Kota Pontianak.",
+    streetAddress:
+      "Gg. Purnama I No.9, Parit Tokaya, Kec. Pontianak Sel., Kota Pontianak.",
     city: "Kota Pontianak",
-    priceRange: "25000",
+    priceRangeMin: 25000,
     isPublished: true,
     lat: -0.05888,
     long: 109.32483,
@@ -439,37 +431,37 @@ const places: Place[] = [
       {
         day: "Sunday",
         openingTime: "09:00",
-        closingTime: "23:00"
+        closingTime: "23:00",
       },
       {
         day: "Monday",
         openingTime: "09:00",
-        closingTime: "23:00"
+        closingTime: "23:00",
       },
       {
         day: "Tuesday",
         openingTime: "09:00",
-        closingTime: "23:00"
+        closingTime: "23:00",
       },
       {
         day: "Wednesday",
         openingTime: "09:00",
-        closingTime: "23:00"
+        closingTime: "23:00",
       },
       {
         day: "Thursday",
         openingTime: "09:00",
-        closingTime: "23:00"
+        closingTime: "23:00",
       },
       {
         day: "Friday",
         openingTime: "09:00",
-        closingTime: "23:00"
+        closingTime: "23:00",
       },
       {
         day: "Saturday",
         openingTime: "09:00",
-        closingTime: "23:00"
+        closingTime: "23:00",
       },
     ],
     placePhotos: [
@@ -489,9 +481,10 @@ const places: Place[] = [
   },
   {
     name: "The Grounds Cafe",
-    streetAddress: "Jl. WR Supratman No.9, Benua Melayu Darat, Kec. Pontianak Sel., Kota Pontianak.",
+    streetAddress:
+      "Jl. WR Supratman No.9, Benua Melayu Darat, Kec. Pontianak Sel., Kota Pontianak.",
     city: "Kota Pontianak",
-    priceRange: "50000",
+    priceRangeMin: 50000,
     isPublished: true,
     lat: -0.03588,
     long: 109.3394,
@@ -499,37 +492,37 @@ const places: Place[] = [
       {
         day: "Sunday",
         openingTime: "10:00",
-        closingTime: "22:00"
+        closingTime: "22:00",
       },
       {
         day: "Monday",
         openingTime: "10:00",
-        closingTime: "22:00"
+        closingTime: "22:00",
       },
       {
         day: "Tuesday",
         openingTime: "10:00",
-        closingTime: "22:00"
+        closingTime: "22:00",
       },
       {
         day: "Wednesday",
         openingTime: "10:00",
-        closingTime: "22:00"
+        closingTime: "22:00",
       },
       {
         day: "Thursday",
         openingTime: "10:00",
-        closingTime: "22:00"
+        closingTime: "22:00",
       },
       {
         day: "Friday",
         openingTime: "10:00",
-        closingTime: "22:00"
+        closingTime: "22:00",
       },
       {
         day: "Saturday",
         openingTime: "10:00",
-        closingTime: "22:00"
+        closingTime: "22:00",
       },
     ],
     placePhotos: [
@@ -551,7 +544,7 @@ const places: Place[] = [
     name: "Aming Coffee",
     streetAddress: "Kampung Tengah, Mempawah Hilir, Mempawah Regency.",
     city: "Mempawah",
-    priceRange: "50000",
+    priceRangeMin: 50000,
     isPublished: true,
     lat: 0.3535,
     long: 108.96379,
@@ -559,37 +552,37 @@ const places: Place[] = [
       {
         day: "Sunday",
         openingTime: "08:00",
-        closingTime: "23:00"
+        closingTime: "23:00",
       },
       {
         day: "Monday",
         openingTime: "08:00",
-        closingTime: "23:00"
+        closingTime: "23:00",
       },
       {
         day: "Tuesday",
         openingTime: "08:00",
-        closingTime: "23:00"
+        closingTime: "23:00",
       },
       {
         day: "Wednesday",
         openingTime: "08:00",
-        closingTime: "23:00"
+        closingTime: "23:00",
       },
       {
         day: "Thursday",
         openingTime: "08:00",
-        closingTime: "23:00"
+        closingTime: "23:00",
       },
       {
         day: "Friday",
         openingTime: "08:00",
-        closingTime: "23:00"
+        closingTime: "23:00",
       },
       {
         day: "Saturday",
         openingTime: "08:00",
-        closingTime: "23:00"
+        closingTime: "23:00",
       },
     ],
     placePhotos: [
@@ -611,7 +604,7 @@ const places: Place[] = [
     name: "UP Coffee",
     streetAddress: "VXXC+75X, Pasiran, Singkawang Barat, Singkawang City.",
     city: "Kota Singkawang",
-    priceRange: "25000",
+    priceRangeMin: 25000,
     isPublished: true,
     lat: 0.90343,
     long: 108.975388,
@@ -619,37 +612,37 @@ const places: Place[] = [
       {
         day: "Sunday",
         openingTime: "10:00",
-        closingTime: "22:00"
+        closingTime: "22:00",
       },
       {
         day: "Monday",
         openingTime: "10:00",
-        closingTime: "22:00"
+        closingTime: "22:00",
       },
       {
         day: "Tuesday",
         openingTime: "10:00",
-        closingTime: "22:00"
+        closingTime: "22:00",
       },
       {
         day: "Wednesday",
         openingTime: "10:00",
-        closingTime: "22:00"
+        closingTime: "22:00",
       },
       {
         day: "Thursday",
         openingTime: "10:00",
-        closingTime: "22:00"
+        closingTime: "22:00",
       },
       {
         day: "Friday",
         openingTime: "10:00",
-        closingTime: "22:00"
+        closingTime: "22:00",
       },
       {
         day: "Saturday",
         openingTime: "10:00",
-        closingTime: "22:00"
+        closingTime: "22:00",
       },
     ],
     placePhotos: [

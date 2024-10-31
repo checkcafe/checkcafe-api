@@ -9,6 +9,7 @@ import states from "./samples/states";
 import cities from "./samples/cities";
 import facility from "./samples/facility";
 import places from "./samples/places";
+import { photoSorts } from "../src/libs/place";
 
 const prisma = new PrismaClient();
 
@@ -249,20 +250,28 @@ async function upsertPlaces() {
           update: {
             streetAddress: place.streetAddress,
             cityId: city.id,
-            priceRange: place.priceRange,
+            priceRangeMin: place.priceRangeMin,
             isPublished: place.isPublished,
             latitude: place.lat,
             longitude: place.long,
+            thumbnailUrl:
+              place.placePhotos && place.placePhotos.length > 0
+                ? place.placePhotos[0].url
+                : null,
           },
           create: {
             name: place.name,
             slug: slugify(place.name),
             streetAddress: place.streetAddress,
             cityId: city.id,
-            priceRange: place.priceRange || null,
+            priceRangeMin: place.priceRangeMin || null,
             isPublished: place.isPublished,
             latitude: place.lat || null,
             longitude: place.long || null,
+            thumbnailUrl:
+              place.placePhotos && place.placePhotos.length > 0
+                ? place.placePhotos[0].url
+                : null,
             userId: user.id,
           },
         });

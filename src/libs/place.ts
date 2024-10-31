@@ -1,11 +1,6 @@
 import slugify from "@/utils/slugify";
 import db from "./db";
 
-interface ChildDataOperation {
-  deleteMany: Record<string, unknown>;
-  create: any[];
-}
-
 /**
  * Generates a unique name for a place.
  *
@@ -79,7 +74,7 @@ export const generateUniqueSlug = async (
  *          `deleteMany` is an empty object, and `create` is an array of objects
  *          cloned from the input `newData`.
  */
-export const prepareChildData = (newData: ChildDataOperation[]) =>
+export const prepareChildData = (newData: any) =>
   newData && newData.length
     ? { deleteMany: {}, create: newData.map((item: any) => ({ ...item })) }
     : undefined;
