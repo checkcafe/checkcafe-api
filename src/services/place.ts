@@ -106,12 +106,19 @@ export const deletePlace = async (placeId: string, user: User) => {
  *
  * @param queryFilter Optional query string parameter for filtering the results.
  * @param querySort Optional query string parameter for sorting the results.
+ * @param limit Optional limit parameter for the number of places to retrieve.
+ * @param page Optional page parameter for pagination.
  * @returns A list of places, with their associated cities, users, operating hours,
  * facilities, and photos. The format of the returned object is determined by the
  * presence of the "user.username" filter in the queryFilter parameter.
  * @throws {Error} If no places are found that match the given filters.
  */
-export const getPlaces = async (queryFilter?: string, querySort?: string) => {
+export const getPlaces = async (
+  queryFilter?: string,
+  querySort?: string,
+  limit: number = 100,
+  page?: number
+) => {
   const where = parseFilters(queryFilter);
   const orderBy = parseSorts(querySort);
 
@@ -204,6 +211,8 @@ export const getPlaces = async (queryFilter?: string, querySort?: string) => {
     },
     where,
     orderBy,
+    take: limit,
+    skip: page ? (page - 1) * limit : 0,
   });
 
   if (places.length === 0) throw new Error("Places not found.");
@@ -214,25 +223,39 @@ export const getPlaces = async (queryFilter?: string, querySort?: string) => {
 
   const user = places[0]?.user;
 
-  if (queryFilter?.includes("user.username")) {
-    return {
-      name: user.name,
-      username: user.username,
-      avatarUrl: user.avatarUrl,
-      places: formattedPlaces,
-    };
-  }
-
-  return formattedPlaces.map((place) => ({
-    ...place,
-    submitter: user
-      ? {
+  const data = queryFilter?.includes("user.username")
+    ? {
+        name: user.name,
+        username: user.username,
+        avatarUrl: user.avatarUrl,
+        places: formattedPlaces,
+      }
+    : formattedPlaces.map((place) => ({
+        ...place,
+        submitter: {
           name: user.name,
           username: user.username,
           avatarUrl: user.avatarUrl,
-        }
-      : undefined,
-  }));
+        },
+      }));
+
+  if (page) {
+    const totalData = await db.place.count({ where });
+    const totalPage = Math.ceil(totalData / limit);
+    const currentPage = page || 1;
+
+    return {
+      data,
+      pagination: {
+        totalData,
+        totalPage,
+        perPage: limit,
+        currentPage,
+      },
+    };
+  }
+
+  return data;
 };
 
 /**

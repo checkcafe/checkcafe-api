@@ -1,7 +1,7 @@
 import type { Context } from "hono";
 import { OpenAPIHono, z } from "@hono/zod-openapi";
 import { querySchema } from "@/schemas/query";
-import { placeSchema } from "@/schemas/place";
+import { placeIdSchema, placeSchema } from "@/schemas/place";
 import authMiddleware from "@/middlewares/auth";
 import * as placeService from "@/services/place";
 
@@ -16,7 +16,7 @@ placeRoute.openapi(
     summary: "Places",
     description: "Get a list of places.",
     request: {
-      query: querySchema.omit({ page: true, limit: true }),
+      query: querySchema,
     },
     responses: {
       200: {
@@ -29,7 +29,7 @@ placeRoute.openapi(
     tags: API_TAGS,
   },
   async (c) => {
-    const { filter, sort } = c.req.valid("query");
+    const { filter, sort, limit, page } = c.req.valid("query");
 
     let filterObj = filter ? JSON.parse(filter) : {};
     filterObj = { isPublished: true, ...filterObj };
@@ -37,7 +37,9 @@ placeRoute.openapi(
     try {
       const result = await placeService.getPlaces(
         JSON.stringify(filterObj),
-        sort
+        sort,
+        limit,
+        page
       );
 
       return c.json(result, 200);
@@ -131,6 +133,7 @@ placeRoute.openapi(
     security: [{ AuthorizationBearer: [] }],
     middleware: [authMiddleware],
     request: {
+      params: placeIdSchema,
       body: {
         content: {
           "application/json": {
@@ -158,11 +161,7 @@ placeRoute.openapi(
   async (c) => {
     const body = c.req.valid("json");
     const user = (c as Context).get("user");
-
-    const id = c.req.param("placeId");
-    if (!id) {
-      return c.json({ message: "Place not found" }, 404);
-    }
+    const { id } = c.req.valid("param");
 
     try {
       const result = await placeService.patchPlace(user, id, body);
@@ -184,6 +183,9 @@ placeRoute.openapi(
       "This operation is used to delete a place. The user must be authenticated.",
     security: [{ AuthorizationBearer: [] }],
     middleware: [authMiddleware],
+    request: {
+      params: placeIdSchema,
+    },
     responses: {
       200: {
         description: "Place deleted successfully",
@@ -202,11 +204,7 @@ placeRoute.openapi(
   },
   async (c) => {
     const user = (c as Context).get("user");
-
-    const id = c.req.param("placeId");
-    if (!id) {
-      return c.json({ message: "Place not found" }, 404);
-    }
+    const { id } = c.req.valid("param");
 
     try {
       await placeService.deletePlace(id, user);
