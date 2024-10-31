@@ -24,9 +24,6 @@ export const placeSchema = z.object({
   wifiSpeedAvg: z.number().optional().openapi({
     description: "The average wifi speed of the place.",
   }),
-  priceRange: z.string().optional().openapi({
-    description: "The price range of the place.",
-  }),
   latitude: z.number().optional().openapi({
     description: "The latitude of the place.",
   }),
@@ -34,7 +31,14 @@ export const placeSchema = z.object({
     description: "The longitude of the place.",
   }),
   isPublished: z.boolean().optional().openapi({
-    description: "The state of the place (true = published, false = not published).",
+    description:
+      "The state of the place (true = published, false = not published).",
+  }),
+  priceRangeMin: z.number().optional().openapi({
+    description: "The minimum price range of the place.",
+  }),
+  priceRangeMax: z.number().optional().openapi({
+    description: "The maximum price range of the place.",
   }),
   cityId: z.string().openapi({
     description: "The ID of the city of the place.",

@@ -118,18 +118,17 @@ model Place {
   slug          String  @unique @db.VarChar(128)
   description   String?
   streetAddress String  @db.VarChar(255)
-  priceRange    String? // Refactor to price range min & max & average
   latitude      Float?
   longitude     Float?
   isPublished   Boolean @default(false)
 
-  // TODO: Price range
-  // priceRangeMin Float
-  // priceRangeMin Decimal @db.Money
+  priceRangeMin Decimal? @db.Money
+  priceRangeMax Decimal? @db.Money
 
-  // TODO: Time average
-  // openingTime: "08:00",
-  // closingTime: "22:00",
+  openingTime DateTime? @db.Time()
+  closingTime DateTime? @db.Time()
+
+  thumbnailUrl String?
 
   cityId String?
   city   City?   @relation(fields: [cityId], references: [id])

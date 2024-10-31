@@ -1,145 +1,20 @@
 import db from "@/libs/db";
 import parseFilters from "@/utils/filter";
 import parseSorts from "@/utils/sort";
-import slugify from "@/utils/slugify";
 import { timeRegex } from "@/schemas/operatingHour";
-import { formatTime, getOperatingHours } from "@/utils/time";
+import { formatOperatingHoursToTime, getOperatingHours } from "@/utils/time";
+import {
+  formatPlaceData,
+  generateUniquePlaceName,
+  generateUniqueSlug,
+  photoSorts,
+  prepareChildData,
+} from "@/libs/place";
 
 type User = {
   id: string;
   role: string;
 };
-
-// Helper function to format place data
-const formatPlaceData = (
-  place: any,
-  submitter?: boolean,
-  thumbnail?: boolean,
-  detailedOperatingHours: boolean = false
-) => {
-  const formattedData: any = {
-    id: place.id,
-    name: place.name,
-    slug: place.slug,
-    description: place.description,
-    currency: place.city?.state.country.currency ?? null,
-    priceRange: place.priceRange,
-    latitude: place.latitude,
-    longitude: place.longitude,
-    address: {
-      street: place.streetAddress,
-      city: place.city?.name ?? null,
-      state: place.city?.state.name ?? null,
-      country: place.city?.state.country.name ?? null,
-      countryCode: place.city?.state.country.code ?? null,
-    },
-  };
-
-  if (place.operatingHours) {
-    if (detailedOperatingHours) {
-      formattedData.operatingHours = place.operatingHours.map(
-        ({
-          day,
-          openingTime,
-          closingTime,
-        }: {
-          day: string;
-          openingTime: string;
-          closingTime: string;
-        }) => ({
-          day,
-          start: formatTime(openingTime),
-          end: formatTime(closingTime),
-        })
-      );
-    } else {
-      const { openingTime, closingTime } = getOperatingHours(
-        place.operatingHours
-      );
-      formattedData.openingTime = openingTime;
-      formattedData.closingTime = closingTime;
-    }
-  }
-
-  if (place.placeFacilities) {
-    formattedData.placeFacilities = place.placeFacilities.map(
-      (facility: { facility: { name: string }; description: string }) => ({
-        facility: facility.facility.name,
-        description: facility.description,
-      })
-    );
-  }
-
-  if (place.placePhotos) {
-    const sortedPhotos = place.placePhotos.sort(
-      (a: { order: number }, b: { order: number }) => a.order - b.order
-    );
-    const photoUrls = sortedPhotos.map((photo: { url: string }) => photo.url);
-
-    if (thumbnail) {
-      formattedData.thumbnail = photoUrls[0];
-    } else {
-      formattedData.photos = photoUrls;
-    }
-  }
-
-  if (submitter && place.user) {
-    formattedData.submitter = {
-      name: place.user.name,
-      username: place.user.username,
-      avatarUrl: place.user.avatarUrl,
-    };
-  }
-
-  return formattedData;
-};
-
-// Helper function to generate unique place name
-const generateUniquePlaceName = async (
-  requestedName: string
-): Promise<string> => {
-  const existingPlace = await db.place.findUnique({
-    where: { name: requestedName },
-  });
-
-  if (!existingPlace) {
-    return requestedName;
-  }
-
-  let counter = 1;
-  let newName = `${requestedName} ${counter}`;
-
-  while (await db.place.findUnique({ where: { name: newName } })) {
-    counter += 1;
-    newName = `${requestedName} ${counter}`;
-  }
-
-  return newName;
-};
-
-// Helper function to generate slug
-const generateUniqueSlug = async (name: string, existingSlug?: string) => {
-  const baseSlug = slugify(name);
-  let slug = baseSlug;
-  let count = 1;
-
-  while (true) {
-    const existing = await db.place.findFirst({ where: { slug } });
-    if (!existing || slug === existingSlug) {
-      break;
-    }
-    slug = `${baseSlug}-${count}`;
-    count++;
-  }
-
-  return slug;
-};
-
-// Helper function to prepare child data
-const prepareChildData = (newData: any[]) =>
-  newData
-    ? { deleteMany: {}, create: newData.map((item: any) => ({ ...item })) }
-    : undefined;
 
 /**
  * Creates a new place in the database with default values.
@@ -155,7 +30,6 @@ export const postPlaces = async (userId: string) => {
       slug: await generateUniqueSlug("New Place"),
       description: "No Description",
       streetAddress: "Input street address of Place",
-      priceRange: "Input price range of Place",
       isPublished: false,
       userId,
     },
@@ -176,29 +50,29 @@ export const postPlaces = async (userId: string) => {
 export const patchPlace = async (user: User, placeId: string, body: any) => {
   const existingPlace = await db.place.findFirst({
     where: { id: placeId },
-    include: {
-      operatingHours: true,
-      placeFacilities: true,
-      placePhotos: true,
-    },
   });
-
   if (!existingPlace) throw new Error("Place not found.");
   if (user.role === "USER" && existingPlace.userId !== user.id) {
     throw new Error("You do not have permission to edit this place.");
   }
 
-  const newSlug = await generateUniqueSlug(body.name, existingPlace.slug);
   const { operatingHours, placeFacilities, placePhotos, ...placeData } = body;
+  const { openingTime, closingTime } = await getOperatingHours(operatingHours);
+  const operatingHoursData = await formatOperatingHoursToTime(operatingHours);
+  const newSlug = await generateUniqueSlug(body.name, existingPlace.slug);
+  const photosOrders = photoSorts(placePhotos);
 
-  return await db.place.update({
+  return db.place.update({
     where: { id: placeId },
     data: {
       ...placeData,
       slug: newSlug,
-      operatingHours: prepareChildData(operatingHours),
+      openingTime,
+      closingTime,
+      thumbnailUrl: photosOrders[0]?.url,
+      operatingHours: prepareChildData(operatingHoursData),
       placeFacilities: prepareChildData(placeFacilities),
-      placePhotos: prepareChildData(placePhotos),
+      placePhotos: prepareChildData(photosOrders),
     },
     include: {
       operatingHours: true,
@@ -218,9 +92,10 @@ export const patchPlace = async (user: User, placeId: string, body: any) => {
  */
 export const deletePlace = async (placeId: string, user: User) => {
   const existingPlace = await db.place.findFirst({ where: { id: placeId } });
+
   if (!existingPlace) throw new Error("Place not found.");
   if (user.role === "USER" && existingPlace.userId !== user.id) {
-    throw new Error("You do not have permission to delete this place.");
+    throw new Error("You do not have permission to edit this place.");
   }
 
   await db.place.delete({ where: { id: placeId } });
@@ -300,10 +175,14 @@ export const getPlaces = async (queryFilter?: string, querySort?: string) => {
       slug: true,
       description: true,
       streetAddress: true,
-      priceRange: true,
       latitude: true,
       longitude: true,
       isPublished: true,
+      priceRangeMin: true,
+      priceRangeMax: true,
+      openingTime: true,
+      closingTime: true,
+      thumbnailUrl: true,
       city: {
         select: {
           name: true,
@@ -322,8 +201,6 @@ export const getPlaces = async (queryFilter?: string, querySort?: string) => {
           avatarUrl: true,
         },
       },
-      operatingHours: true,
-      placePhotos: true,
     },
     where,
     orderBy,
@@ -332,7 +209,7 @@ export const getPlaces = async (queryFilter?: string, querySort?: string) => {
   if (places.length === 0) throw new Error("Places not found.");
 
   const formattedPlaces = places.map((place) =>
-    formatPlaceData(place, !queryFilter?.includes("user.username"), true)
+    formatPlaceData(place, !queryFilter?.includes("user.username"))
   );
 
   const user = places[0]?.user;
@@ -373,9 +250,10 @@ export const getPlaceBySlugOrId = async (slugOrId: string) => {
       slug: true,
       description: true,
       streetAddress: true,
-      priceRange: true,
       latitude: true,
       longitude: true,
+      priceRangeMin: true,
+      priceRangeMax: true,
       user: {
         select: {
           name: true,
@@ -421,5 +299,5 @@ export const getPlaceBySlugOrId = async (slugOrId: string) => {
 
   if (!place) throw new Error("Place not found.");
 
-  return formatPlaceData(place, true, false, true);
+  return formatPlaceData(place, true);
 };
