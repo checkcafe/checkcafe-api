@@ -126,87 +126,36 @@ export const changePassword = async (
  */
 const processToken = async (
   refreshToken: string,
-  action: "REVOKE" | "REGENERATE",
-  timeoutDuration: number = 10000
+  isRegenerate: boolean = false
 ) => {
-  const decodedToken = await jwt.validateToken(refreshToken);
-  if (!decodedToken?.subject) {
-    throw new Error("Invalid or expired refresh token");
+  const tokenRecord = await db.userToken.findFirst({
+    where: {
+      token: refreshToken,
+      expiresAt: { gte: new Date() },
+    },
+  });
+
+  if (!tokenRecord) {
+    throw new Error("Refresh token is invalid, expired, or already revoked!");
   }
 
-  const userId = decodedToken.subject;
-
-  const withTimeout = <T>(
-    promise: Promise<T>,
-    duration: number
-  ): Promise<T> => {
-    return Promise.race([
-      promise,
-      new Promise<T>((_, reject) =>
-        setTimeout(() => reject(new Error("Operation timed out")), duration)
-      ),
-    ]);
-  };
-
-  return await db.$transaction(async (prisma) => {
-    const tokenRecords = await withTimeout(
-      prisma.userToken.findMany({
-        where: {
-          userId,
-          revoked: false,
-          expiresAt: { gte: new Date() },
-        },
-      }),
-      timeoutDuration
-    );
-
-    const validTokenRecord = await Promise.all(
-      tokenRecords.map(async (tokenRecord) => {
-        const isValidToken = await passwordVerify(
-          refreshToken,
-          tokenRecord.token
-        );
-        return isValidToken ? tokenRecord : null;
-      })
-    ).then((results) => results.find((record) => record !== null));
-
-    if (!validTokenRecord) {
-      throw new Error("Refresh token is invalid or already revoked!");
-    }
-
-    await prisma.userToken.update({
-      where: { id: validTokenRecord.id },
-      data: { revoked: true },
-    });
-
-    await prisma.userToken.deleteMany({
-      where: {
-        userId,
-        OR: [
-          {
-            expiresAt: { lt: new Date() },
-          },
-          {
-            revoked: true,
-          },
-        ],
-      },
-    });
-
-    if (action === "REGENERATE") {
-      const [newAccessToken, newRefreshToken] = await Promise.all([
-        jwt.createAccessToken(userId.toString()),
-        jwt.createRefreshToken(userId.toString()),
-      ]);
-
-      return {
-        accessToken: newAccessToken,
-        refreshToken: newRefreshToken,
-      };
-    }
-
-    return true;
+  await db.userToken.delete({
+    where: { id: tokenRecord.id },
   });
+
+  if (isRegenerate) {
+    const [newAccessToken, newRefreshToken] = await Promise.all([
+      jwt.createAccessToken(tokenRecord.userId),
+      jwt.createRefreshToken(tokenRecord.userId),
+    ]);
+
+    return {
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken,
+    };
+  }
+
+  return true;
 };
 
 /**
@@ -215,7 +164,7 @@ const processToken = async (
  * @returns The new access and refresh token pair as an object with `accessToken` and `refreshToken` properties.
  */
 export const regenToken = async (refreshToken: string): Promise<any> => {
-  return await processToken(refreshToken, "REGENERATE");
+  return await processToken(refreshToken, true);
 };
 
 /**
@@ -225,5 +174,5 @@ export const regenToken = async (refreshToken: string): Promise<any> => {
  * @returns A boolean indicating success.
  */
 export const logout = async (refreshToken: string) => {
-  return await processToken(refreshToken, "REVOKE");
+  return await processToken(refreshToken);
 };

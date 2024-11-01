@@ -58,11 +58,10 @@ model UserToken {
   token     String
   issuedAt  DateTime @default(now())
   expiresAt DateTime
-  revoked   Boolean  @default(false)
 
   user User @relation("UserTokens", fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([userId, token])
+  @@index([token, expiresAt])
   @@map("user_tokens")
 }
 

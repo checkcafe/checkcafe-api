@@ -3,15 +3,15 @@ import { createJWT, validateJWT } from "oslo/jwt";
 import { TimeSpan } from "oslo";
 import db from "@/libs/db";
 
+const SECRET_KEY = process.env.JWT_SECRET || "secret";
 /**
  * Gets the secret token as an encoded ArrayBuffer.
  * @throws {Error} If the secret token is not defined.
  */
 const getEncodedSecret = async (): Promise<ArrayBuffer> => {
-  const secret = process.env.JWT_SECRET;
-  if (!secret) throw new Error("Secret token is not defined");
+  if (!SECRET_KEY) throw new Error("Secret token is not defined");
 
-  return new TextEncoder().encode(secret).buffer as ArrayBuffer;
+  return new TextEncoder().encode(SECRET_KEY).buffer as ArrayBuffer;
 };
 
 /**
@@ -77,21 +77,23 @@ export const validateToken = async (token: string): Promise<any> => {
  */
 export const createRefreshToken = async (
   userId: string,
-  expiresInDays: number = 30
+  expiresInDays: number = 14
 ): Promise<string> => {
   try {
-    const refreshToken = await createToken(
-      userId,
-      new TimeSpan(expiresInDays, "d")
+    const issuedAt = new Date();
+    const expiresAt = new Date(
+      issuedAt.getTime() + expiresInDays * 24 * 60 * 60 * 1000
     );
-    const hashedToken = await passwordHash(refreshToken);
+    const tokenExpiry = new TimeSpan(expiresInDays, "d");
+
+    const refreshToken = await createToken(userId, tokenExpiry);
 
     await db.userToken.create({
       data: {
-        token: hashedToken,
         userId,
-        issuedAt: new Date(),
-        expiresAt: new Date(Date.now() + expiresInDays * 24 * 60 * 60 * 1000),
+        token: refreshToken,
+        issuedAt,
+        expiresAt,
       },
     });
 
