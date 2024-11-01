@@ -1,5 +1,5 @@
 import type { Context } from "hono";
-import { OpenAPIHono } from "@hono/zod-openapi";
+import { OpenAPIHono, z } from "@hono/zod-openapi";
 import { querySchema } from "@/schemas/query";
 import { userSchema } from "@/schemas/user";
 import * as userService from "@/services/user";
@@ -148,7 +148,7 @@ userRoute.openapi(
     summary: "User places",
     description: "Get places by user.",
     request: {
-      query: querySchema.omit({ page: true, limit: true }),
+      query: querySchema,
     },
     responses: {
       200: {
@@ -161,7 +161,7 @@ userRoute.openapi(
     tags: API_TAGS,
   },
   async (c) => {
-    const { filter, sort } = c.req.valid("query");
+    const { filter, sort, limit, page } = c.req.valid("query");
     const username = c.req.param("username");
 
     if (!username) {
@@ -169,12 +169,24 @@ userRoute.openapi(
     }
 
     let filterObj = filter ? JSON.parse(filter) : {};
-    filterObj = { "user.username": username, ...filterObj };
+    filterObj = {
+      isPublished: true,
+      "user.username": username,
+      ...filterObj,
+    };
+
+    let sortObj = sort ? JSON.parse(sort) : {};
+    sortObj = {
+      createdAt: "desc",
+      ...sortObj,
+    };
 
     try {
       const places = await placeService.getPlaces(
         JSON.stringify(filterObj),
-        sort
+        JSON.stringify(sortObj),
+        limit,
+        page
       );
 
       return c.json(places, 200);
@@ -194,6 +206,10 @@ userRoute.openapi(
     path: "/{username}/favorites",
     summary: "User favorite places",
     description: "Get favorite places by user.",
+    request: {
+      params: z.object({ username: z.string() }),
+      query: querySchema,
+    },
     responses: {
       200: {
         description: "Places retrieved successfully",
@@ -205,14 +221,33 @@ userRoute.openapi(
     tags: API_TAGS,
   },
   async (c) => {
-    const username = c.req.param("username");
+    const { username } = c.req.valid("param");
+    const { filter, sort, limit, page } = c.req.valid("query");
 
     if (!username) {
       return c.json({ error: "Username is required!" }, 401);
     }
 
+    let filterObj = filter ? JSON.parse(filter) : {};
+    filterObj = {
+      "place.isPublished": true,
+      "user.username": username,
+      ...filterObj,
+    };
+
+    let sortObj = sort ? JSON.parse(sort) : {};
+    sortObj = {
+      createdAt: "desc",
+      ...sortObj,
+    };
+
     try {
-      const favorites = await placeFavoriteService.getFavorites(username);
+      const favorites = await placeFavoriteService.getFavorites(
+        JSON.stringify(filterObj),
+        JSON.stringify(sortObj),
+        limit,
+        page
+      );
 
       return c.json(favorites, 200);
     } catch (error: Error | any) {

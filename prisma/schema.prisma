@@ -112,20 +112,18 @@ model City {
 }
 
 model Place {
-  id            String  @id @default(cuid())
-  name          String  @unique @db.VarChar(255)
-  slug          String  @unique @db.VarChar(128)
+  id            String    @id @default(cuid())
+  name          String    @unique @db.VarChar(255)
+  slug          String    @unique @db.VarChar(128)
   description   String?
-  streetAddress String  @db.VarChar(255)
+  streetAddress String    @db.VarChar(255)
   latitude      Float?
   longitude     Float?
-  isPublished   Boolean @default(false)
-
-  priceRangeMin Decimal? @db.Money
-  priceRangeMax Decimal? @db.Money
-
-  openingTime DateTime? @db.Time()
-  closingTime DateTime? @db.Time()
+  isPublished   Boolean   @default(false)
+  priceRangeMin Decimal?  @db.Money
+  priceRangeMax Decimal?  @db.Money
+  openingTime   DateTime? @db.Time()
+  closingTime   DateTime? @db.Time()
 
   thumbnailUrl String?
 

@@ -1,14 +1,30 @@
 import db from "@/libs/db";
+import parseFilters from "@/utils/filter";
 import parseSorts from "@/utils/sort";
 
 /**
- * Retrieves a list of favorite records for a given user ID, with optional sorting.
+ * Retrieves a list of favorite places for a user with optional filtering, sorting,
+ * and pagination. The function returns the formatted favorite places along with
+ * pagination details if the page parameter is provided.
  *
- * @param username The ID of the user whose favorite records to retrieve.
+ * @param queryFilter Optional query string parameter for filtering the results.
  * @param querySort Optional query string parameter for sorting the results.
- * @returns A list of favorite records, with their associated places and users.
+ * @param limit Optional limit parameter for the number of favorite places to retrieve,
+ * defaults to 100.
+ * @param page Optional page parameter for pagination.
+ * @returns An object containing the user's favorite places, formatted with detailed
+ * place and user information. If the page parameter is provided, it also returns
+ * pagination details including total data count, total pages, items per page, and the
+ * current page.
+ * @throws {Error} If no favorite places are found.
  */
-export const getFavorites = async (username: string, querySort?: string) => {
+export const getFavorites = async (
+  queryFilter?: string,
+  querySort?: string,
+  limit: number = 100,
+  page?: number
+) => {
+  const where = parseFilters(queryFilter);
   const orderBy = parseSorts(querySort);
 
   const placeFavorites = await db.placeFavorite.findMany({
@@ -20,10 +36,13 @@ export const getFavorites = async (username: string, querySort?: string) => {
           slug: true,
           description: true,
           streetAddress: true,
-          priceRangeMin: true,
-          priceRangeMax: true,
           latitude: true,
           longitude: true,
+          priceRangeMin: true,
+          priceRangeMax: true,
+          openingTime: true,
+          closingTime: true,
+          thumbnailUrl: true,
           city: {
             select: {
               name: true,
@@ -44,8 +63,10 @@ export const getFavorites = async (username: string, querySort?: string) => {
         },
       },
     },
-    where: { user: { username }, place: { isPublished: true } },
+    where,
     orderBy,
+    take: limit,
+    skip: page ? (page - 1) * limit : 0,
   });
 
   if (!placeFavorites.length) {
@@ -54,7 +75,7 @@ export const getFavorites = async (username: string, querySort?: string) => {
 
   const { name, username: userUsername, avatarUrl } = placeFavorites[0].user;
 
-  const userFavorites = {
+  const placeFavoritesFormatted = {
     name,
     username: userUsername,
     avatarUrl,
@@ -64,10 +85,13 @@ export const getFavorites = async (username: string, querySort?: string) => {
       slug: place.slug,
       description: place.description,
       streetAddress: place.streetAddress,
-      priceRangeMin: place.priceRangeMin,
-      priceRangeMax: place.priceRangeMax,
       latitude: place.latitude,
       longitude: place.longitude,
+      priceRangeMin: place.priceRangeMin,
+      priceRangeMax: place.priceRangeMax,
+      openingTime: place.openingTime,
+      closingTime: place.closingTime,
+      thumbnailUrl: place.thumbnailUrl,
       city: {
         name: place.city?.name ?? "Unknown",
         state: place.city?.state?.name ?? "Unknown",
@@ -75,7 +99,25 @@ export const getFavorites = async (username: string, querySort?: string) => {
     })),
   };
 
-  return userFavorites;
+  if (page) {
+    const totalData = await db.placeFavorite.count({
+      where,
+    });
+    const totalPage = Math.ceil(totalData / limit);
+    const currentPage = page || 1;
+
+    return {
+      placeFavoritesFormatted,
+      pagination: {
+        totalData,
+        totalPage,
+        perPage: limit,
+        currentPage,
+      },
+    };
+  }
+
+  return placeFavoritesFormatted;
 };
 
 /**
