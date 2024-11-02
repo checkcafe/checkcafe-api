@@ -67,7 +67,15 @@ export const login = async (data: z.infer<typeof loginSchema>) => {
   const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(username);
 
   const user = await db.user.findUnique({
-    select: { id: true, password: true, role: { select: { name: true } } },
+    select: {
+      id: true,
+      name: true,
+      username: true,
+      email: true,
+      password: true,
+      avatarUrl: true,
+      role: { select: { name: true } },
+    },
     where: isEmail ? { email: username } : { username: username },
   });
 
@@ -80,7 +88,17 @@ export const login = async (data: z.infer<typeof loginSchema>) => {
     jwt.createRefreshToken(user.id),
   ]);
 
-  return { accessToken, refreshToken, role: user.role.name || null };
+  return {
+    user: {
+      id: user.id,
+      name: user.name,
+      username: user.username,
+      email: user.email,
+      avatarUrl: user.avatarUrl,
+      role: user.role.name,
+    },
+    token: { accessToken, refreshToken },
+  };
 };
 
 /**
