@@ -69,11 +69,7 @@ export const login = async (data: z.infer<typeof loginSchema>) => {
   const user = await db.user.findUnique({
     select: {
       id: true,
-      name: true,
-      username: true,
-      email: true,
       password: true,
-      avatarUrl: true,
       role: { select: { name: true } },
     },
     where: isEmail ? { email: username } : { username: username },
@@ -88,17 +84,7 @@ export const login = async (data: z.infer<typeof loginSchema>) => {
     jwt.createRefreshToken(user.id),
   ]);
 
-  return {
-    user: {
-      id: user.id,
-      name: user.name,
-      username: user.username,
-      email: user.email,
-      avatarUrl: user.avatarUrl,
-      role: user.role.name,
-    },
-    token: { accessToken, refreshToken },
-  };
+  return { accessToken, refreshToken, role: user.role.name || null };
 };
 
 /**
