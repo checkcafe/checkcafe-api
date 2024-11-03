@@ -660,6 +660,126 @@ const places: Place[] = [
       },
     ],
   },
+  {
+    name: "Leaf & co. cafe",
+    streetAddress: "53, Jalan Sultan, City Centre, 50000 Kuala Lumpur, Wilayah Persekutuan Kuala Lumpur.",
+    city: "Kuala Lumpur City Centre",
+    priceRangeMin: 60000,
+    isPublished: true,
+    lat: 3.142420,
+    long: 101.692850,
+    operatingHours: [
+      {
+        day: "Sunday",
+        openingTime: "10:00",
+        closingTime: "22:00",
+      },
+      {
+        day: "Monday",
+        openingTime: "10:00",
+        closingTime: "22:00",
+      },
+      {
+        day: "Tuesday",
+        openingTime: "10:00",
+        closingTime: "22:00",
+      },
+      {
+        day: "Wednesday",
+        openingTime: "10:00",
+        closingTime: "22:00",
+      },
+      {
+        day: "Thursday",
+        openingTime: "10:00",
+        closingTime: "22:00",
+      },
+      {
+        day: "Friday",
+        openingTime: "10:00",
+        closingTime: "22:00",
+      },
+      {
+        day: "Saturday",
+        openingTime: "10:00",
+        closingTime: "22:00",
+      },
+    ],
+    placePhotos: [
+      {
+        url: "https://ucarecdn.com/9797f053-9b54-4bbe-a59f-5f8c30540d20/leafandcocafe1.jpg",
+        order: 0,
+      },
+      {
+        url: "https://ucarecdn.com/5999bba3-0a85-4bcb-9b6e-e50b3963a275/leafandcocafe2.jpg",
+        order: 1,
+      },
+      {
+        url: "https://ucarecdn.com/e6c06520-5e99-41fd-ab34-c5c6aa7648e1/leafandcocafe3.jpg",
+        order: 2,
+      },
+    ],
+  },
+  {
+    name: "Solace Bukit Bintang",
+    streetAddress: "39, 39A & 41, Jln Sahabat, Bukit Bintang, 50200 Kuala Lumpur, Wilayah Persekutuan Kuala Lumpur.",
+    city: "Bukit Bintang",
+    priceRangeMin: 60000,
+    isPublished: true,
+    lat: 3.147350,
+    long: 101.706970,
+    operatingHours: [
+      {
+        day: "Sunday",
+        openingTime: "10:00",
+        closingTime: "22:00",
+      },
+      {
+        day: "Monday",
+        openingTime: "10:00",
+        closingTime: "22:00",
+      },
+      {
+        day: "Tuesday",
+        openingTime: "10:00",
+        closingTime: "22:00",
+      },
+      {
+        day: "Wednesday",
+        openingTime: "10:00",
+        closingTime: "22:00",
+      },
+      {
+        day: "Thursday",
+        openingTime: "10:00",
+        closingTime: "22:00",
+      },
+      {
+        day: "Friday",
+        openingTime: "10:00",
+        closingTime: "22:00",
+      },
+      {
+        day: "Saturday",
+        openingTime: "10:00",
+        closingTime: "22:00",
+      },
+    ],
+    placePhotos: [
+      {
+        url: "https://ucarecdn.com/8f4b93ad-5b22-4ef4-9b6a-3f7d828b5814/solace1.jpg",
+        order: 0,
+      },
+      {
+        url: "https://ucarecdn.com/d049bef5-e2e5-4244-9be7-56e7aca284ef/solace2.jpg",
+        order: 1,
+      },
+      {
+        url: "https://ucarecdn.com/eebc9711-6ef2-4394-bf64-c70d80641ce2/solace3.jpeg",
+        order: 2,
+      },
+    ],
+  },
 ];
 
 export default places;

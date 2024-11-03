@@ -156,6 +156,70 @@ const states: StateRecord[] = [
     name: "Papua Barat Daya",
     country: "Indonesia",
   },
+  {
+    name: "Johor",
+    country: "Malaysia",
+  },
+  {
+    name: "Kedah",
+    country: "Malaysia",
+  },
+  {
+    name: "Kelantan",
+    country: "Malaysia",
+  },
+  {
+    name: "Malacca",
+    country: "Malaysia",
+  },
+  {
+    name: "Negeri Sembilan",
+    country: "Malaysia",
+  },
+  {
+    name: "Pahang",
+    country: "Malaysia",
+  },
+  {
+    name: "Penang",
+    country: "Malaysia",
+  },
+  {
+    name: "Perak",
+    country: "Malaysia",
+  },
+  {
+    name: "Perlis",
+    country: "Malaysia",
+  },
+  {
+    name: "Sabah",
+    country: "Malaysia",
+  },
+  {
+    name: "Sarawak",
+    country: "Malaysia",
+  },
+  {
+    name: "Selangor",
+    country: "Malaysia",
+  },
+  {
+    name: "Terengganu",
+    country: "Malaysia",
+  },
+  {
+    name: "Kuala Lumpur",
+    country: "Malaysia",
+  },
+  {
+    name: "Labuan",
+    country: "Malaysia",
+  },
+  {
+    name: "Putrajaya",
+    country: "Malaysia",
+  }
 ];
 
 export default states;

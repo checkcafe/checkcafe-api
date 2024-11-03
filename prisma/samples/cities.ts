@@ -2122,6 +2122,54 @@ const cities: CityRecord[] = [
     name: "Kota Sorong",
     state: "Papua Barat Daya",
   },
+  {
+    name: "Kuala Lumpur City Centre",
+    state: "Kuala Lumpur",
+  },
+  {
+    name: "Brickfields",
+    state: "Kuala Lumpur",
+  },
+  {
+    name: "Bangsar",
+    state: "Kuala Lumpur",
+  },
+  {
+    name: "Mont Kiara",
+    state: "Kuala Lumpur",
+  },
+  {
+    name: "Cheras",
+    state: "Kuala Lumpur",
+  },
+  {
+    name: "Titiwangsa",
+    state: "Kuala Lumpur",
+  },
+  {
+    name: "Setapak",
+    state: "Kuala Lumpur",
+  },
+  {
+    name: "Sentul",
+    state: "Kuala Lumpur",
+  },
+  {
+    name: "Bukit Bintang",
+    state: "Kuala Lumpur",
+  },
+  {
+    name: "Ampang",
+    state: "Kuala Lumpur",
+  },
+  {
+    name: "Wangsa Maju",
+    state: "Kuala Lumpur",
+  },
+  {
+    name: "Seputeh",
+    state: "Kuala Lumpur",
+  }
 ];
 
 export default cities;
