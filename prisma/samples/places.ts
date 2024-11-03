@@ -81,15 +81,15 @@ const places: Place[] = [
     ],
     placePhotos: [
       {
-        url: "https://lh3.googleusercontent.com/p/AF1QipNyXWksKJT4Eoz8HLZS0PDwGCoRc5dLB4YwONdc=s680-w680-h510",
+        url: "https://ucarecdn.com/89bc774b-ec7e-4aa7-bd75-370cfb812b84/oshjakarta1.jpg",
         order: 0,
       },
       {
-        url: "https://lh3.googleusercontent.com/p/AF1QipOz9u5wGSl_o_qxBtjce5TM_2CIRMuOnKGtJT0z=s680-w680-h510",
+        url: "https://ucarecdn.com/0f817510-7998-4ef0-bc44-63b6cd8a85d4/oshjakarta2.jpg",
         order: 1,
       },
       {
-        url: "https://lh3.googleusercontent.com/p/AF1QipOu2NFzu6j87osV9KF4Fo-EAlMm3dASx_uwVuis=s680-w680-h510",
+        url: "https://ucarecdn.com/7143cd0d-909a-4211-95c6-d80bc220fec5/oshjakarta3.jpg",
         order: 2,
       },
     ],
@@ -155,15 +155,15 @@ const places: Place[] = [
     ],
     placePhotos: [
       {
-        url: "https://lh3.googleusercontent.com/p/AF1QipNny5HMeEVYF6GnOfUpCFhQGUDj7-PJNiz8d0ob=s680-w680-h510",
+        url: "https://ucarecdn.com/4dd1d22e-e2f9-40b9-8626-be6f213fbf52/evlogiacafe1.jpg",
         order: 0,
       },
       {
-        url: "https://lh3.googleusercontent.com/p/AF1QipPmM6O4vD9pqI28ABgamhB9tXCsSS2vLzsAN6s0=s680-w680-h510",
+        url: "https://ucarecdn.com/450b2cf4-dbc0-4f01-a48c-b9fa46e9c004/evlogiacafe2.jpg",
         order: 1,
       },
       {
-        url: "https://lh3.googleusercontent.com/p/AF1QipOpWW18QCw27w5nWWUDb-aMkbKLWJfQcdb2QCDH=s680-w680-h510",
+        url: "https://ucarecdn.com/e47941cd-33cc-41eb-bf7d-03022539c4c8/evlogiacafe3.jpg",
         order: 2,
       },
     ],
@@ -225,15 +225,15 @@ const places: Place[] = [
     ],
     placePhotos: [
       {
-        url: "https://lh3.googleusercontent.com/p/AF1QipPvey2kvaRnm5Cefi3kOGQLMqYMWAtajhySt7jN=s680-w680-h510",
+        url: "https://ucarecdn.com/34e8ad96-9ec9-42d2-a96b-0c2b9f1a12bc/hartakacoffee1.jpg",
         order: 0,
       },
       {
-        url: "https://lh3.googleusercontent.com/p/AF1QipMjjwu4oSslBIA4uUYu2BQd69tUI2A6gc3UhALg=s680-w680-h510",
+        url: "https://ucarecdn.com/31fdadfb-12e6-4cbe-bdcc-12951a6b81a6/hartakacoffee2.jpg",
         order: 1,
       },
       {
-        url: "https://lh3.googleusercontent.com/p/AF1QipMNlJeL5RDALhUwsDFG3E2svnx3BgjXHMHZIvqM=s680-w680-h510",
+        url: "https://ucarecdn.com/e69b5ed2-469c-47de-9b8e-7c67a951da07/hartakacoffee3.jpg",
         order: 2,
       },
     ],
@@ -285,15 +285,15 @@ const places: Place[] = [
     ],
     placePhotos: [
       {
-        url: "https://lh3.googleusercontent.com/p/AF1QipMLrpuYue-dg2rU5vv14ko1GWXdeh8z_uxuOlUB=s680-w680-h510",
+        url: "https://ucarecdn.com/0d60a202-4d38-44c0-be97-e850e3a74fa9/temukitacoffee1.jpg",
         order: 0,
       },
       {
-        url: "https://lh3.googleusercontent.com/p/AF1QipO-5c8ZeOUu34SWJISAQwGEjFW8Wbhx5G1HiP9J=s680-w680-h510",
+        url: "https://ucarecdn.com/eb441588-b93a-46e4-b384-60aa13210580/temukitacoffee2.jpg",
         order: 1,
       },
       {
-        url: "https://lh3.googleusercontent.com/p/AF1QipPT-pCeJUMRNkGdboPGvH-6LMc6f-wrhRmK8-h1=s680-w680-h510",
+        url: "https://ucarecdn.com/be349640-ceda-4b85-9f5a-c4b0c2c74510/temukitacoffee3.jpg",
         order: 2,
       },
     ],
@@ -345,15 +345,15 @@ const places: Place[] = [
     ],
     placePhotos: [
       {
-        url: "https://lh3.googleusercontent.com/p/AF1QipP4C0hX7m2oRNYPAIBKDtdQqWYeo2xiO2k2ffIe=s680-w680-h510",
+        url: "https://ucarecdn.com/3346090b-6e05-406e-b176-5c4d154423bf/roemahkve1.jpg",
         order: 0,
       },
       {
-        url: "https://lh3.googleusercontent.com/p/AF1QipMOc0YO9E6cTOtHWZtGzN7neBlwQYpYZQBln3pT=s680-w680-h510",
+        url: "https://ucarecdn.com/83199b7a-2d68-4a86-ad7d-2f571bf08954/roemahkve2.jpg",
         order: 1,
       },
       {
-        url: "https://lh3.googleusercontent.com/p/AF1QipOZCl8VVprf7lg65BGXUx3htu3-DMnl5k9IDzi3=s680-w680-h510",
+        url: "https://ucarecdn.com/355ad026-f90d-41f0-95a4-6319c67a69d1/roemahkve3.jpg",
         order: 2,
       },
     ],
@@ -405,15 +405,15 @@ const places: Place[] = [
     ],
     placePhotos: [
       {
-        url: "https://lh3.googleusercontent.com/p/AF1QipPs47nBR9i97qUNwEs0tWTRR18kfHsETdzxInPa=s680-w680-h510",
+        url: "https://ucarecdn.com/430c4a54-21ea-4c12-ad2f-d94134050277/harunacafe1.JPG",
         order: 0,
       },
       {
-        url: "https://lh3.googleusercontent.com/p/AF1QipPdSWn1wtLD7vVD-j_71RrxlrKGXZeqCIi5IvV8=s680-w680-h510",
+        url: "https://ucarecdn.com/6e34bdd6-8000-44ce-aa65-e677ef3ec855/harunacafe2.jpg",
         order: 1,
       },
       {
-        url: "https://lh3.googleusercontent.com/p/AF1QipNGBXIlnKx_zZ021rJZWz4qcZVWMChl8ViPPg0G=s680-w680-h510",
+        url: "https://ucarecdn.com/6a12572c-33ff-4301-bd43-fbf45f7b41fa/harunacafe3.jpg",
         order: 2,
       },
     ],
@@ -466,15 +466,15 @@ const places: Place[] = [
     ],
     placePhotos: [
       {
-        url: "https://lh3.googleusercontent.com/p/AF1QipMrF6SVCQztp1zjTVWPo7w20ouQ-BOHj8KLArGO=s680-w680-h510",
+        url: "https://ucarecdn.com/a669e096-e954-49fa-9cc3-8074a02d65ac/characoffee1.jpg",
         order: 0,
       },
       {
-        url: "https://lh3.googleusercontent.com/p/AF1QipMLnNmwpKUZejq67updudKrcUHPVpqSuykPvVmz=s680-w680-h510",
+        url: "https://ucarecdn.com/da604e46-7d39-4595-8e4f-228ba1819b48/characoffee2.jpg",
         order: 1,
       },
       {
-        url: "https://lh3.googleusercontent.com/p/AF1QipNrmr2sxvYA_4GNTbpCs9r24pd2hwGNE8qx5AL8=s680-w680-h510",
+        url: "https://ucarecdn.com/6d1e510e-f70d-442e-aeff-b0675616cbdc/characoffee3.jpg",
         order: 2,
       },
     ],
@@ -527,15 +527,15 @@ const places: Place[] = [
     ],
     placePhotos: [
       {
-        url: "https://lh3.googleusercontent.com/p/AF1QipPqmWlYvGskzgxml9dJApksqk9GgL-NxDIsYyxb=s680-w680-h510",
+        url: "https://ucarecdn.com/b0ed05d6-4320-4f99-be18-e319ef26fa9e/thegroundscafe1.jpg",
         order: 0,
       },
       {
-        url: "https://lh3.googleusercontent.com/p/AF1QipP_IqljSQHPzbXCDW-tOjAXV7vZyIAhfmW1wg71=s680-w680-h510",
+        url: "https://ucarecdn.com/96557877-6ba5-4d3b-8709-a3542283d13d/thegroundscafe2.jpg",
         order: 1,
       },
       {
-        url: "https://lh3.googleusercontent.com/p/AF1QipPgBrXT_QCkYRDbdpH0ZoFt6DIYXsfZHceqfreR=s680-w680-h510",
+        url: "https://ucarecdn.com/b31649bf-b9c8-4eb4-a0df-4271a924c56e/thegroundscafe3.jpg",
         order: 2,
       },
     ],
@@ -587,15 +587,15 @@ const places: Place[] = [
     ],
     placePhotos: [
       {
-        url: "https://lh3.googleusercontent.com/p/AF1QipNE2Rr-eJuMWIKrfhespJI0EXVuePpVu0JhiPtZ=s680-w680-h510",
+        url: "https://ucarecdn.com/f5554a9f-ffc9-4df1-b8bd-743eb9dde786/amingcoffe1.jpg",
         order: 0,
       },
       {
-        url: "https://lh3.googleusercontent.com/p/AF1QipPasmT39ZOyjM5hmriu0glvV4uUqKXlZteoM8Wa=s680-w680-h510",
+        url: "https://ucarecdn.com/d2ae6586-a466-4efb-9936-ec2f94825328/amingcoffee2.jpg",
         order: 1,
       },
       {
-        url: "https://lh3.googleusercontent.com/p/AF1QipO_zSDzRH9WwIXoYlTS1Vh1LNaFm94ekP4TkLFG=s680-w680-h510",
+        url: "https://ucarecdn.com/041d0f68-f904-4da5-9d71-f6965fdc660a/amingcoffee3.jpg",
         order: 2,
       },
     ],
@@ -647,15 +647,15 @@ const places: Place[] = [
     ],
     placePhotos: [
       {
-        url: "https://lh3.googleusercontent.com/p/AF1QipN2FSa-FPEnauvP7ZcHc9kBnEnWqubC_fRetMkC=s680-w680-h510",
+        url: "https://ucarecdn.com/6c502cc5-acd1-4c0d-9522-2baffd366094/upcoffee1.jpg",
         order: 0,
       },
       {
-        url: "https://lh3.googleusercontent.com/p/AF1QipOPEkNu9R6aHHOyw-jQtRm5alFiRY-42Sew86tL=s680-w680-h510",
+        url: "https://ucarecdn.com/b7c635ed-b321-4eae-9a3f-36d65454b67a/upcoffee2.jpg",
         order: 1,
       },
       {
-        url: "https://lh3.googleusercontent.com/p/AF1QipPVGHM88Q_KrmOb0tvXiL7bq6Gqc2v1zLLOTjIr=s680-w680-h510",
+        url: "https://ucarecdn.com/e312b8f3-f8da-4202-b13a-aedb6258de5e/upcoffee3.jpg",
         order: 2,
       },
     ],
