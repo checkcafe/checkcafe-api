@@ -46,7 +46,7 @@ placeRoute.openapi(
     } catch (error: Error | any) {
       return c.json(
         { error: error.message || "Failed to retrieve places" },
-        401
+        error.status || 401
       );
     }
   }
@@ -80,7 +80,7 @@ placeRoute.openapi(
     } catch (error: Error | any) {
       return c.json(
         { error: error.message || "Failed to get place by slug!" },
-        500
+        error.status || 500
       );
     }
   }
@@ -116,7 +116,7 @@ placeRoute.openapi(
     } catch (error: Error | any) {
       return c.json(
         { error: error.message || "Failed to create a new place!" },
-        400
+        error.status || 400
       );
     }
   }
@@ -168,7 +168,7 @@ placeRoute.openapi(
 
       return c.json(result, 200);
     } catch (error: Error | any) {
-      return c.json({ message: error.message }, 500);
+      return c.json({ message: error.message }, error.status || 500);
     }
   }
 );
@@ -211,7 +211,7 @@ placeRoute.openapi(
 
       return c.json({ message: "Success delete place" }, 200);
     } catch (error: Error | any) {
-      return c.json({ message: error.message }, 500);
+      return c.json({ message: error.message }, error.status || 500);
     }
   }
 );

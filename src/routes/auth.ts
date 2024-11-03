@@ -62,7 +62,7 @@ authRoute.openapi(
 
       return c.json(user, 201);
     } catch (error: Error | any) {
-      return c.json({ error: error.message || "Registration failed!" }, 400);
+      return c.json({ error: error.message || "Registration failed!" }, error.status || 400);
     }
   }
 );
@@ -101,7 +101,7 @@ authRoute.openapi(
 
       return c.json(result, 200);
     } catch (error: Error | any) {
-      return c.json({ error: error.message || "Login failed!" }, 401);
+      return c.json({ error: error.message || "Login failed!" },error.status || 401);
     }
   }
 );
@@ -134,7 +134,7 @@ authRoute.openapi(
 
       return c.json(user, 200);
     } catch (error: Error | any) {
-      return c.json({ error: error.message }, 401);
+      return c.json({ error: error.message }, error.status || 401);
     }
   }
 );
@@ -176,7 +176,7 @@ authRoute.openapi(
 
       return c.json({ message: "Password successfully changed!" }, 200);
     } catch (error: Error | any) {
-      return c.json({ error: error.message }, 401);
+      return c.json({ error: error.message }, error.status || 401);
     }
   }
 );
@@ -217,7 +217,7 @@ authRoute.openapi(
     } catch (error: Error | any) {
       return c.json(
         { error: error.message || "Failed to refresh token!" },
-        401
+        error.status || 401
       );
     }
   }
@@ -260,7 +260,7 @@ authRoute.openapi(
 
       return c.json({ message: "Logout successful!" }, 200);
     } catch (error: Error | any) {
-      return c.json({ error: error.message || "Failed to logout!" }, 500);
+      return c.json({ error: error.message || "Failed to logout!" }, error.status || 500);
     }
   }
 );

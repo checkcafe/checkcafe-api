@@ -38,7 +38,7 @@ facilityRoute.openapi(
     } catch (error: Error | any) {
       return c.json(
         { error: error.message || "Failed to retrieve facilities" },
-        500
+        error.status || 500
       );
     }
   }

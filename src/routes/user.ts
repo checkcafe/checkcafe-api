@@ -42,7 +42,7 @@ userRoute.openapi(
 
       return c.json(result, 200);
     } catch (error: Error | any) {
-      return c.json({ error: error.message || "Failed to get user!" }, 401);
+      return c.json({ error: error.message || "Failed to get user!" }, error.status || 401);
     }
   }
 );
@@ -85,7 +85,7 @@ userRoute.openapi(
 
       return c.json(result, 200);
     } catch (error: Error | any) {
-      return c.json({ error: error.message || "Failed to get user!" }, 401);
+      return c.json({ error: error.message || "Failed to get user!" }, error.status || 401);
     }
   }
 );
@@ -135,7 +135,7 @@ userRoute.openapi(
 
       return c.json(updatedUser, 200);
     } catch (error: Error | any) {
-      return c.json({ error: error.message || "Failed to update user!" }, 401);
+      return c.json({ error: error.message || "Failed to update user!" },  error.status || 401);
     }
   }
 );
@@ -193,7 +193,7 @@ userRoute.openapi(
     } catch (error: Error | any) {
       return c.json(
         { error: error.message || "Failed to get user places!" },
-        401
+        error.status || 401
       );
     }
   }
@@ -253,7 +253,7 @@ userRoute.openapi(
     } catch (error: Error | any) {
       return c.json(
         { error: error.message || "Failed to get user favorite place!" },
-        401
+        error.status || 401
       );
     }
   }
@@ -310,7 +310,7 @@ userRoute.openapi(
     } catch (error: Error | any) {
       return c.json(
         { error: error.message || "Failed to create user favorite place!" },
-        401
+        error.status || 401
       );
     }
   }
@@ -358,7 +358,7 @@ userRoute.openapi(
     } catch (error: Error | any) {
       return c.json(
         { error: error.message || "Failed to delete user favorite place!" },
-        401
+        error.status || 401
       );
     }
   }

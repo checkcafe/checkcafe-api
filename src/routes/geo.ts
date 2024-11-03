@@ -38,7 +38,7 @@ geoRoute.openapi(
     } catch (error: Error | any) {
       return c.json(
         { message: error.message || "Failed to retrieve countries" },
-        500
+        error.status || 500
       );
     }
   }
@@ -77,7 +77,7 @@ geoRoute.openapi(
     } catch (error: Error | any) {
       return c.json(
         { message: error.message || "Failed to retrieve states" },
-        500
+        error.status || 500
       );
     }
   }
@@ -116,7 +116,7 @@ geoRoute.openapi(
     } catch (error: Error | any) {
       return c.json(
         { message: error.message || "Failed to retrieve cities" },
-        500
+        error.status || 500
       );
     }
   }
