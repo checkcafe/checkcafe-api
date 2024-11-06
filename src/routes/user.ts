@@ -42,7 +42,10 @@ userRoute.openapi(
 
       return c.json(result, 200);
     } catch (error: Error | any) {
-      return c.json({ error: error.message || "Failed to get user!" }, error.status || 401);
+      return c.json(
+        { error: error.message || "Failed to get user!" },
+        error.status || 401
+      );
     }
   }
 );
@@ -74,10 +77,7 @@ userRoute.openapi(
       const baseUrl = `${protocol}://${host}`;
 
       const result = {
-        id: user.id,
-        name: user.name,
-        username: user.username,
-        avatarUrl: user.avatarUrl,
+        ...user,
         placesUrl: `${baseUrl}/users/${user.username}/places`,
         favoritesUrl: `${baseUrl}/users/${user.username}/favorites`,
         role: user.role?.name || null,
@@ -85,7 +85,10 @@ userRoute.openapi(
 
       return c.json(result, 200);
     } catch (error: Error | any) {
-      return c.json({ error: error.message || "Failed to get user!" }, error.status || 401);
+      return c.json(
+        { error: error.message || "Failed to get user!" },
+        error.status || 401
+      );
     }
   }
 );
@@ -135,7 +138,10 @@ userRoute.openapi(
 
       return c.json(updatedUser, 200);
     } catch (error: Error | any) {
-      return c.json({ error: error.message || "Failed to update user!" },  error.status || 401);
+      return c.json(
+        { error: error.message || "Failed to update user!" },
+        error.status || 401
+      );
     }
   }
 );

@@ -7,7 +7,8 @@
     "migrate:deploy": "prisma migrate deploy",
     "generate": "prisma generate",
     "seed": "prisma db seed",
-    "prettier": "bunx prettier --write ."
+    "prettier": "bunx prettier --write .",
+    "studio": "prisma studio"
   },
   "prisma": {
     "seed": "bun run prisma/seed.ts"

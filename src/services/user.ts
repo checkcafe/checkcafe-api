@@ -43,6 +43,9 @@ export const getUser = async (userId?: string, username?: string) => {
     where: { id: userId || undefined, username: username || undefined },
     include: {
       role: true,
+      places: true,
+      PlaceFavorite: true,
+      placeReviews: true,
     },
   });
 
