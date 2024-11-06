@@ -128,9 +128,9 @@ model Place {
   thumbnailUrl String?
 
   cityId String?
-  city   City?   @relation(fields: [cityId], references: [id])
-  userId String
-  user   User    @relation(fields: [userId], references: [id])
+  city   City?   @relation(fields: [cityId], references: [id], onUpdate: Cascade, onDelete: SetNull)
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: SetNull)
 
   operatingHours  OperatingHour[]
   placeFacilities PlaceFacility[]
@@ -224,9 +224,9 @@ model PlaceFavorite {
   id String @id @default(cuid())
 
   placeId String
-  place   Place  @relation(fields: [placeId], references: [id], onDelete: Cascade)
+  place   Place  @relation(fields: [placeId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   userId  String
-  user    User   @relation(fields: [userId], references: [id])
+  user    User   @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -240,9 +240,9 @@ model PlaceReview {
   comment String?
 
   placeId String
-  place   Place  @relation(fields: [placeId], references: [id], onDelete: Cascade)
+  place   Place  @relation(fields: [placeId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   userId  String
-  user    User   @relation(fields: [userId], references: [id])
+  user    User   @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
 
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
@@ -257,7 +257,7 @@ model PlaceReviewPhoto {
   order Int    @default(0)
 
   placeReviewId String
-  placeReview   PlaceReview @relation(fields: [placeReviewId], references: [id], onDelete: Cascade)
+  placeReview   PlaceReview @relation(fields: [placeReviewId], references: [id], onUpdate: Cascade, onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
