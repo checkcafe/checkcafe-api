@@ -7,6 +7,7 @@ import * as placeService from "@/services/place";
 import * as placeFavoriteService from "@/services/placeFavorite";
 import * as placeSchema from "@/schemas/place";
 import authMiddleware from "@/middlewares/auth";
+import db from "@/libs/db";
 
 const userRoute = new OpenAPIHono();
 const API_TAGS = ["User"];
@@ -275,44 +276,40 @@ userRoute.openapi(
     security: [{ AuthorizationBearer: [] }],
     middleware: [authMiddleware],
     request: {
+      params: z.object({ username: z.string() }),
       body: {
-        content: {
-          "application/json": {
-            schema: placeSchema.placeIdSchema,
-          },
-        },
+        content: { "application/json": { schema: placeSchema.placeIdSchema } },
       },
     },
     responses: {
-      200: {
-        description: "Places retrieved successfully",
-      },
-      401: {
-        description: "Refresh token is missing or invalid",
-      },
+      200: { description: "Places retrieved successfully" },
+      401: { description: "Refresh token is missing or invalid" },
     },
     tags: API_TAGS,
   },
   async (c) => {
     const userId = (c as Context).get("user")?.id as string;
-    const username = c.req.param("username");
-    const { id } = c.req.valid("json");
+    const { username } = c.req.valid("param");
+    const { id: placeId } = c.req.valid("json");
 
-    if (!username) {
-      return c.json({ error: "Username is required!" }, 401);
-    }
+    if (!username) return c.json({ error: "Username is required!" }, 401);
 
     try {
-      const [user, favorites] = await Promise.all([
-        await userService.getUser(userId, username),
-        await placeFavoriteService.createFavorite(userId, id),
-      ]);
+      // TODO: Refactor as database service
+      const updatedUser = await db.user.update({
+        where: { id: userId },
+        data: { PlaceFavorite: { create: { placeId } } },
+        include: {
+          role: true,
+          places: true,
+          PlaceFavorite: true,
+          placeReviews: true,
+        },
+      });
 
-      if (!user || user.id !== userId) {
-        return c.json({ error: "User not found!" }, 401);
-      }
+      if (!updatedUser) return c.json({ error: "User not found!" }, 401);
 
-      return c.json(favorites, 200);
+      return c.json(updatedUser, 200);
     } catch (error: Error | any) {
       return c.json(
         { error: error.message || "Failed to create user favorite place!" },
@@ -326,44 +323,45 @@ userRoute.openapi(
 userRoute.openapi(
   {
     method: "delete",
-    path: "/{username}/favorites/{id}",
-    summary: "User favorite place",
-    description: "Get favorite places by user.",
+    path: "/{username}/favorites/{placeFavoriteId}",
+    summary: "User unfavorite place",
+    description: "Unfavorite place.",
     security: [{ AuthorizationBearer: [] }],
     middleware: [authMiddleware],
+    request: {
+      params: z.object({ username: z.string(), placeFavoriteId: z.string() }),
+    },
     responses: {
-      200: {
-        description: "Places retrieved successfully",
-      },
-      401: {
-        description: "Refresh token is missing or invalid",
-      },
+      200: { description: "Unfavorited place" },
+      401: { description: "Refresh token is missing or invalid" },
     },
     tags: API_TAGS,
   },
   async (c) => {
     const userId = (c as Context).get("user")?.id as string;
-    const username = c.req.param("username");
-    const id = c.req.param("id");
+    const { username, placeFavoriteId } = c.req.valid("param");
 
-    if (!id || !username) {
-      return c.json({ error: "Id and username are required!" }, 401);
-    }
+    if (!username) return c.json({ error: "Username is required!" }, 401);
 
     try {
-      const [user, favorites] = await Promise.all([
-        await userService.getUser(userId, username),
-        await placeFavoriteService.deleteFavorite(userId, id),
-      ]);
+      // TODO: Refactor as database service
+      const updatedUser = await db.user.update({
+        where: { id: userId },
+        data: { PlaceFavorite: { delete: { id: placeFavoriteId } } },
+        include: {
+          role: true,
+          places: true,
+          PlaceFavorite: true,
+          placeReviews: true,
+        },
+      });
 
-      if (!user || user.id !== userId) {
-        return c.json({ error: "User not found!" }, 401);
-      }
+      if (!updatedUser) return c.json({ error: "User not found!" }, 401);
 
-      return c.json(favorites, 200);
+      return c.json(updatedUser, 200);
     } catch (error: Error | any) {
       return c.json(
-        { error: error.message || "Failed to delete user favorite place!" },
+        { error: error.message || "Failed to unfavorite place!" },
         error.status || 401
       );
     }

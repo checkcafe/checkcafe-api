@@ -11,7 +11,7 @@ export const cleanExpiredTokens = async (): Promise<void> => {
         expiresAt: { lt: new Date() },
       },
     });
-    console.log(`Deleted ${result.count} expired tokens.`);
+    console.info(`Deleted ${result.count} expired tokens.`);
   } catch (error) {
     console.error("Error deleting expired tokens:", error);
   }
