@@ -40,9 +40,22 @@ export const getUsers = async (queryFilter?: string, querySort?: string) => {
  */
 export const getUser = async (userId?: string, username?: string) => {
   const user = await db.user.findUnique({
-    where: { id: userId || undefined, username: username || undefined },
-    include: {
-      role: true,
+    where: {
+      id: userId || undefined,
+      username: username || undefined,
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      username: true,
+      avatarUrl: true,
+      role: {
+        select: {
+          name: true,
+        },
+      },
+      createdAt: true,
     },
   });
 
