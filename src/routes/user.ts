@@ -1,13 +1,12 @@
 import type { Context } from "hono";
 import { OpenAPIHono, z } from "@hono/zod-openapi";
 import { querySchema } from "@/schemas/query";
-import { userSchema } from "@/schemas/user";
+import { usernameSchema, userSchema } from "@/schemas/user";
 import * as userService from "@/services/user";
 import * as placeService from "@/services/place";
 import * as placeFavoriteService from "@/services/placeFavorite";
 import * as placeSchema from "@/schemas/place";
 import authMiddleware from "@/middlewares/auth";
-import db from "@/libs/db";
 
 const userRoute = new OpenAPIHono();
 const API_TAGS = ["User"];
@@ -58,6 +57,9 @@ userRoute.openapi(
     path: "/{username}",
     summary: "User profile",
     description: "Get user information including user ID, username, and role.",
+    request: {
+      params: usernameSchema,
+    },
     responses: {
       200: {
         description: "User information successfully retrieved",
@@ -69,22 +71,12 @@ userRoute.openapi(
     tags: API_TAGS,
   },
   async (c) => {
-    const username = c.req.param("username");
+    const { username } = c.req.valid("param");
 
     try {
-      const user = await userService.getUser(undefined, username);
-      const protocol = c.req.header("X-Forwarded-Proto") || "http";
-      const host = c.req.header("host");
-      const baseUrl = `${protocol}://${host}`;
+      const user = await userService.getUser(username);
 
-      const result = {
-        ...user,
-        placesUrl: `${baseUrl}/users/${user.username}/places`,
-        favoritesUrl: `${baseUrl}/users/${user.username}/favorites`,
-        role: user.role?.name || null,
-      };
-
-      return c.json(result, 200);
+      return c.json(user, 200);
     } catch (error: Error | any) {
       return c.json(
         { error: error.message || "Failed to get user!" },
@@ -104,6 +96,7 @@ userRoute.openapi(
     security: [{ AuthorizationBearer: [] }],
     middleware: [authMiddleware],
     request: {
+      params: usernameSchema,
       body: {
         content: {
           "application/json": {
@@ -123,13 +116,13 @@ userRoute.openapi(
     tags: API_TAGS,
   },
   async (c) => {
-    const username = c.req.param("username");
+    const { username } = c.req.valid("param");
     const userId = (c as Context).get("user")?.id as string;
     const body = c.req.valid("json");
 
     try {
       const [user, updatedUser] = await Promise.all([
-        await userService.getUser(userId, username),
+        await userService.getUser(username),
         await userService.updateUser(userId, body),
       ]);
 
@@ -214,7 +207,7 @@ userRoute.openapi(
     summary: "User favorite places",
     description: "Get favorite places by user.",
     request: {
-      params: z.object({ username: z.string() }),
+      params: usernameSchema,
       query: querySchema,
     },
     responses: {
@@ -276,7 +269,7 @@ userRoute.openapi(
     security: [{ AuthorizationBearer: [] }],
     middleware: [authMiddleware],
     request: {
-      params: z.object({ username: z.string() }),
+      params: usernameSchema,
       body: {
         content: { "application/json": { schema: placeSchema.placeIdSchema } },
       },
@@ -317,7 +310,7 @@ userRoute.openapi(
     security: [{ AuthorizationBearer: [] }],
     middleware: [authMiddleware],
     request: {
-      params: z.object({ username: z.string(), placeFavoriteId: z.string() }),
+      params: usernameSchema.extend({ placeFavoriteId: z.string() }),
     },
     responses: {
       200: { description: "Unfavorited place" },

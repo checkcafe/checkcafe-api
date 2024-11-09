@@ -1,5 +1,7 @@
 import { z } from "@hono/zod-openapi";
 
+export const usernameSchema = z.object({ username: z.string() });
+
 export const userSchema = z.object({
   name: z
     .string()

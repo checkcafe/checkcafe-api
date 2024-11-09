@@ -31,31 +31,53 @@ export const getUsers = async (queryFilter?: string, querySort?: string) => {
 };
 
 /**
- * Retrieves the profile of a user by ID.
+ * Retrieves the profile of the currently authenticated user by ID.
  *
  * @param userId The ID of the user to retrieve.
- * @param username The username of the user to retrieve.
- * @returns The user profile.
- * @throws {Error} If the user does not exist.
+ * @returns The user profile, including id, name, email, username, avatar URL, role, and creation date.
+ * @throws {Error} If the user is not found.
  */
-export const getUser = async (userId?: string, username?: string) => {
+export const getMe = async (userId: string) => {
   const user = await db.user.findUnique({
-    where: {
-      id: userId || undefined,
-      username: username || undefined,
-    },
+    where: { id: userId },
     select: {
       id: true,
       name: true,
       email: true,
       username: true,
       avatarUrl: true,
-      role: {
-        select: {
-          name: true,
-        },
-      },
+      role: { select: { name: true } },
       createdAt: true,
+    },
+  });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  return user;
+};
+
+/**
+ * Retrieves a user's profile by username.
+ *
+ * @param username The username of the user to retrieve.
+ * @returns The user profile, including id, name, email, username, avatar URL, creation date, places, favorite places, and place reviews.
+ * @throws {Error} If the user is not found.
+ */
+export const getUser = async (username: string) => {
+  const user = await db.user.findUnique({
+    where: { username },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      username: true,
+      avatarUrl: true,
+      createdAt: true,
+      places: true,
+      PlaceFavorites: true,
+      placeReviews: true,
     },
   });
 

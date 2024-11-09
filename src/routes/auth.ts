@@ -1,6 +1,6 @@
 import type { Context } from "hono";
 import { OpenAPIHono } from "@hono/zod-openapi";
-import { getUser } from "@/services/user";
+import { getMe, getUser } from "@/services/user";
 import * as authService from "@/services/auth";
 import * as authSchema from "@/schemas/auth";
 import authMiddleware from "@/middlewares/auth";
@@ -62,7 +62,10 @@ authRoute.openapi(
 
       return c.json(user, 201);
     } catch (error: Error | any) {
-      return c.json({ error: error.message || "Registration failed!" }, error.status || 400);
+      return c.json(
+        { error: error.message || "Registration failed!" },
+        error.status || 400
+      );
     }
   }
 );
@@ -101,7 +104,10 @@ authRoute.openapi(
 
       return c.json(result, 200);
     } catch (error: Error | any) {
-      return c.json({ error: error.message || "Login failed!" },error.status || 401);
+      return c.json(
+        { error: error.message || "Login failed!" },
+        error.status || 401
+      );
     }
   }
 );
@@ -130,7 +136,7 @@ authRoute.openapi(
     const userId = (c as Context).get("user")?.id as string;
 
     try {
-      const user = await getUser(userId);
+      const user = await getMe(userId);
 
       return c.json(user, 200);
     } catch (error: Error | any) {
@@ -260,7 +266,10 @@ authRoute.openapi(
 
       return c.json({ message: "Logout successful!" }, 200);
     } catch (error: Error | any) {
-      return c.json({ error: error.message || "Failed to logout!" }, error.status || 500);
+      return c.json(
+        { error: error.message || "Failed to logout!" },
+        error.status || 500
+      );
     }
   }
 );

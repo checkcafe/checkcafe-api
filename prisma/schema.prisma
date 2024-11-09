@@ -24,10 +24,10 @@ model User {
   roleId String
   role   Role   @relation(fields: [roleId], references: [id])
 
-  tokens        UserToken[]     @relation("UserTokens")
-  places        Place[]
-  placeReviews  PlaceReview[]
-  PlaceFavorite PlaceFavorite[]
+  tokens         UserToken[]     @relation("UserTokens")
+  places         Place[]
+  placeReviews   PlaceReview[]
+  PlaceFavorites PlaceFavorite[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -135,7 +135,7 @@ model Place {
   operatingHours  OperatingHour[]
   placeFacilities PlaceFacility[]
   placePhotos     PlacePhoto[]
-  PlaceFavorite   PlaceFavorite[]
+  PlaceFavorites  PlaceFavorite[]
   placeReviews    PlaceReview[]
 
   createdAt DateTime @default(now())
