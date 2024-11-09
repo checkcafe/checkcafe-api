@@ -15,15 +15,15 @@
   },
   "dependencies": {
     "@hono/zod-openapi": "^0.16.4",
-    "@prisma/client": "^5.21.1",
-    "@scalar/hono-api-reference": "^0.5.156",
+    "@prisma/client": "^5.22.0",
+    "@scalar/hono-api-reference": "^0.5.159",
     "dayjs": "^1.11.13",
-    "hono": "^4.6.7",
+    "hono": "^4.6.9",
     "oslo": "^1.2.1"
   },
   "devDependencies": {
     "@types/bun": "latest",
     "@types/cli-progress": "^3.11.6",
-    "prisma": "^5.21.1"
+    "prisma": "^5.22.0"
   }
 }
