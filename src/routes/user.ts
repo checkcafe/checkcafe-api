@@ -1,7 +1,11 @@
 import type { Context } from "hono";
 import { OpenAPIHono, z } from "@hono/zod-openapi";
 import { querySchema } from "@/schemas/query";
-import { usernameSchema, userSchema } from "@/schemas/user";
+import {
+  usernameSchema,
+  createUserSchema,
+  userProfileSchema,
+} from "@/schemas/user";
 import * as userService from "@/services/user";
 import * as placeService from "@/services/place";
 import * as placeFavoriteService from "@/services/placeFavorite";
@@ -63,6 +67,9 @@ userRoute.openapi(
     responses: {
       200: {
         description: "User information successfully retrieved",
+        content: {
+          "application/json": { schema: userProfileSchema },
+        },
       },
       401: {
         description: "Refresh token is missing or invalid",
@@ -100,7 +107,7 @@ userRoute.openapi(
       body: {
         content: {
           "application/json": {
-            schema: userSchema,
+            schema: createUserSchema,
           },
         },
       },

@@ -68,16 +68,13 @@ export const getMe = async (userId: string) => {
 export const getUser = async (username: string) => {
   const user = await db.user.findUnique({
     where: { username },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      username: true,
-      avatarUrl: true,
-      createdAt: true,
+    include: {
       places: true,
-      PlaceFavorites: true,
+      placeFavorites: true,
       placeReviews: true,
+    },
+    omit: {
+      password: true,
     },
   });
 

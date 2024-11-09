@@ -1,8 +1,15 @@
 import { z } from "@hono/zod-openapi";
 
+import {
+  UserSchema,
+  PlaceSchema,
+  PlaceFavoriteSchema,
+  PlaceReviewSchema,
+} from "../../prisma/generated/zod";
+
 export const usernameSchema = z.object({ username: z.string() });
 
-export const userSchema = z.object({
+export const createUserSchema = z.object({
   name: z
     .string()
     .min(1, "Name is required")
@@ -28,4 +35,11 @@ export const userSchema = z.object({
     .string()
     .optional()
     .openapi({ description: "The avatar URL of the user." }),
+});
+
+export const userProfileSchema = z.object({
+  ...UserSchema.shape,
+  places: z.array(PlaceSchema),
+  placeFavorites: z.array(PlaceFavoriteSchema),
+  placeReviews: z.array(PlaceReviewSchema),
 });
