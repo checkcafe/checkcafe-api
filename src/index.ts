@@ -25,6 +25,7 @@ app.get("/", (c) => {
     {
       description: "API for CheckCafe project.",
       ui: `/ui`,
+      docs: `/openapi.json`,
     },
     200
   );

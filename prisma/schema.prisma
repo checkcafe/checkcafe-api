@@ -26,8 +26,8 @@ model User {
 
   tokens         UserToken[]     @relation("UserTokens")
   places         Place[]
+  placeFavorites PlaceFavorite[]
   placeReviews   PlaceReview[]
-  PlaceFavorites PlaceFavorite[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -103,7 +103,7 @@ model City {
   stateId String
   state   State  @relation(fields: [stateId], references: [id], onDelete: Cascade)
 
-  place Place[]
+  places Place[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -135,7 +135,7 @@ model Place {
   operatingHours  OperatingHour[]
   placeFacilities PlaceFacility[]
   placePhotos     PlacePhoto[]
-  PlaceFavorites  PlaceFavorite[]
+  placeFavorites  PlaceFavorite[]
   placeReviews    PlaceReview[]
 
   createdAt DateTime @default(now())
@@ -244,9 +244,10 @@ model PlaceReview {
   userId  String
   user    User   @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
 
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
-  PlaceReviewPhoto PlaceReviewPhoto[] @relation()
+  placeReviewPhotos PlaceReviewPhoto[] @relation()
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("place_reviews")
 }
