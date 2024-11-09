@@ -289,27 +289,15 @@ userRoute.openapi(
   },
   async (c) => {
     const userId = (c as Context).get("user")?.id as string;
-    const { username } = c.req.valid("param");
     const { id: placeId } = c.req.valid("json");
 
-    if (!username) return c.json({ error: "Username is required!" }, 401);
-
     try {
-      // TODO: Refactor as database service
-      const updatedUser = await db.user.update({
-        where: { id: userId },
-        data: { PlaceFavorite: { create: { placeId } } },
-        include: {
-          role: true,
-          places: true,
-          PlaceFavorite: true,
-          placeReviews: true,
-        },
-      });
+      const favoritePlace = await placeFavoriteService.upsertFavorite(
+        userId,
+        placeId
+      );
 
-      if (!updatedUser) return c.json({ error: "User not found!" }, 401);
-
-      return c.json(updatedUser, 200);
+      return c.json(favoritePlace, 200);
     } catch (error: Error | any) {
       return c.json(
         { error: error.message || "Failed to create user favorite place!" },
@@ -339,26 +327,15 @@ userRoute.openapi(
   },
   async (c) => {
     const userId = (c as Context).get("user")?.id as string;
-    const { username, placeFavoriteId } = c.req.valid("param");
-
-    if (!username) return c.json({ error: "Username is required!" }, 401);
+    const { placeFavoriteId } = c.req.valid("param");
 
     try {
-      // TODO: Refactor as database service
-      const updatedUser = await db.user.update({
-        where: { id: userId },
-        data: { PlaceFavorite: { delete: { id: placeFavoriteId } } },
-        include: {
-          role: true,
-          places: true,
-          PlaceFavorite: true,
-          placeReviews: true,
-        },
-      });
+      const result = placeFavoriteService.deleteFavorite(
+        userId,
+        placeFavoriteId
+      );
 
-      if (!updatedUser) return c.json({ error: "User not found!" }, 401);
-
-      return c.json(updatedUser, 200);
+      return c.json(result, 200);
     } catch (error: Error | any) {
       return c.json(
         { error: error.message || "Failed to unfavorite place!" },

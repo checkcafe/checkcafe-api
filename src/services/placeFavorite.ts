@@ -121,14 +121,14 @@ export const getFavorites = async (
 };
 
 /**
- * Creates a new favorite record in the database for the given user and place.
+ * Creates or updates a favorite record in the database for the given user and place.
  *
  * @param userId The ID of the user favoriting the place.
  * @param placeId The ID of the place to favorite.
- * @returns The newly created favorite record.
+ * @returns The created or updated favorite record.
  */
-export const createFavorite = async (userId: string, placeId: string) => {
-  const place = db.place.findUnique({
+export const upsertFavorite = async (userId: string, placeId: string) => {
+  const place = await db.place.findUnique({
     where: { id: placeId, isPublished: true },
   });
 
@@ -148,24 +148,34 @@ export const createFavorite = async (userId: string, placeId: string) => {
 };
 
 /**
- * Deletes a favorite record from the database for the given user and place ID.
+ * Deletes a favorite record from the database for the given user and place ID
+ * if the place is published.
  *
  * @param userId The ID of the user who owns the favorite record.
- * @param id The ID of the favorite record to delete.
- * @returns The deleted favorite record.
+ * @param placeFavoriteId The ID of the favorite record to delete.
+ * @returns The deleted favorite record or throws an error if conditions are not met.
  */
-export const deleteFavorite = async (userId: string, id: string) => {
-  const placeFavoriteExists = await db.placeFavorite.findUnique({
-    where: { id, userId },
+export const deleteFavorite = async (
+  userId: string,
+  placeFavoriteId: string
+) => {
+  const placeFavorite = await db.placeFavorite.findFirst({
+    where: {
+      id: placeFavoriteId,
+      userId: userId,
+      place: {
+        isPublished: true,
+      },
+    },
   });
 
-  if (!placeFavoriteExists) {
-    throw new Error("Favorite place not found.");
+  if (!placeFavorite) {
+    throw new Error("Favorite not found.");
   }
 
-  const placeFavorite = await db.placeFavorite.delete({
-    where: { id, userId },
+  const deletedFavorite = await db.placeFavorite.delete({
+    where: { id: placeFavoriteId, userId: userId },
   });
 
-  return placeFavorite;
+  return deletedFavorite;
 };
