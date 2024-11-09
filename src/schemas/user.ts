@@ -40,6 +40,10 @@ export const createUserSchema = z.object({
 export const userProfileSchema = z.object({
   ...UserSchema.shape,
   places: z.array(PlaceSchema),
-  placeFavorites: z.array(PlaceFavoriteSchema),
-  placeReviews: z.array(PlaceReviewSchema),
+  placeFavorites: z.array(
+    z.object({ ...PlaceFavoriteSchema.shape, place: PlaceSchema })
+  ),
+  placeReviews: z.array(
+    z.object({ ...PlaceReviewSchema.shape, place: PlaceSchema })
+  ),
 });

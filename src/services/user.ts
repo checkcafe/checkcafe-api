@@ -67,11 +67,11 @@ export const getMe = async (userId: string) => {
  */
 export const getUser = async (username: string) => {
   const user = await db.user.findUnique({
-    where: { username },
+    where: { username, places: {} },
     include: {
-      places: true,
-      placeFavorites: true,
-      placeReviews: true,
+      places: { where: { isPublished: true } },
+      placeFavorites: { include: { place: true } },
+      placeReviews: { include: { place: true } },
     },
     omit: {
       password: true,
