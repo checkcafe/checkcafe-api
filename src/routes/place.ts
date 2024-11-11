@@ -126,7 +126,7 @@ placeRoute.openapi(
 placeRoute.openapi(
   {
     method: "patch",
-    path: "/{placeId}",
+    path: "/{id}",
     summary: "Update a place",
     description:
       "This operation is used to update a place. The user must be authenticated.",
@@ -177,7 +177,7 @@ placeRoute.openapi(
 placeRoute.openapi(
   {
     method: "delete",
-    path: "/{placeId}",
+    path: "/{id}",
     summary: "Delete a place",
     description:
       "This operation is used to delete a place. The user must be authenticated.",
