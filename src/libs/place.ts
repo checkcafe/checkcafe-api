@@ -126,6 +126,7 @@ export const formatPlaceData = (place: any, submitter?: boolean) => {
     thumbnailUrl: place.thumbnailUrl,
     address: {
       street: place.streetAddress,
+      cityId: place.city?.id ?? null,
       city: place.city?.name ?? null,
       state: place.city?.state.name ?? null,
       country: place.city?.state.country.name ?? null,

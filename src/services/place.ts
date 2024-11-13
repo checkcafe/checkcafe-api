@@ -225,6 +225,7 @@ export const getPlaces = async (
       thumbnailUrl: true,
       city: {
         select: {
+          id: true,
           name: true,
           state: {
             select: {
