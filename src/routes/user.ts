@@ -155,6 +155,7 @@ userRoute.openapi(
     summary: "User places",
     description: "Get places by user.",
     request: {
+      params: usernameSchema,
       query: querySchema,
     },
     responses: {
@@ -169,16 +170,71 @@ userRoute.openapi(
   },
   async (c) => {
     const { filter, sort, limit, page } = c.req.valid("query");
-    const username = c.req.param("username");
-
-    if (!username) {
-      return c.json({ error: "Username is required!" }, 401);
-    }
+    const { username } = c.req.valid("param");
 
     let filterObj = filter ? JSON.parse(filter) : {};
     filterObj = {
       isPublished: true,
       "user.username": username,
+      ...filterObj,
+    };
+
+    let sortObj = sort ? JSON.parse(sort) : {};
+    sortObj = {
+      createdAt: "desc",
+      ...sortObj,
+    };
+
+    try {
+      const places = await placeService.getPlaces(
+        JSON.stringify(filterObj),
+        JSON.stringify(sortObj),
+        limit,
+        page
+      );
+
+      return c.json(places, 200);
+    } catch (error: Error | any) {
+      return c.json(
+        { error: error.message || "Failed to get user places!" },
+        error.status || 401
+      );
+    }
+  }
+);
+
+// Get User Dashboard Route
+userRoute.openapi(
+  {
+    method: "get",
+    path: "/{username}/dashboard",
+    summary: "User dashboard",
+    description: "Get user dashboard information.",
+    security: [{ AuthorizationBearer: [] }],
+    middleware: [authMiddleware],
+    request: {
+      params: usernameSchema,
+      query: querySchema,
+    },
+    responses: {
+      200: {
+        description: "Dashboard retrieved successfully",
+      },
+      401: {
+        description: "Refresh token is missing or invalid",
+      },
+    },
+    tags: API_TAGS,
+  },
+  async (c) => {
+    const { filter, sort, limit, page } = c.req.valid("query");
+    const { username } = c.req.valid("param");
+    const userId = (c as Context).get("user")?.id as string;
+
+    let filterObj = filter ? JSON.parse(filter) : {};
+    filterObj = {
+      "user.username": username,
+      "user.id": userId,
       ...filterObj,
     };
 

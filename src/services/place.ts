@@ -93,6 +93,29 @@ export const patchPlace = async (user: User, placeId: string, body: any) => {
 };
 
 /**
+ * Toggles the `isPublished` status of a place for a given user.
+ *
+ * @param userId - The ID of the user attempting to toggle the publication status.
+ * @param placeId - The ID of the place whose publication status is to be toggled.
+ * @throws {Error} If the place does not exist or if the user does not have permission to edit the place.
+ * @returns The updated place with the toggled `isPublished` status.
+ */
+export const patchIsPublished = async (userId: string, placeId: string) => {
+  const place = await db.place.findUnique({ where: { id: placeId, userId } });
+
+  if (!place) throw new Error("Place not found.");
+
+  if (place.userId !== userId) {
+    throw new Error("You do not have permission to edit this place.");
+  }
+
+  return db.place.update({
+    where: { id: placeId },
+    data: { isPublished: !place.isPublished },
+  });
+};
+
+/**
  * Deletes a place from the database.
  *
  * @param placeId The ID of the place to delete.
@@ -296,6 +319,7 @@ export const getPlaceBySlugOrId = async (slugOrId: string) => {
       },
       city: {
         select: {
+          id: true,
           name: true,
           state: {
             select: {

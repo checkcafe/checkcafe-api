@@ -173,6 +173,49 @@ placeRoute.openapi(
   }
 );
 
+// Update isPublished Place Route
+placeRoute.openapi(
+  {
+    method: "patch",
+    path: "/{id}/isPublished",
+    summary: "Toggle isPublished a place",
+    description:
+      "This operation is used to update isPublished a place. The user must be authenticated.",
+    security: [{ AuthorizationBearer: [] }],
+    middleware: [authMiddleware],
+    request: {
+      params: placeIdSchema,
+    },
+    responses: {
+      200: {
+        description: "Place patched successfully",
+      },
+      401: {
+        description: "Unauthorized",
+      },
+      404: {
+        description: "Place not found",
+      },
+      500: {
+        description: "Failed to patch place",
+      },
+    },
+    tags: API_TAGS,
+  },
+  async (c) => {
+    const userId = (c as Context).get("user")?.id as string;
+    const { id } = c.req.valid("param");
+
+    try {
+      const result = await placeService.patchIsPublished(userId, id);
+
+      return c.json(result, 200);
+    } catch (error: Error | any) {
+      return c.json({ message: error.message }, error.status || 500);
+    }
+  }
+);
+
 // Delete Place Route
 placeRoute.openapi(
   {
