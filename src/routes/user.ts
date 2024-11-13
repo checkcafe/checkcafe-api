@@ -266,6 +266,30 @@ userRoute.openapi(
   }
 );
 
+// Get User Dashboard Place Route
+userRoute.openapi(
+  {
+    method: "get",
+    path: "/{username}/dashboard",
+    summary: "User dashboard places",
+    description: "Get dashboard places by user.",
+    security: [{ AuthorizationBearer: [] }],
+    middleware: [authMiddleware],
+    responses: {
+      200: {
+        description: "Places retrieved successfully",
+      },
+      401: {
+        description: "Refresh token is missing or invalid",
+      },
+    },
+    tags: API_TAGS,
+  },
+  async (c) => {
+    // TODO: Get dashboard places by user id (without filter isPublished)
+  }
+);
+
 // Post User Favorite Route
 userRoute.openapi(
   {
