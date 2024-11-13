@@ -57,23 +57,33 @@ export const patchPlace = async (user: User, placeId: string, body: any) => {
   }
 
   const { operatingHours, placeFacilities, placePhotos, ...placeData } = body;
-  const { openingTime, closingTime } = await getOperatingHours(operatingHours);
-  const operatingHoursData = await formatOperatingHoursToTime(operatingHours);
-  const newSlug = await generateUniqueSlug(body.name, existingPlace.slug);
-  const photosOrders = photoSorts(placePhotos);
+  const dataToUpdate: any = { ...placeData };
+
+  dataToUpdate.slug = await generateUniqueSlug(body.name, existingPlace.slug);
+
+  if (operatingHours) {
+    const { openingTime, closingTime } = await getOperatingHours(
+      operatingHours
+    );
+    const operatingHoursData = await formatOperatingHoursToTime(operatingHours);
+    dataToUpdate.openingTime = openingTime;
+    dataToUpdate.closingTime = closingTime;
+    dataToUpdate.operatingHours = prepareChildData(operatingHoursData);
+  }
+
+  if (placeFacilities) {
+    dataToUpdate.placeFacilities = prepareChildData(placeFacilities);
+  }
+
+  if (placePhotos) {
+    const photosOrders = photoSorts(placePhotos);
+    dataToUpdate.thumbnailUrl = photosOrders[0]?.url;
+    dataToUpdate.placePhotos = prepareChildData(photosOrders);
+  }
 
   return db.place.update({
     where: { id: placeId },
-    data: {
-      ...placeData,
-      slug: newSlug,
-      openingTime,
-      closingTime,
-      thumbnailUrl: photosOrders[0]?.url,
-      operatingHours: prepareChildData(operatingHoursData),
-      placeFacilities: prepareChildData(placeFacilities),
-      placePhotos: prepareChildData(photosOrders),
-    },
+    data: dataToUpdate,
     include: {
       operatingHours: true,
       placeFacilities: { include: { facility: true } },
@@ -225,17 +235,17 @@ export const getPlaces = async (
 
   const data = queryFilter?.includes("user.username")
     ? {
-        name: user.name,
-        username: user.username,
-        avatarUrl: user.avatarUrl,
+        name: user?.name,
+        username: user?.username,
+        avatarUrl: user?.avatarUrl,
         places: formattedPlaces,
       }
     : formattedPlaces.map((place) => ({
         ...place,
         submitter: {
-          name: user.name,
-          username: user.username,
-          avatarUrl: user.avatarUrl,
+          name: user?.name,
+          username: user?.username,
+          avatarUrl: user?.avatarUrl,
         },
       }));
 
