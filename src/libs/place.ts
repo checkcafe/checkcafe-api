@@ -124,6 +124,7 @@ export const formatPlaceData = (place: any, submitter?: boolean) => {
     openingTime: place.openingTime,
     closingTime: place.closingTime,
     thumbnailUrl: place.thumbnailUrl,
+    isPublished: place.isPublished,
     address: {
       street: place.streetAddress,
       cityId: place.city?.id ?? null,

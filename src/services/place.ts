@@ -311,6 +311,7 @@ export const getPlaceBySlugOrId = async (slugOrId: string) => {
       longitude: true,
       priceRangeMin: true,
       priceRangeMax: true,
+      isPublished: true,
       user: {
         select: {
           name: true,
