@@ -322,6 +322,45 @@ userRoute.openapi(
   }
 );
 
+// Get User Dashboard Place Route
+userRoute.openapi(
+  {
+    method: "get",
+    path: "/{username}/dashboard",
+    summary: "User dashboard places",
+    description: "Get dashboard places by user.",
+    security: [{ AuthorizationBearer: [] }],
+    middleware: [authMiddleware],
+    request: {
+      params: usernameSchema,
+    },
+    responses: {
+      200: {
+        description: "Places retrieved successfully",
+      },
+      401: {
+        description: "Refresh token is missing or invalid",
+      },
+    },
+    tags: API_TAGS,
+  },
+  async (c) => {
+    const userId = (c as Context).get("user")?.id as string;
+    const { username } = c.req.valid("param");
+
+    try {
+      const places = await userService.getUserDashboard(userId, username);
+
+      return c.json({ places }, 200);
+    } catch (error: Error | any) {
+      return c.json(
+        { error: error.message || "Failed to find user dashboard places!" },
+        error.status || 404
+      );
+    }
+  }
+);
+
 // Post User Favorite Route
 userRoute.openapi(
   {

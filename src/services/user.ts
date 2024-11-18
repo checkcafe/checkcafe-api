@@ -30,6 +30,27 @@ export const getUsers = async (queryFilter?: string, querySort?: string) => {
   return users;
 };
 
+// Todo : Get dashboard by username without isPublish filter
+export const getUserDashboard = async (userId: string, userName: string) => {
+  const places = await db.place.findMany({
+    where: {
+      userId,
+      user: {
+        username: userName
+      }
+    },
+    include: {
+      user: true
+    }
+  });
+
+  if (!places) {
+    throw new Error("Place not found")
+  }
+
+  return places;
+}
+
 /**
  * Retrieves the profile of the currently authenticated user by ID.
  *
