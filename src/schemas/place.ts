@@ -21,9 +21,6 @@ export const placeSchema = z.object({
   streetAddress: z.string().openapi({
     description: "The address of the place.",
   }),
-  wifiSpeedAvg: z.number().optional().openapi({
-    description: "The average wifi speed of the place.",
-  }),
   latitude: z.number().optional().openapi({
     description: "The latitude of the place.",
   }),
