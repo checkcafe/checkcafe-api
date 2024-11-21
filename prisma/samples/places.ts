@@ -792,6 +792,128 @@ const places: Place[] = [
       },
     ],
   },
+  {
+    name: "M Marini Grand Caffè & Terrazza",
+    streetAddress: "Ground Floor, One Kl, No.6, Jalan Pinang, Kuala Lumpur City Centre, 50450 Kuala Lumpur, Federal Territory of Kuala Lumpur",
+    city: "Kuala Lumpur City Centre",
+    priceRangeMin: 20,
+    priceRangeMax: 50,
+    isPublished: true,
+    lat: 3.155930,
+    long: 101.710120,
+    operatingHours: [
+      {
+        day: "Sunday",
+        openingTime: "11:30",
+        closingTime: "01:00",
+      },
+      {
+        day: "Monday",
+        openingTime: "11:30",
+        closingTime: "01:00",
+      },
+      {
+        day: "Tuesday",
+        openingTime: "11:30",
+        closingTime: "01:00",
+      },
+      {
+        day: "Wednesday",
+        openingTime: "11:30",
+        closingTime: "01:00",
+      },
+      {
+        day: "Thursday",
+        openingTime: "11:30",
+        closingTime: "01:00",
+      },
+      {
+        day: "Friday",
+        openingTime: "11:30",
+        closingTime: "01:00",
+      },
+      {
+        day: "Saturday",
+        openingTime: "11:30",
+        closingTime: "01:00",
+      },
+    ],
+    placePhotos: [
+      {
+        url: "https://ucarecdn.com/b86ef166-2da1-429c-ac70-f2c8c7a68994/20200724.jpg",
+        order: 0,
+      },
+      {
+        url: "https://ucarecdn.com/47cde01f-6414-4257-b344-222f5990393d/20240728.jpg",
+        order: 1,
+      },
+      {
+        url: "https://ucarecdn.com/150ab550-47a5-4e9c-bbb9-413345b2c551/20220715.jpg",
+        order: 2,
+      },
+    ],
+  },
+  {
+    name: "After One KL",
+    streetAddress: "1, Persiaran Lidcol , Jalan Yap Kwan Seng, Wilayah Persekutuan, 1, Persiaran Lidcol, Kampung Baru, 50450 Kuala Lumpur, Federal Territory of Kuala Lumpur",
+    city: "Kuala Lumpur City Centre",
+    priceRangeMin: 40,
+    priceRangeMax: 60,
+    isPublished: true,
+    lat: 3.162240,
+    long: 101.713280,
+    operatingHours: [
+      {
+        day: "Sunday",
+        openingTime: "08:00",
+        closingTime: "21:00",
+      },
+      {
+        day: "Monday",
+        openingTime: "08:00",
+        closingTime: "21:00",
+      },
+      {
+        day: "Tuesday",
+        openingTime: "08:00",
+        closingTime: "21:00",
+      },
+      {
+        day: "Wednesday",
+        openingTime: "08:00",
+        closingTime: "21:00",
+      },
+      {
+        day: "Thursday",
+        openingTime: "08:00",
+        closingTime: "21:00",
+      },
+      {
+        day: "Friday",
+       openingTime: "08:00",
+        closingTime: "21:00",
+      },
+      {
+        day: "Saturday",
+        openingTime: "08:00",
+        closingTime: "21:00",
+      },
+    ],
+    placePhotos: [
+      {
+        url: "https://ucarecdn.com/02e6f08b-05a7-4530-8ca1-ca62238d0b1f/20240530.jpg",
+        order: 0,
+      },
+      {
+        url: "https://ucarecdn.com/6863b382-bba0-48fd-aaac-709b85f01d03/20220924.jpg",
+        order: 1,
+      },
+      {
+        url: "https://ucarecdn.com/917addf4-c824-4abb-8864-aa3d83760090/DSCF5088.jpg",
+        order: 2,
+      },
+    ],
+  },
 ];
 
 export default places;
