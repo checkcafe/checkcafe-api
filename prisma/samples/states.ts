@@ -219,7 +219,27 @@ const states: StateRecord[] = [
   {
     name: "Putrajaya",
     country: "Malaysia",
-  }
+  },
+  {
+    name: "Central Region",
+    country: "Malaysia",
+  },
+  {
+    name: "East Region",
+    country: "Malaysia",
+  },
+  {
+    name: "North Region",
+    country: "Malaysia",
+  },
+  {
+    name: "North-East Region",
+    country: "Malaysia",
+  },
+  {
+    name: "West Region",
+    country: "Malaysia",
+  },
 ];
 
 export default states;
