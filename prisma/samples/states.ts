@@ -222,23 +222,23 @@ const states: StateRecord[] = [
   },
   {
     name: "Central Region",
-    country: "Malaysia",
+    country: "Singapore",
   },
   {
     name: "East Region",
-    country: "Malaysia",
+    country: "Singapore",
   },
   {
     name: "North Region",
-    country: "Malaysia",
+    country: "Singapore",
   },
   {
     name: "North-East Region",
-    country: "Malaysia",
+    country: "Singapore",
   },
   {
     name: "West Region",
-    country: "Malaysia",
+    country: "Singapore",
   },
 ];
 
