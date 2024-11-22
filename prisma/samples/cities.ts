@@ -2169,7 +2169,191 @@ const cities: CityRecord[] = [
   {
     name: "Seputeh",
     state: "Kuala Lumpur",
-  }
+  },
+  {
+    name: "Bukit Merah",
+    state: "Central Region",
+  },
+  {
+    name: "Bukit Timah",
+    state: "Central Region",
+  },
+  {
+    name: "Downtown Core",
+    state: "Central Region",
+  },
+  {
+    name: "Kallang",
+    state: "Central Region",
+  },
+  {
+    name: "Marina East",
+    state: "Central Region",
+  },
+  {
+    name: "Marina South",
+    state: "Central Region",
+  },
+  {
+    name: "Newton",
+    state: "Central Region",
+  },
+  {
+    name: "Orchard",
+    state: "Central Region",
+  },
+  {
+    name: "Outram",
+    state: "Central Region",
+  },
+  {
+    name: "Queenstown",
+    state: "Central Region",
+  },
+  {
+    name: "River Valley",
+    state: "Central Region",
+  },
+  {
+    name: "Rochor",
+    state: "Central Region",
+  },
+  {
+    name: "Singapore River",
+    state: "Central Region",
+  },
+  {
+    name: "Tanglin",
+    state: "Central Region",
+  },
+  {
+    name: "Toa Payoh",
+    state: "Central Region",
+  },
+
+  // East Region
+  {
+    name: "Bedok",
+    state: "East Region",
+  },
+  {
+    name: "Changi",
+    state: "East Region",
+  },
+  {
+    name: "Changi Bay",
+    state: "East Region",
+  },
+  {
+    name: "Pasir Ris",
+    state: "East Region",
+  },
+  {
+    name: "Tampines",
+    state: "East Region",
+  },
+
+  // North Region
+  {
+    name: "Admiralty",
+    state: "North Region",
+  },
+  {
+    name: "Mandai",
+    state: "North Region",
+  },
+  {
+    name: "Sembawang",
+    state: "North Region",
+  },
+  {
+    name: "Simpang",
+    state: "North Region",
+  },
+  {
+    name: "Woodlands",
+    state: "North Region",
+  },
+  {
+    name: "Yishun",
+    state: "North Region",
+  },
+
+  // North-East Region
+  {
+    name: "Ang Mo Kio",
+    state: "North-East Region",
+  },
+  {
+    name: "Hougang",
+    state: "North-East Region",
+  },
+  {
+    name: "Punggol",
+    state: "North-East Region",
+  },
+  {
+    name: "Seletar",
+    state: "North-East Region",
+  },
+  {
+    name: "Sengkang",
+    state: "North-East Region",
+  },
+  {
+    name: "Serangoon",
+    state: "North-East Region",
+  },
+
+  // West Region
+  {
+    name: "Boon Lay",
+    state: "West Region",
+  },
+  {
+    name: "Bukit Batok",
+    state: "West Region",
+  },
+  {
+    name: "Bukit Panjang",
+    state: "West Region",
+  },
+  {
+    name: "Choa Chu Kang",
+    state: "West Region",
+  },
+  {
+    name: "Clementi",
+    state: "West Region",
+  },
+  {
+    name: "Jurong East",
+    state: "West Region",
+  },
+  {
+    name: "Jurong West",
+    state: "West Region",
+  },
+  {
+    name: "Pioneer",
+    state: "West Region",
+  },
+  {
+    name: "Tengah",
+    state: "West Region",
+  },
+  {
+    name: "Tuas",
+    state: "West Region",
+  },
+  {
+    name: "Western Islands",
+    state: "West Region",
+  },
+  {
+    name: "Western Water Catchment",
+    state: "West Region",
+  },
 ];
 
 export default cities;

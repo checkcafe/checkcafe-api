@@ -1097,6 +1097,67 @@ const places: Place[] = [
       },
     ],
   },
+  {
+    name: "My Awesome Cafe",
+    streetAddress: "202 Telok Ayer St, Singapore 068639",
+    city: "Downtown Core",
+    priceRangeMin: 20,
+    priceRangeMax: 40,
+    isPublished: true,
+    lat: 1.280130,
+    long: 103.847153,
+    operatingHours: [
+      {
+        day: "Sunday",
+        openingTime: "10:30",
+        closingTime: "23:30",
+      },
+      {
+        day: "Monday",
+        openingTime: "10:30",
+        closingTime: "23:30",
+      },
+      {
+        day: "Tuesday",
+        openingTime: "10:30",
+        closingTime: "23:30",
+      },
+      {
+        day: "Wednesday",
+        openingTime: "08:00",
+        closingTime: "17:00",
+      },
+      {
+        day: "Thursday",
+        openingTime: "10:30",
+        closingTime: "23:30",
+      },
+      {
+        day: "Friday",
+       openingTime: "10:30",
+        closingTime: "23:30",
+      },
+      {
+        day: "Saturday",
+        openingTime: "10:30",
+        closingTime: "23:30",
+      },
+    ],
+    placePhotos: [
+      {
+        url: "https://ucarecdn.com/ad3dee92-26dc-4307-9422-2f95e5d2cb58/20201106.jpg",
+        order: 0,
+      },
+      {
+        url: "https://ucarecdn.com/e94db80b-fc8c-4e1c-8cdc-40e712a2c23e/20201106.jpg",
+        order: 1,
+      },
+      {
+        url: "https://ucarecdn.com/6ba18c18-af03-4902-9ecb-942fe2f40c60/20231214.jpg",
+        order: 2,
+      },
+    ],
+  },
 ];
 
 export default places;
