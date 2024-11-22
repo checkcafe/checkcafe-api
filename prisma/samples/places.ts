@@ -914,6 +914,189 @@ const places: Place[] = [
       },
     ],
   },
+  {
+    name: "Flaaah with ONO - Suria KLCC",
+    streetAddress: "Lot 114, Level 1, Petronas Twin Tower, Kuala Lumpur City Centre, 50088 Kuala Lumpur, Federal Territory of Kuala Lumpur",
+    city: "Kuala Lumpur City Centre",
+    priceRangeMin: 20,
+    priceRangeMax: 40,
+    isPublished: true,
+    lat: 3.091550,
+    long: 101.677030,
+    operatingHours: [
+      {
+        day: "Sunday",
+        openingTime: "10:00",
+        closingTime: "22:30",
+      },
+      {
+        day: "Monday",
+        openingTime: "08:00",
+        closingTime: "22:00",
+      },
+      {
+        day: "Tuesday",
+        openingTime: "08:00",
+        closingTime: "22:00",
+      },
+      {
+        day: "Wednesday",
+        openingTime: "08:00",
+        closingTime: "22:00",
+      },
+      {
+        day: "Thursday",
+        openingTime: "08:00",
+        closingTime: "22:00",
+      },
+      {
+        day: "Friday",
+       openingTime: "08:00",
+        closingTime: "22:00",
+      },
+      {
+        day: "Saturday",
+        openingTime: "10:00",
+        closingTime: "22:30",
+      },
+    ],
+    placePhotos: [
+      {
+        url: "https://ucarecdn.com/e3672d2b-7cba-4a87-8db6-18757c05d916/20240708.jpg",
+        order: 0,
+      },
+      {
+        url: "https://ucarecdn.com/16cbc384-c8c5-4d30-927f-1871207c22bd/20240720.jpg",
+        order: 1,
+      },
+      {
+        url: "https://ucarecdn.com/d3042dbc-c596-4c01-a1bf-de553ac1a537/20240704.jpg",
+        order: 2,
+      },
+    ],
+  },
+  {
+    name: "Eight Ounce Coffee Co. ",
+    streetAddress: "Unit 115, Level 1, Suria KLCC, Persiaran Petronas, Kuala Lumpur City Centre, 50088 Kuala Lumpur, Federal Territory of Kuala Lumpur",
+    city: "Kuala Lumpur City Centre",
+    priceRangeMin: 20,
+    priceRangeMax: 40,
+    isPublished: true,
+    lat: 3.154390,
+    long: 101.715180,
+    operatingHours: [
+      {
+        day: "Sunday",
+        openingTime: "09:00",
+        closingTime: "22:00",
+      },
+      {
+        day: "Monday",
+        openingTime: "07:30",
+        closingTime: "22:00",
+      },
+      {
+        day: "Tuesday",
+        openingTime: "07:30",
+        closingTime: "22:00",
+      },
+      {
+        day: "Wednesday",
+        openingTime: "07:30",
+        closingTime: "22:00",
+      },
+      {
+        day: "Thursday",
+        openingTime: "07:30",
+        closingTime: "22:00",
+      },
+      {
+        day: "Friday",
+       openingTime: "07:30",
+        closingTime: "22:00",
+      },
+      {
+        day: "Saturday",
+        openingTime: "09:00",
+        closingTime: "22:00",
+      },
+    ],
+    placePhotos: [
+      {
+        url: "https://ucarecdn.com/ee9369b6-0e17-4ee5-bf95-074ada336273/20180516.jpg",
+        order: 0,
+      },
+      {
+        url: "https://ucarecdn.com/3356dd59-0154-477a-9130-f9c34df116dc/5copy.jpg",
+        order: 1,
+      },
+      {
+        url: "https://ucarecdn.com/7f1b1c79-4fa7-44cd-926c-1f004c177f92/20240531.jpg",
+        order: 2,
+      },
+    ],
+  },
+  {
+    name: "Ra-Ft Café / Bistro Binjai 8 | Coffee",
+    streetAddress: " Unit G-1, Ground Floor, Binjai 8 Premium Soho, 2, Lrg Binjai, Kuala Lumpur, 50450 Kuala Lumpur, Federal Territory of Kuala Lumpur",
+    city: "Kuala Lumpur City Centre",
+    priceRangeMin: 20,
+    priceRangeMax: 40,
+    isPublished: true,
+    lat: 3.156680,
+    long: 101.719170,
+    operatingHours: [
+      {
+        day: "Sunday",
+        openingTime: "08:00",
+        closingTime: "17:00",
+      },
+      {
+        day: "Monday",
+        openingTime: "08:00",
+        closingTime: "17:00",
+      },
+      {
+        day: "Tuesday",
+        openingTime: "08:00",
+        closingTime: "17:00",
+      },
+      {
+        day: "Wednesday",
+        openingTime: "08:00",
+        closingTime: "17:00",
+      },
+      {
+        day: "Thursday",
+        openingTime: "08:00",
+        closingTime: "17:00",
+      },
+      {
+        day: "Friday",
+       openingTime: "08:00",
+        closingTime: "17:00",
+      },
+      {
+        day: "Saturday",
+        openingTime: "08:00",
+        closingTime: "17:00",
+      },
+    ],
+    placePhotos: [
+      {
+        url: "https://ucarecdn.com/7645dcb8-d284-4b4f-a669-05ead9edb511/image025.jpg",
+        order: 0,
+      },
+      {
+        url: "https://ucarecdn.com/4a305390-5f1d-42cb-aceb-d6f959391d4d/20210609.jpg",
+        order: 1,
+      },
+      {
+        url: "https://ucarecdn.com/0195b2ca-c3bd-44e3-a4f6-da903b4ddded/20241028.jpg",
+        order: 2,
+      },
+    ],
+  },
 ];
 
 export default places;
