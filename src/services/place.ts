@@ -24,10 +24,13 @@ type User = {
  * price range, and other details.
  */
 export const postPlaces = async (userId: string) => {
+  const name = await generateUniquePlaceName("Input name of Place");
+  const slug = await generateUniqueSlug("New Place");
+
   return await db.place.create({
     data: {
-      name: await generateUniquePlaceName("Input name of Place"),
-      slug: await generateUniqueSlug("New Place"),
+      name,
+      slug,
       description: "No Description",
       streetAddress: "Input street address of Place",
       isPublished: false,

@@ -18,18 +18,24 @@ import db from "./db";
 export const generateUniquePlaceName = async (
   requestedName: string
 ): Promise<string> => {
-  const existingPlace = await db.place.findUnique({
-    where: { name: requestedName },
+  const similarNames = await db.place.findMany({
+    where: {
+      name: {
+        startsWith: requestedName,
+      },
+    },
+    select: { name: true },
   });
 
-  if (!existingPlace) {
+  if (!similarNames.some((place) => place.name === requestedName)) {
     return requestedName;
   }
 
   let counter = 1;
   let newName = `${requestedName} ${counter}`;
 
-  while (await db.place.findUnique({ where: { name: newName } })) {
+  const nameSet = new Set(similarNames.map((place) => place.name));
+  while (nameSet.has(newName)) {
     counter += 1;
     newName = `${requestedName} ${counter}`;
   }
@@ -49,16 +55,22 @@ export const generateUniquePlaceName = async (
 export const generateUniqueSlug = async (
   name: string,
   existingSlug?: string
-) => {
+): Promise<string> => {
   const baseSlug = slugify(name);
+  const similarSlugs = await db.place.findMany({
+    where: {
+      slug: {
+        startsWith: baseSlug,
+      },
+    },
+    select: { slug: true },
+  });
+
   let slug = baseSlug;
   let count = 1;
 
-  while (true) {
-    const existing = await db.place.findFirst({ where: { slug } });
-    if (!existing || slug === existingSlug) {
-      break;
-    }
+  const slugSet = new Set(similarSlugs.map((place) => place.slug));
+  while (slugSet.has(slug) && slug !== existingSlug) {
     slug = `${baseSlug}-${count}`;
     count++;
   }
