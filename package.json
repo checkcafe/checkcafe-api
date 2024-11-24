@@ -17,9 +17,9 @@
   "dependencies": {
     "@hono/zod-openapi": "^0.16.4",
     "@prisma/client": "^5.22.0",
-    "@scalar/hono-api-reference": "^0.5.159",
+    "@scalar/hono-api-reference": "^0.5.161",
     "dayjs": "^1.11.13",
-    "hono": "^4.6.10",
+    "hono": "^4.6.11",
     "oslo": "^1.2.1",
     "zod-prisma-types": "^3.1.8"
   },
