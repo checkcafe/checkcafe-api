@@ -59,10 +59,21 @@ export const patchPlace = async (user: User, placeId: string, body: any) => {
     throw new Error("You do not have permission to edit this place.");
   }
 
-  const { operatingHours, placeFacilities, placePhotos, ...placeData } = body;
+  const { operatingHours, placeFacilities, placePhotos, slug, ...placeData } =
+    body;
   const dataToUpdate: any = { ...placeData };
 
-  dataToUpdate.slug = await generateUniqueSlug(body.name, existingPlace.slug);
+  if (slug) {
+    const existingSlug = await db.place.findFirst({
+      where: { slug, id: { not: placeId } },
+    });
+    if (existingSlug) {
+      throw new Error("The provided slug is already in use.");
+    }
+    dataToUpdate.slug = slug;
+  } else {
+    dataToUpdate.slug = await generateUniqueSlug(body.name, existingPlace.slug);
+  }
 
   if (operatingHours) {
     const { openingTime, closingTime } = await getOperatingHours(

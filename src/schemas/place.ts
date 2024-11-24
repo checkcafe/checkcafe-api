@@ -15,6 +15,9 @@ export const placeSchema = z.object({
   name: z.string().min(1, "Name is required").max(255).openapi({
     description: "The name of the place.",
   }),
+  slug: z.string().optional().openapi({
+    description: "The slug of the place.",
+  }),
   description: z.string().optional().openapi({
     description: "The description of the place.",
   }),
