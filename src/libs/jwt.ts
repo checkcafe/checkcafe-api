@@ -44,7 +44,7 @@ const createToken = async (
  */
 export const createAccessToken = async (
   userId: string,
-  expiresInMinutes = 15
+  expiresInMinutes = 60
 ): Promise<string> => {
   try {
     return await createToken(userId, new TimeSpan(expiresInMinutes, "m"));
