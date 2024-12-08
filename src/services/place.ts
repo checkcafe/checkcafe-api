@@ -263,13 +263,16 @@ export const getPlaces = async (
     skip: page ? (page - 1) * limit : 0,
   });
 
-  if (places.length === 0) throw new Error("Places not found.");
-
   const formattedPlaces = places.map((place) =>
     formatPlaceData(place, !queryFilter?.includes("user.username"))
   );
 
-  const user = places[0]?.user;
+  const user =
+    places[0]?.user ||
+    (await db.user.findUnique({
+      where: { username: where.user.username.contains || "" },
+      omit: { password: true },
+    }));
 
   const data = queryFilter?.includes("user.username")
     ? {
