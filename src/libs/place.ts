@@ -138,9 +138,14 @@ export const formatPlaceData = (place: any, submitter?: boolean) => {
 
   if (place.placeFacilities) {
     formattedData.placeFacilities = place.placeFacilities.map(
-      (facility: { facility: { name: string }; description: string }) => ({
+      (facility: {
+        facility: { name: string };
+        description: string;
+        facilityId: string;
+      }) => ({
         facility: facility.facility.name,
         description: facility.description,
+        facilityId: facility.facilityId,
       })
     );
   }
