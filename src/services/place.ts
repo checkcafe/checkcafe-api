@@ -358,6 +358,7 @@ export const getPlaceBySlugOrId = async (slugOrId: string) => {
       placeFacilities: {
         select: {
           description: true,
+          facilityId: true,
           facility: { select: { name: true } },
         },
       },
@@ -374,6 +375,6 @@ export const getPlaceBySlugOrId = async (slugOrId: string) => {
   // Check authorized user who can access the place which is not published yet
 
   if (!place) throw new Error("Place not found.");
-
+  console.log(place);
   return formatPlaceData(place, true);
 };
