@@ -130,6 +130,7 @@ export const formatPlaceData = (place: any, submitter?: boolean) => {
       country: place.city?.state.country.name ?? null,
       countryCode: place.city?.state.country.code ?? null,
     },
+    favoriteCount: place._count ? place._count.placeFavorites : null,
   };
 
   if (place.operatingHours) {
