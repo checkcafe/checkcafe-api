@@ -414,8 +414,6 @@ export const getFavoriteplaces = async (limit: number = 7) => {
     },
     take: limit,
   });
-  // console.log(places, "favouriteplaces");
   const formattedPlaces = places.map((place) => formatPlaceData(place));
-  console.log(formattedPlaces, "favouriteplaces");
   return { formattedPlaces };
 };
