@@ -51,7 +51,38 @@ placeRoute.openapi(
     }
   }
 );
-
+// Get All Favorite Places Route
+placeRoute.openapi(
+  {
+    method: "get",
+    path: "/favorite",
+    summary: "Favorite Places",
+    description: "Get a list of favorite places.",
+    // request: {
+    //   query: querySchema,
+    // },
+    responses: {
+      200: {
+        description: "Places retrieved successfully",
+      },
+      401: {
+        description: "Failed to retrieve places",
+      },
+    },
+    tags: API_TAGS,
+  },
+  async (c) => {
+    try {
+      const result = await placeService.getFavoriteplaces();
+      return c.json(result.formattedPlaces, 200);
+    } catch (error: Error | any) {
+      return c.json(
+        { error: error.message || "Failed to retrieve places" },
+        error.status || 401
+      );
+    }
+  }
+);
 // Get One Place Route
 placeRoute.openapi(
   {

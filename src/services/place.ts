@@ -289,7 +289,6 @@ export const getPlaces = async (
           avatarUrl: user?.avatarUrl,
         },
       }));
-
   if (page) {
     const totalData = await db.place.count({ where });
     const totalPage = Math.ceil(totalData / limit);
@@ -375,6 +374,48 @@ export const getPlaceBySlugOrId = async (slugOrId: string) => {
   // Check authorized user who can access the place which is not published yet
 
   if (!place) throw new Error("Place not found.");
-  console.log(place);
   return formatPlaceData(place, true);
+};
+
+export const getFavoriteplaces = async (limit: number = 7) => {
+  const places = await db.place.findMany({
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      isPublished: true,
+      priceRangeMin: true,
+      priceRangeMax: true,
+      openingTime: true,
+      closingTime: true,
+      thumbnailUrl: true,
+      city: {
+        select: {
+          id: true,
+          name: true,
+          state: {
+            select: {
+              name: true,
+              country: { select: { name: true, code: true, currency: true } },
+            },
+          },
+        },
+      },
+      _count: {
+        select: {
+          placeFavorites: true,
+        },
+      },
+    },
+    orderBy: {
+      placeFavorites: {
+        _count: "desc",
+      },
+    },
+    take: limit,
+  });
+  // console.log(places, "favouriteplaces");
+  const formattedPlaces = places.map((place) => formatPlaceData(place));
+  console.log(formattedPlaces, "favouriteplaces");
+  return { formattedPlaces };
 };
